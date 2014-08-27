@@ -13,6 +13,7 @@
 *.patch
 *.pc
 *.pot
+*.rc
 *.so*
 *.dylib
 .*.swp
@@ -45,6 +46,13 @@ dataDec.txt
 log.dec
 x265_lookahead.clbin
 
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+deinstall.cmake
+install_manifest.txt
+
 *.ilk
 *.meta
 *.obj
@@ -53,6 +61,7 @@ x265_lookahead.clbin
 *.pidb
 *.tlog
 *.manifest
+*.res
 *.sdf
 *.suo
 *.user

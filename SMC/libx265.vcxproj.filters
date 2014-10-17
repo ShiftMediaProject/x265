@@ -236,7 +236,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="x265.def">
+    <None Include="libx265.def">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

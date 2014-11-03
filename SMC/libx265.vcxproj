@@ -672,14 +672,20 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   <ItemGroup>
     <ClInclude Include="..\source\common\bitstream.h" />
     <ClInclude Include="..\source\common\common.h" />
+    <ClInclude Include="..\source\common\constants.h" />
+    <ClInclude Include="..\source\common\contexts.h" />
     <ClInclude Include="..\source\common\cpu.h" />
+    <ClInclude Include="..\source\common\cudata.h" />
     <ClInclude Include="..\source\common\deblock.h" />
     <ClInclude Include="..\source\common\frame.h" />
+    <ClInclude Include="..\source\common\framedata.h" />
     <ClInclude Include="..\source\common\lowres.h" />
     <ClInclude Include="..\source\common\md5.h" />
     <ClInclude Include="..\source\common\mv.h" />
     <ClInclude Include="..\source\common\param.h" />
     <ClInclude Include="..\source\common\piclist.h" />
+    <ClInclude Include="..\source\common\picyuv.h" />
+    <ClInclude Include="..\source\common\predict.h" />
     <ClInclude Include="..\source\common\primitives.h" />
     <ClInclude Include="..\source\common\quant.h" />
     <ClInclude Include="..\source\common\scalinglist.h" />
@@ -697,9 +703,9 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClInclude Include="..\source\common\x86\mc.h" />
     <ClInclude Include="..\source\common\x86\pixel-util.h" />
     <ClInclude Include="..\source\common\x86\pixel.h" />
+    <ClInclude Include="..\source\common\yuv.h" />
     <ClInclude Include="..\source\encoder\analysis.h" />
     <ClInclude Include="..\source\encoder\bitcost.h" />
-    <ClInclude Include="..\source\encoder\cturow.h" />
     <ClInclude Include="..\source\encoder\dpb.h" />
     <ClInclude Include="..\source\encoder\encoder.h" />
     <ClInclude Include="..\source\encoder\entropy.h" />
@@ -708,26 +714,13 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClInclude Include="..\source\encoder\level.h" />
     <ClInclude Include="..\source\encoder\motion.h" />
     <ClInclude Include="..\source\encoder\nal.h" />
-    <ClInclude Include="..\source\encoder\predict.h" />
     <ClInclude Include="..\source\encoder\ratecontrol.h" />
     <ClInclude Include="..\source\encoder\rdcost.h" />
     <ClInclude Include="..\source\encoder\reference.h" />
+    <ClInclude Include="..\source\encoder\sao.h" />
+    <ClInclude Include="..\source\encoder\search.h" />
     <ClInclude Include="..\source\encoder\sei.h" />
     <ClInclude Include="..\source\encoder\slicetype.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\CommonDef.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\ContextTables.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComDataCU.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComMotionInfo.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComPattern.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComPicSym.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComPicYuv.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComRom.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComSampleAdaptiveOffset.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComWeightPrediction.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TComYuv.h" />
-    <ClInclude Include="..\source\Lib\TLibCommon\TypeDef.h" />
-    <ClInclude Include="..\source\Lib\TLibEncoder\TEncSampleAdaptiveOffset.h" />
-    <ClInclude Include="..\source\Lib\TLibEncoder\TEncSearch.h" />
     <ClInclude Include="..\source\x265.h" />
     <ClInclude Include="x265_config.h" />
   </ItemGroup>
@@ -750,10 +743,13 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   <ItemGroup>
     <ClCompile Include="..\source\common\bitstream.cpp" />
     <ClCompile Include="..\source\common\common.cpp" />
+    <ClCompile Include="..\source\common\constants.cpp" />
     <ClCompile Include="..\source\common\cpu.cpp" />
+    <ClCompile Include="..\source\common\cudata.cpp" />
     <ClCompile Include="..\source\common\dct.cpp" />
     <ClCompile Include="..\source\common\deblock.cpp" />
     <ClCompile Include="..\source\common\frame.cpp" />
+    <ClCompile Include="..\source\common\framedata.cpp" />
     <ClCompile Include="..\source\common\IntraPred.cpp" />
     <ClCompile Include="..\source\common\ipfilter.cpp" />
     <ClCompile Include="..\source\common\loopfilter.cpp">
@@ -772,7 +768,9 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClCompile Include="..\source\common\md5.cpp" />
     <ClCompile Include="..\source\common\param.cpp" />
     <ClCompile Include="..\source\common\piclist.cpp" />
+    <ClCompile Include="..\source\common\picyuv.cpp" />
     <ClCompile Include="..\source\common\pixel.cpp" />
+    <ClCompile Include="..\source\common\predict.cpp" />
     <ClCompile Include="..\source\common\primitives.cpp" />
     <ClCompile Include="..\source\common\quant.cpp" />
     <ClCompile Include="..\source\common\scalinglist.cpp" />
@@ -780,7 +778,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClCompile Include="..\source\common\slice.cpp" />
     <ClCompile Include="..\source\common\threading.cpp" />
     <ClCompile Include="..\source\common\threadpool.cpp" />
-    <ClCompile Include="..\source\common\vec\blockcopy-sse3.cpp" />
     <ClCompile Include="..\source\common\vec\dct-sse3.cpp" />
     <ClCompile Include="..\source\common\vec\dct-sse41.cpp" />
     <ClCompile Include="..\source\common\vec\dct-ssse3.cpp" />
@@ -789,10 +786,10 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClCompile Include="..\source\common\wavefront.cpp" />
     <ClCompile Include="..\source\common\winxp.cpp" />
     <ClCompile Include="..\source\common\x86\asm-primitives.cpp" />
+    <ClCompile Include="..\source\common\yuv.cpp" />
     <ClCompile Include="..\source\encoder\analysis.cpp" />
     <ClCompile Include="..\source\encoder\api.cpp" />
     <ClCompile Include="..\source\encoder\bitcost.cpp" />
-    <ClCompile Include="..\source\encoder\cturow.cpp" />
     <ClCompile Include="..\source\encoder\dpb.cpp" />
     <ClCompile Include="..\source\encoder\encoder.cpp" />
     <ClCompile Include="..\source\encoder\entropy.cpp" />
@@ -801,24 +798,13 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClCompile Include="..\source\encoder\level.cpp" />
     <ClCompile Include="..\source\encoder\motion.cpp" />
     <ClCompile Include="..\source\encoder\nal.cpp" />
-    <ClCompile Include="..\source\encoder\predict.cpp" />
     <ClCompile Include="..\source\encoder\ratecontrol.cpp" />
     <ClCompile Include="..\source\encoder\reference.cpp" />
+    <ClCompile Include="..\source\encoder\sao.cpp" />
+    <ClCompile Include="..\source\encoder\search.cpp" />
     <ClCompile Include="..\source\encoder\sei.cpp" />
     <ClCompile Include="..\source\encoder\slicetype.cpp" />
     <ClCompile Include="..\source\encoder\weightPrediction.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComDataCU.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComMotionInfo.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPattern.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPicSym.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPicYuv.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPicYuvMD5.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComRom.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComSampleAdaptiveOffset.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComWeightPrediction.cpp" />
-    <ClCompile Include="..\source\Lib\TLibCommon\TComYuv.cpp" />
-    <ClCompile Include="..\source\Lib\TLibEncoder\TEncSampleAdaptiveOffset.cpp" />
-    <ClCompile Include="..\source\Lib\TLibEncoder\TEncSearch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <YASM Include="..\source\common\x86\blockcopy8.asm" />

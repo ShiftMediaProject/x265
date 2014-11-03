@@ -28,24 +28,6 @@
     <Filter Include="Source Files\common\vec">
       <UniqueIdentifier>{b187658e-7e2e-4962-8a35-1f2aca47956b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Lib">
-      <UniqueIdentifier>{6b3d3fd7-3d8c-4ac2-8297-6575b9215f38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Lib\TLibCommon">
-      <UniqueIdentifier>{bc6a2b17-be9c-4682-9850-07ae7930a2e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\source\Lib">
-      <UniqueIdentifier>{22088402-9398-4933-bf59-9d5f6d870d81}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\source\Lib\TLibCommon">
-      <UniqueIdentifier>{bed21315-1509-4e42-bea0-80b979bc21eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Lib\TLibEncoder">
-      <UniqueIdentifier>{ba4447c4-caf0-482b-9e44-19d408ef5212}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\source\Lib\TLibEncoder">
-      <UniqueIdentifier>{c473f600-7259-4e9d-a239-eef4bfa22bda}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\encoder">
       <UniqueIdentifier>{0b3eb306-99f1-467a-a2cc-bc287a34608c}</UniqueIdentifier>
     </Filter>
@@ -79,9 +61,6 @@
       <Filter>Header Files\source\common</Filter>
     </ClInclude>
     <ClInclude Include="..\source\common\md5.h">
-      <Filter>Header Files\source\common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\mv.h">
       <Filter>Header Files\source\common</Filter>
     </ClInclude>
     <ClInclude Include="..\source\common\param.h">
@@ -141,55 +120,10 @@
     <ClInclude Include="..\source\common\x86\pixel-util.h">
       <Filter>Header Files\source\common\x86</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\CommonDef.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\ContextTables.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComDataCU.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComMotionInfo.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComPattern.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComPicSym.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComPicYuv.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComRom.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComSampleAdaptiveOffset.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComWeightPrediction.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TComYuv.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibCommon\TypeDef.h">
-      <Filter>Header Files\source\Lib\TLibCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibEncoder\TEncSampleAdaptiveOffset.h">
-      <Filter>Header Files\source\Lib\TLibEncoder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Lib\TLibEncoder\TEncSearch.h">
-      <Filter>Header Files\source\Lib\TLibEncoder</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\encoder\analysis.h">
       <Filter>Header Files\source\encoder</Filter>
     </ClInclude>
     <ClInclude Include="..\source\encoder\bitcost.h">
-      <Filter>Header Files\source\encoder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\encoder\cturow.h">
       <Filter>Header Files\source\encoder</Filter>
     </ClInclude>
     <ClInclude Include="..\source\encoder\dpb.h">
@@ -216,9 +150,6 @@
     <ClInclude Include="..\source\encoder\nal.h">
       <Filter>Header Files\source\encoder</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\encoder\predict.h">
-      <Filter>Header Files\source\encoder</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\encoder\ratecontrol.h">
       <Filter>Header Files\source\encoder</Filter>
     </ClInclude>
@@ -232,6 +163,36 @@
       <Filter>Header Files\source\encoder</Filter>
     </ClInclude>
     <ClInclude Include="..\source\encoder\slicetype.h">
+      <Filter>Header Files\source\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\constants.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\predict.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\yuv.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\contexts.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\cudata.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\framedata.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\mv.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\picyuv.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\encoder\sao.h">
+      <Filter>Header Files\source\encoder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\encoder\search.h">
       <Filter>Header Files\source\encoder</Filter>
     </ClInclude>
   </ItemGroup>
@@ -324,9 +285,6 @@
     <ClCompile Include="..\source\common\x86\asm-primitives.cpp">
       <Filter>Source Files\common\x86</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\common\vec\blockcopy-sse3.cpp">
-      <Filter>Source Files\common\vec</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\common\vec\dct-sse3.cpp">
       <Filter>Source Files\common\vec</Filter>
     </ClCompile>
@@ -339,42 +297,6 @@
     <ClCompile Include="..\source\common\vec\vec-primitives.cpp">
       <Filter>Source Files\common\vec</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPattern.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPicSym.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPicYuv.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComPicYuvMD5.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComRom.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComSampleAdaptiveOffset.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComWeightPrediction.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComYuv.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComDataCU.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibCommon\TComMotionInfo.cpp">
-      <Filter>Source Files\Lib\TLibCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibEncoder\TEncSearch.cpp">
-      <Filter>Source Files\Lib\TLibEncoder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Lib\TLibEncoder\TEncSampleAdaptiveOffset.cpp">
-      <Filter>Source Files\Lib\TLibEncoder</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\encoder\framefilter.cpp">
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
@@ -385,9 +307,6 @@
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
     <ClCompile Include="..\source\encoder\nal.cpp">
-      <Filter>Source Files\encoder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\encoder\predict.cpp">
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
     <ClCompile Include="..\source\encoder\ratecontrol.cpp">
@@ -414,9 +333,6 @@
     <ClCompile Include="..\source\encoder\bitcost.cpp">
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\encoder\cturow.cpp">
-      <Filter>Source Files\encoder</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\encoder\dpb.cpp">
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
@@ -427,6 +343,30 @@
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
     <ClCompile Include="..\source\encoder\frameencoder.cpp">
+      <Filter>Source Files\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\constants.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\cudata.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\framedata.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\picyuv.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\predict.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\yuv.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\encoder\search.cpp">
+      <Filter>Source Files\encoder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\encoder\sao.cpp">
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
   </ItemGroup>

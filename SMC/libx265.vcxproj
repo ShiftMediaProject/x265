@@ -198,9 +198,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>X265_VERSION=1.3;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;ENABLE_ASSEMBLY=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -208,7 +207,7 @@
       <C99Support>true</C99Support>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -239,17 +238,15 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>X265_VERSION=1.3;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;ENABLE_ASSEMBLY=1;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -278,7 +275,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
-      <SDLCheck>false</SDLCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>X265_VERSION=1.3;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;ENABLE_ASSEMBLY=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -286,9 +282,9 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/Qms0 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)\bin\$(TargetName)$(TargetExt)</OutputFile>
@@ -318,17 +314,15 @@ del ..\source\x265_config.h
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>X265_VERSION=1.3;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;ENABLE_ASSEMBLY=1;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)\bin\$(TargetName)$(TargetExt)</OutputFile>
@@ -357,10 +351,9 @@ del ..\source\x265_config.h
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -378,7 +371,7 @@ del ..\source\x265_config.h
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -409,10 +402,9 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTO|Win32'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -430,7 +422,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -461,10 +453,9 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -473,7 +464,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <PreprocessorDefinitions>X265_VERSION=1.3;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;ENABLE_ASSEMBLY=1;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -482,7 +472,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -513,10 +503,9 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTO|x64'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -525,7 +514,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <PreprocessorDefinitions>X265_VERSION=1.3;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;ENABLE_ASSEMBLY=1;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -534,7 +522,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -565,7 +553,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
     <ClCompile>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -573,7 +560,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
       <ExceptionHandling>false</ExceptionHandling>
@@ -587,7 +574,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -619,10 +606,9 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -631,7 +617,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <PreprocessorDefinitions>X265_VERSION=1.3;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;ENABLE_ASSEMBLY=1;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -640,7 +625,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
-      <DisableSpecificWarnings>4391</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

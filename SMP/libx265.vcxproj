@@ -208,6 +208,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(OutDir)\lib\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -247,6 +248,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(OutDir)\lib\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -285,6 +287,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <WarningLevel>Level3</WarningLevel>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)\bin\$(TargetName)$(TargetExt)</OutputFile>
@@ -294,6 +297,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <ProfileGuidedDatabase>$(OutDir)\bin\$(TargetName).pgd</ProfileGuidedDatabase>
       <ModuleDefinitionFile>libx265.def</ModuleDefinitionFile>
       <LargeAddressAware>true</LargeAddressAware>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -323,6 +327,7 @@ del ..\source\x265_config.h
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)\bin\$(TargetName)$(TargetExt)</OutputFile>
@@ -331,6 +336,7 @@ del ..\source\x265_config.h
       <ImportLibrary>$(OutDir)\bin\$(TargetName).lib</ImportLibrary>
       <ProfileGuidedDatabase>$(OutDir)\bin\$(TargetName).pgd</ProfileGuidedDatabase>
       <ModuleDefinitionFile>libx265.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -372,6 +378,7 @@ del ..\source\x265_config.h
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -423,6 +430,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -473,6 +481,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -523,6 +532,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -562,7 +572,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <C99Support>true</C99Support>
       <WarningLevel>Level3</WarningLevel>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <DebugInformationFormat>None</DebugInformationFormat>
       <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -575,6 +584,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -626,6 +636,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <ExceptionHandling>false</ExceptionHandling>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <DisableSpecificWarnings>4391;4996</DisableSpecificWarnings>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

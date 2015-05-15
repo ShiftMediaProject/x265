@@ -808,6 +808,7 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <YASM Include="..\source\common\x86\cpu-a.asm" />
     <YASM Include="..\source\common\x86\dct8.asm" />
     <YASM Include="..\source\common\x86\intrapred8.asm" />
+    <YASM Include="..\source\common\x86\intrapred8_allangs.asm" />
     <YASM Include="..\source\common\x86\ipfilter8.asm" />
     <YASM Include="..\source\common\x86\loopfilter.asm" />
     <YASM Include="..\source\common\x86\mc-a.asm" />

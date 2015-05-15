@@ -83,6 +83,11 @@ void FrameFilter::processRow(int row)
 {
     ProfileScopeEvent(filterCTURow);
 
+#if DETAILED_CU_STATS
+    ScopedElapsedTime filterPerfScope(m_frameEncoder->m_cuStats.loopFilterElapsedTime);
+    m_frameEncoder->m_cuStats.countLoopFilter++;
+#endif
+
     if (!m_param->bEnableLoopFilter && !m_param->bEnableSAO)
     {
         processRowPost(row);
@@ -298,6 +303,9 @@ void FrameFilter::processRowPost(int row)
         updateChecksum(reconPic->m_picOrg[1], m_frameEncoder->m_checksum[1], height, width, stride, row, cuHeight);
         updateChecksum(reconPic->m_picOrg[2], m_frameEncoder->m_checksum[2], height, width, stride, row, cuHeight);
     }
+
+    if (ATOMIC_INC(&m_frameEncoder->m_completionCount) == 2 * (int)m_frameEncoder->m_numRows)
+        m_frameEncoder->m_completionEvent.trigger();
 }
 
 static uint64_t computeSSD(pixel *fenc, pixel *rec, intptr_t stride, uint32_t width, uint32_t height)
@@ -421,7 +429,7 @@ static void restoreOrigLosslessYuv(const CUData* cu, Frame& frame, uint32_t absP
 /* Original YUV restoration for CU in lossless coding */
 static void origCUSampleRestoration(const CUData* cu, const CUGeom& cuGeom, Frame& frame)
 {
-    uint32_t absPartIdx = cuGeom.encodeIdx;
+    uint32_t absPartIdx = cuGeom.absPartIdx;
     if (cu->m_cuDepth[absPartIdx] > cuGeom.depth)
     {
         for (int subPartIdx = 0; subPartIdx < 4; subPartIdx++)

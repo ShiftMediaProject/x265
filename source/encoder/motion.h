@@ -67,6 +67,8 @@ public:
     MotionEstimate();
     ~MotionEstimate();
 
+    static void initScales();
+    static int hpelIterationCount(int subme);
     void init(int method, int refine, int csp);
 
     /* Methods called at slice setup */

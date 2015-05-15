@@ -74,13 +74,6 @@
 #define ALIGN_VAR_16(T, var) T var __attribute__((aligned(16)))
 #define ALIGN_VAR_32(T, var) T var __attribute__((aligned(32)))
 
-#if X265_ARCH_X86 && !defined(X86_64)
-extern "C" intptr_t x265_stack_align(void (*func)(), ...);
-#define x265_stack_align(func, ...) x265_stack_align((void (*)())func, __VA_ARGS__)
-#else
-#define x265_stack_align(func, ...) func(__VA_ARGS__)
-#endif
-
 #if defined(__MINGW32__)
 #define fseeko fseeko64
 #endif
@@ -90,7 +83,6 @@ extern "C" intptr_t x265_stack_align(void (*func)(), ...);
 #define ALIGN_VAR_8(T, var)  __declspec(align(8)) T var
 #define ALIGN_VAR_16(T, var) __declspec(align(16)) T var
 #define ALIGN_VAR_32(T, var) __declspec(align(32)) T var
-#define x265_stack_align(func, ...) func(__VA_ARGS__)
 #define fseeko _fseeki64
 
 #endif // if defined(__GNUC__)
@@ -106,19 +98,20 @@ extern "C" intptr_t x265_stack_align(void (*func)(), ...);
 #if _DEBUG && defined(_MSC_VER)
 #define DEBUG_BREAK() __debugbreak()
 #elif __APPLE_CC__
-#define DEBUG_BREAK() __builtin_trap();
+#define DEBUG_BREAK() __builtin_trap()
 #else
-#define DEBUG_BREAK()
+#define DEBUG_BREAK() abort()
 #endif
 
 /* If compiled with CHECKED_BUILD perform run-time checks and log any that
  * fail, both to stderr and to a file */
 #if CHECKED_BUILD || _DEBUG
+extern int g_checkFailures;
 #define X265_CHECK(expr, ...) if (!(expr)) { \
     x265_log(NULL, X265_LOG_ERROR, __VA_ARGS__); \
-    DEBUG_BREAK(); \
     FILE *fp = fopen("x265_check_failures.txt", "a"); \
     if (fp) { fprintf(fp, "%s:%d\n", __FILE__, __LINE__); fprintf(fp, __VA_ARGS__); fclose(fp); } \
+    g_checkFailures++; DEBUG_BREAK(); \
 }
 #if _MSC_VER
 #pragma warning(disable: 4127) // some checks have constant conditions
@@ -257,7 +250,7 @@ typedef int16_t  coeff_t;      // transform coefficient
 #define UNIT_SIZE               (1 << LOG2_UNIT_SIZE)       // unit size of CU partition
 
 #define MAX_NUM_PARTITIONS      256
-#define NUM_CU_PARTITIONS       (1U << (g_maxFullDepth << 1))
+#define NUM_4x4_PARTITIONS      (1U << (g_unitSizeDepth << 1)) // number of 4x4 units in max CU size
 
 #define MIN_PU_SIZE             4
 #define MIN_TU_SIZE             4
@@ -376,6 +369,7 @@ struct analysis_inter_data
     int32_t*    ref;
     uint8_t*    depth;
     uint8_t*    modes;
+    uint32_t*   bestMergeCand;
 };
 
 /* Stores intra analysis data for a single frame. This struct needs better packing */
@@ -384,6 +378,7 @@ struct analysis_intra_data
     uint8_t*  depth;
     uint8_t*  modes;
     char*     partSizes;
+    uint8_t*  chromaModes;
 };
 
 enum TextType
@@ -429,6 +424,8 @@ uint32_t x265_picturePlaneSize(int csp, int width, int height, int plane);
 void*    x265_malloc(size_t size);
 void     x265_free(void *ptr);
 char*    x265_slurp_file(const char *filename);
+
+void     x265_setup_primitives(x265_param* param, int cpu); /* primitives.cpp */
 
 #include "constants.h"
 

@@ -428,7 +428,7 @@ template<int size>
 void cpy2Dto1D_shl(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift)
 {
     X265_CHECK(((intptr_t)dst & 15) == 0, "dst alignment error\n");
-    X265_CHECK((((intptr_t)src | srcStride) & 15) == 0 || size == 4, "src alignment error\n");
+    X265_CHECK((((intptr_t)src | (srcStride * sizeof(*src))) & 15) == 0 || size == 4, "src alignment error\n");
     X265_CHECK(shift >= 0, "invalid shift\n");
 
     for (int i = 0; i < size; i++)
@@ -445,7 +445,7 @@ template<int size>
 void cpy2Dto1D_shr(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift)
 {
     X265_CHECK(((intptr_t)dst & 15) == 0, "dst alignment error\n");
-    X265_CHECK((((intptr_t)src | srcStride) & 15) == 0 || size == 4, "src alignment error\n");
+    X265_CHECK((((intptr_t)src | (srcStride * sizeof(*src))) & 15) == 0 || size == 4, "src alignment error\n");
     X265_CHECK(shift > 0, "invalid shift\n");
 
     int16_t round = 1 << (shift - 1);
@@ -462,7 +462,7 @@ void cpy2Dto1D_shr(int16_t* dst, const int16_t* src, intptr_t srcStride, int shi
 template<int size>
 void cpy1Dto2D_shl(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift)
 {
-    X265_CHECK((((intptr_t)dst | dstStride) & 15) == 0 || size == 4, "dst alignment error\n");
+    X265_CHECK((((intptr_t)dst | (dstStride * sizeof(*dst))) & 15) == 0 || size == 4, "dst alignment error\n");
     X265_CHECK(((intptr_t)src & 15) == 0, "src alignment error\n");
     X265_CHECK(shift >= 0, "invalid shift\n");
 
@@ -479,7 +479,7 @@ void cpy1Dto2D_shl(int16_t* dst, const int16_t* src, intptr_t dstStride, int shi
 template<int size>
 void cpy1Dto2D_shr(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift)
 {
-    X265_CHECK((((intptr_t)dst | dstStride) & 15) == 0 || size == 4, "dst alignment error\n");
+    X265_CHECK((((intptr_t)dst | (dstStride * sizeof(*dst))) & 15) == 0 || size == 4, "dst alignment error\n");
     X265_CHECK(((intptr_t)src & 15) == 0, "src alignment error\n");
     X265_CHECK(shift > 0, "invalid shift\n");
 
@@ -522,12 +522,10 @@ void weight_sp_c(const int16_t* src, pixel* dst, intptr_t srcStride, intptr_t ds
 
 #if CHECKED_BUILD || _DEBUG
     const int correction = (IF_INTERNAL_PREC - X265_DEPTH);
-#endif
-
     X265_CHECK(!((w0 << 6) > 32767), "w0 using more than 16 bits, asm output will mismatch\n");
     X265_CHECK(!(round > 32767), "round using more than 16 bits, asm output will mismatch\n");
     X265_CHECK((shift >= correction), "shift must be include factor correction, please update ASM ABI\n");
-    X265_CHECK(!(round & ((1 << correction) - 1)), "round must be include factor correction, please update ASM ABI\n");
+#endif
 
     for (y = 0; y <= height - 1; y++)
     {

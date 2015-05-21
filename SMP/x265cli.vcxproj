@@ -25,6 +25,8 @@
     <ClInclude Include="..\source\input\y4m.h" />
     <ClInclude Include="..\source\input\yuv.h" />
     <ClInclude Include="..\source\output\output.h" />
+    <ClInclude Include="..\source\output\raw.h" />
+    <ClInclude Include="..\source\output\reconplay.h" />
     <ClInclude Include="..\source\output\y4m.h" />
     <ClInclude Include="..\source\output\yuv.h" />
     <ClInclude Include="..\source\x265.h" />
@@ -50,6 +52,8 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\yuv_input.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\source\output\output.cpp" />
+    <ClCompile Include="..\source\output\raw.cpp" />
+    <ClCompile Include="..\source\output\reconplay.cpp" />
     <ClCompile Include="..\source\output\y4m.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\y4m_output.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\y4m_output.obj</ObjectFileName>

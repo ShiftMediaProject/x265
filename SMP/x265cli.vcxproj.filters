@@ -66,6 +66,12 @@
     <ClInclude Include="..\source\compat\getopt\getopt.h">
       <Filter>Header Files\compat</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\output\raw.h">
+      <Filter>Header Files\output</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\output\reconplay.h">
+      <Filter>Header Files\output</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="x265.rc">
@@ -99,6 +105,12 @@
     </ClCompile>
     <ClCompile Include="..\source\compat\getopt\getopt.c">
       <Filter>Source Files\compat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\output\reconplay.cpp">
+      <Filter>Source Files\output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\output\raw.cpp">
+      <Filter>Source Files\output</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

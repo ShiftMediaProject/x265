@@ -419,5 +419,14 @@
     <YASM Include="..\source\common\x86\intrapred8_allangs.asm">
       <Filter>Source Files\common\x86</Filter>
     </YASM>
+    <YASM Include="..\source\common\x86\intrapred16.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </YASM>
+    <YASM Include="..\source\common\x86\sad16-a.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </YASM>
+    <YASM Include="..\source\common\x86\ipfilter16.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </YASM>
   </ItemGroup>
 </Project>

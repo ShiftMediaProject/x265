@@ -157,10 +157,9 @@ public:
     double m_rateFactorMaxIncrement; /* Don't allow RF above (CRF + this value). */
     double m_rateFactorMaxDecrement; /* don't allow RF below (this value). */
 
-    Predictor m_pred[5];
-    Predictor m_predBfromP;
-
+    Predictor m_pred[4];       /* Slice predictors to preidct bits for each Slice type - I,P,Bref and B */
     int64_t m_leadingNoBSatd;
+    int     m_predType;       /* Type of slice predictors to be used - depends on the slice type */
     double  m_ipOffset;
     double  m_pbOffset;
     int64_t m_bframeBits;
@@ -266,6 +265,7 @@ protected:
     double tuneAbrQScaleFromFeedback(double qScale);
     void   accumPQpUpdate();
 
+    int    getPredictorType(int lowresSliceType, int sliceType);
     void   updateVbv(int64_t bits, RateControlEntry* rce);
     void   updatePredictor(Predictor *p, double q, double var, double bits);
     double clipQscale(Frame* pic, RateControlEntry* rce, double q);

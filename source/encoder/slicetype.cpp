@@ -44,23 +44,6 @@ using namespace x265;
 
 namespace {
 
-inline int16_t median(int16_t a, int16_t b, int16_t c)
-{
-    int16_t t = (a - b) & ((a - b) >> 31);
-
-    a -= t;
-    b += t;
-    b -= (b - c) & ((b - c) >> 31);
-    b += (a - b) & ((a - b) >> 31);
-    return b;
-}
-
-inline void median_mv(MV &dst, MV a, MV b, MV c)
-{
-    dst.x = median(a.x, b.x, c.x);
-    dst.y = median(a.y, b.y, c.y);
-}
-
 /* Compute variance to derive AC energy of each block */
 inline uint32_t acEnergyVar(Frame *curFrame, uint64_t sum_ssd, int shift, int plane)
 {
@@ -492,8 +475,6 @@ Lookahead::Lookahead(x265_param *param, ThreadPool* pool)
     m_8x8Blocks = m_8x8Width > 2 && m_8x8Height > 2 ? (m_8x8Width - 2) * (m_8x8Height - 2) : m_8x8Width * m_8x8Height;
 
     m_lastKeyframe = -m_param->keyframeMax;
-    memset(m_preframes, 0, sizeof(m_preframes));
-    m_preTotal = m_preAcquired = m_preCompleted = 0;
     m_sliceTypeBusy = false;
     m_fullQueueSize = X265_MAX(1, m_param->lookaheadDepth);
     m_bAdaptiveQuant = m_param->rc.aqMode || m_param->bEnableWeightedPred || m_param->bEnableWeightedBiPred;
@@ -568,14 +549,14 @@ bool Lookahead::create()
     return m_tld && m_scratch;
 }
 
-void Lookahead::stop()
+void Lookahead::stopJobs()
 {
     if (m_pool && !m_inputQueue.empty())
     {
-        m_preLookaheadLock.acquire();
+        m_inputLock.acquire();
         m_isActive = false;
         bool wait = m_outputSignalRequired = m_sliceTypeBusy;
-        m_preLookaheadLock.release();
+        m_inputLock.release();
 
         if (wait)
             m_outputSignal.wait();
@@ -634,19 +615,11 @@ void Lookahead::addPicture(Frame& curFrame, int sliceType)
             m_filled = true; /* full capacity plus mini-gop lag */
     }
 
-    m_preLookaheadLock.acquire();
-
     m_inputLock.acquire();
     m_inputQueue.pushBack(curFrame);
-    m_inputLock.release();
-
-    m_preframes[m_preTotal++] = &curFrame;
-    X265_CHECK(m_preTotal <= X265_LOOKAHEAD_MAX, "prelookahead overflow\n");
-    
-    m_preLookaheadLock.release();
-
-    if (m_pool)
+    if (m_pool && m_inputQueue.size() >= m_fullQueueSize)
         tryWakeOne();
+    m_inputLock.release();
 }
 
 /* Called by API thread */
@@ -657,74 +630,33 @@ void Lookahead::flush()
     m_filled = true;
 }
 
-void Lookahead::findJob(int workerThreadID)
+void Lookahead::findJob(int /*workerThreadID*/)
 {
-    Frame* preFrame;
-    bool   doDecide;
+    bool doDecide;
 
-    if (!m_isActive)
+    m_inputLock.acquire();
+    if (m_inputQueue.size() >= m_fullQueueSize && !m_sliceTypeBusy && m_isActive)
+        doDecide = m_sliceTypeBusy = true;
+    else
+        doDecide = m_helpWanted = false;
+    m_inputLock.release();
+
+    if (!doDecide)
         return;
 
-    int tld = workerThreadID;
-    if (workerThreadID < 0)
-        tld = m_pool ? m_pool->m_numWorkers : 0;
+    ProfileLookaheadTime(m_slicetypeDecideElapsedTime, m_countSlicetypeDecide);
+    ProfileScopeEvent(slicetypeDecideEV);
 
-    m_preLookaheadLock.acquire();
-    do
+    slicetypeDecide();
+
+    m_inputLock.acquire();
+    if (m_outputSignalRequired)
     {
-        preFrame = NULL;
-        doDecide = false;
-
-        if (m_preTotal > m_preAcquired)
-            preFrame = m_preframes[m_preAcquired++];
-        else
-        {
-            if (m_preTotal == m_preCompleted)
-                m_preAcquired = m_preTotal = m_preCompleted = 0;
-
-            /* the worker thread that performs the last pre-lookahead will generally get to run
-             * slicetypeDecide() */
-            m_inputLock.acquire();
-            if (!m_sliceTypeBusy && !m_preTotal && m_inputQueue.size() >= m_fullQueueSize && m_isActive)
-                doDecide = m_sliceTypeBusy = true;
-            else
-                m_helpWanted = false;
-            m_inputLock.release();
-        }
-        m_preLookaheadLock.release();
-
-        if (preFrame)
-        {
-            ProfileLookaheadTime(m_preLookaheadElapsedTime, m_countPreLookahead);
-            ProfileScopeEvent(prelookahead);
-
-            preFrame->m_lowres.init(preFrame->m_fencPic, preFrame->m_poc);
-            if (m_param->rc.bStatRead && m_param->rc.cuTree && IS_REFERENCED(preFrame))
-                /* cu-tree offsets were read from stats file */;
-            else if (m_bAdaptiveQuant)
-                m_tld[tld].calcAdaptiveQuantFrame(preFrame, m_param);
-            m_tld[tld].lowresIntraEstimate(preFrame->m_lowres);
-
-            m_preLookaheadLock.acquire(); /* re-acquire for next pass */
-            m_preCompleted++;
-        }
-        else if (doDecide)
-        {
-            ProfileLookaheadTime(m_slicetypeDecideElapsedTime, m_countSlicetypeDecide);
-            ProfileScopeEvent(slicetypeDecideEV);
-
-            slicetypeDecide();
-
-            m_preLookaheadLock.acquire(); /* re-acquire for next pass */
-            if (m_outputSignalRequired)
-            {
-                m_outputSignal.trigger();
-                m_outputSignalRequired = false;
-            }
-            m_sliceTypeBusy = false;
-        }
+        m_outputSignal.trigger();
+        m_outputSignalRequired = false;
     }
-    while (preFrame || doDecide);
+    m_sliceTypeBusy = false;
+    m_inputLock.release();
 }
 
 /* Called by API thread */
@@ -739,13 +671,11 @@ Frame* Lookahead::getDecidedPicture()
         if (out)
             return out;
 
-        /* process all pending pre-lookahead frames and run slicetypeDecide() if
-         * necessary */
-        findJob(-1);
+        findJob(-1); /* run slicetypeDecide() if necessary */
 
-        m_preLookaheadLock.acquire();
-        bool wait = m_outputSignalRequired = m_sliceTypeBusy || m_preTotal;
-        m_preLookaheadLock.release();
+        m_inputLock.acquire();
+        bool wait = m_outputSignalRequired = m_sliceTypeBusy;
+        m_inputLock.release();
 
         if (wait)
             m_outputSignal.wait();
@@ -809,7 +739,7 @@ void Lookahead::getEstimatedPictureCost(Frame *curFrame)
     {
         /* aggregate lowres row satds to CTU resolution */
         curFrame->m_lowres.lowresCostForRc = curFrame->m_lowres.lowresCosts[b - p0][p1 - b];
-        uint32_t lowresRow = 0, lowresCol = 0, lowresCuIdx = 0, sum = 0;
+        uint32_t lowresRow = 0, lowresCol = 0, lowresCuIdx = 0, sum = 0, intraSum = 0;
         uint32_t scale = m_param->maxCUSize / (2 * X265_LOWRES_CU_SIZE);
         uint32_t numCuInHeight = (m_param->sourceHeight + g_maxCUSize - 1) / g_maxCUSize;
         uint32_t widthInLowresCu = (uint32_t)m_8x8Width, heightInLowresCu = (uint32_t)m_8x8Height;
@@ -823,7 +753,7 @@ void Lookahead::getEstimatedPictureCost(Frame *curFrame)
             lowresRow = row * scale;
             for (uint32_t cnt = 0; cnt < scale && lowresRow < heightInLowresCu; lowresRow++, cnt++)
             {
-                sum = 0;
+                sum = 0; intraSum = 0;
                 lowresCuIdx = lowresRow * widthInLowresCu;
                 for (lowresCol = 0; lowresCol < widthInLowresCu; lowresCol++, lowresCuIdx++)
                 {
@@ -836,24 +766,57 @@ void Lookahead::getEstimatedPictureCost(Frame *curFrame)
                     }
                     curFrame->m_lowres.lowresCostForRc[lowresCuIdx] = lowresCuCost;
                     sum += lowresCuCost;
+                    intraSum += curFrame->m_lowres.intraCost[lowresCuIdx];
                 }
                 curFrame->m_encData->m_rowStat[row].satdForVbv += sum;
+                curFrame->m_encData->m_rowStat[row].intraSatdForVbv += intraSum;
             }
         }
     }
 }
 
+void PreLookaheadGroup::processTasks(int workerThreadID)
+{
+    if (workerThreadID < 0)
+        workerThreadID = m_lookahead.m_pool ? m_lookahead.m_pool->m_numWorkers : 0;
+    LookaheadTLD& tld = m_lookahead.m_tld[workerThreadID];
+
+    m_lock.acquire();
+    while (m_jobAcquired < m_jobTotal)
+    {
+        Frame* preFrame = m_preframes[m_jobAcquired++];
+        ProfileLookaheadTime(m_lookahead.m_preLookaheadElapsedTime, m_lookahead.m_countPreLookahead);
+        ProfileScopeEvent(prelookahead);
+        m_lock.release();
+
+        preFrame->m_lowres.init(preFrame->m_fencPic, preFrame->m_poc);
+        if (m_lookahead.m_param->rc.bStatRead && m_lookahead.m_param->rc.cuTree && IS_REFERENCED(preFrame))
+            /* cu-tree offsets were read from stats file */;
+        else if (m_lookahead.m_bAdaptiveQuant)
+            tld.calcAdaptiveQuantFrame(preFrame, m_lookahead.m_param);
+        tld.lowresIntraEstimate(preFrame->m_lowres);
+        preFrame->m_lowresInit = true;
+
+        m_lock.acquire();
+    }
+    m_lock.release();
+}
+
 /* called by API thread or worker thread with inputQueueLock acquired */
 void Lookahead::slicetypeDecide()
 {
-    Lowres *frames[X265_LOOKAHEAD_MAX];
-    Frame *list[X265_LOOKAHEAD_MAX];
-    int maxSearch = X265_MIN(m_param->lookaheadDepth, X265_LOOKAHEAD_MAX);
+    PreLookaheadGroup pre(*this);
 
+    Lowres* frames[X265_LOOKAHEAD_MAX + X265_BFRAME_MAX + 4];
+    Frame*  list[X265_BFRAME_MAX + 4];
     memset(frames, 0, sizeof(frames));
     memset(list, 0, sizeof(list));
+    int maxSearch = X265_MIN(m_param->lookaheadDepth, X265_LOOKAHEAD_MAX);
+    maxSearch = X265_MAX(1, maxSearch);
+
     {
         ScopedLock lock(m_inputLock);
+
         Frame *curFrame = m_inputQueue.first();
         int j;
         for (j = 0; j < m_param->bframes + 2; j++)
@@ -869,11 +832,23 @@ void Lookahead::slicetypeDecide()
         {
             if (!curFrame) break;
             frames[j + 1] = &curFrame->m_lowres;
-            X265_CHECK(curFrame->m_lowres.costEst[0][0] > 0, "prelookahead not completed for input picture\n");
+
+            if (!curFrame->m_lowresInit)
+                pre.m_preframes[pre.m_jobTotal++] = curFrame;
+
             curFrame = curFrame->m_next;
         }
 
         maxSearch = j;
+    }
+
+    /* perform pre-analysis on frames which need it, using a bonded task group */
+    if (pre.m_jobTotal)
+    {
+        if (m_pool)
+            pre.tryBondPeers(*m_pool, pre.m_jobTotal);
+        pre.processTasks(-1);
+        pre.waitForExit();
     }
 
     if (m_lastNonB && !m_param->rc.bStatRead &&
@@ -2038,12 +2013,10 @@ void CostEstimateGroup::estimateCUCost(LookaheadTLD& tld, int cuX, int cuY, int 
 
         int numc = 0;
         MV mvc[4], mvp;
-
         MV* fencMV = &fenc->lowresMvs[i][listDist[i]][cuXY];
+        ReferencePlanes* fref = i ? fref1 : wfref0;
 
         /* Reverse-order MV prediction */
-        mvc[0] = 0;
-        mvc[2] = 0;
 #define MVC(mv) mvc[numc++] = mv;
         if (cuX < widthInCU - 1)
             MVC(fencMV[1]);
@@ -2056,12 +2029,29 @@ void CostEstimateGroup::estimateCUCost(LookaheadTLD& tld, int cuX, int cuY, int 
                 MVC(fencMV[widthInCU + 1]);
         }
 #undef MVC
-        if (numc <= 1)
-            mvp = mvc[0];
-        else
-            median_mv(mvp, mvc[0], mvc[1], mvc[2]);
 
-        fencCost = tld.me.motionEstimate(i ? fref1 : wfref0, mvmin, mvmax, mvp, numc, mvc, s_merange, *fencMV);
+        if (!numc)
+            mvp = 0;
+        else
+        {
+            ALIGN_VAR_32(pixel, subpelbuf[X265_LOWRES_CU_SIZE * X265_LOWRES_CU_SIZE]);
+            int mvpcost = MotionEstimate::COST_MAX;
+
+            /* measure SATD cost of each neighbor MV (estimating merge analysis)
+             * and use the lowest cost MV as MVP (estimating AMVP). Since all
+             * mvc[] candidates are measured here, none are passed to motionEstimate */
+            for (int idx = 0; idx < numc; idx++)
+            {
+                intptr_t stride = X265_LOWRES_CU_SIZE;
+                pixel *src = fref->lowresMC(pelOffset, mvc[idx], subpelbuf, stride);
+                int cost = tld.me.bufSATD(src, stride);
+                COPY2_IF_LT(mvpcost, cost, mvp, mvc[idx]);
+            }
+        }
+
+        /* ME will never return a cost larger than the cost @MVP, so we do not
+         * have to check that ME cost is more than the estimated merge cost */
+        fencCost = tld.me.motionEstimate(fref, mvmin, mvmax, mvp, 0, NULL, s_merange, *fencMV);
         COPY2_IF_LT(bcost, fencCost, listused, i + 1);
     }
 

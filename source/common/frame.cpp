@@ -31,18 +31,21 @@ using namespace x265;
 Frame::Frame()
 {
     m_bChromaExtended = false;
+    m_lowresInit = false;
     m_reconRowCount.set(0);
     m_countRefEncoders = 0;
     m_encData = NULL;
     m_reconPic = NULL;
     m_next = NULL;
     m_prev = NULL;
+    m_param = NULL;
     memset(&m_lowres, 0, sizeof(m_lowres));
 }
 
 bool Frame::create(x265_param *param)
 {
     m_fencPic = new PicYuv;
+    m_param = param;
 
     return m_fencPic->create(param->sourceWidth, param->sourceHeight, param->internalCsp) &&
            m_lowres.create(m_fencPic, param->bframes, !!param->rc.aqMode);

@@ -300,7 +300,7 @@ RateControl::RateControl(x265_param& p)
         }
     }
 
-    /* qstep - value set as encoder specific */
+    /* qpstep - value set as encoder specific */
     m_lstep = pow(2, m_param->rc.qpStep / 6.0);
 
     for (int i = 0; i < 2; i++)
@@ -370,14 +370,19 @@ bool RateControl::init(const SPS& sps)
     m_accumPQp = (m_param->rc.rateControlMode == X265_RC_CRF ? CRF_INIT_QP : ABR_INIT_QP_MIN) * m_accumPNorm;
 
     /* Frame Predictors and Row predictors used in vbv */
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 4; i++)
     {
-        m_pred[i].coeff = 1.5;
+        m_pred[i].coeff = 1.0;
         m_pred[i].count = 1.0;
         m_pred[i].decay = 0.5;
         m_pred[i].offset = 0.0;
     }
-    m_pred[0].coeff = 1.0;
+    m_pred[0].coeff = m_pred[3].coeff = 0.75;
+    if (m_param->rc.qCompress >= 0.8) // when tuned for grain 
+    {
+        m_pred[1].coeff = 0.75;
+        m_pred[0].coeff = m_pred[3].coeff = 0.50;
+    }
     if (!m_statFileOut && (m_param->rc.bStatWrite || m_param->rc.bStatRead))
     {
         /* If the user hasn't defined the stat filename, use the default value */
@@ -945,6 +950,9 @@ int RateControl::rateControlStart(Frame* curFrame, RateControlEntry* rce, Encode
     m_curSlice = curEncData.m_slice;
     m_sliceType = m_curSlice->m_sliceType;
     rce->sliceType = m_sliceType;
+    if (!m_2pass)
+        rce->keptAsRef = IS_REFERENCED(curFrame);
+    m_predType = getPredictorType(curFrame->m_lowres.sliceType, m_sliceType);
     rce->poc = m_curSlice->m_poc;
     if (m_param->rc.bStatRead)
     {
@@ -1074,7 +1082,7 @@ int RateControl::rateControlStart(Frame* curFrame, RateControlEntry* rce, Encode
             m_lastQScaleFor[m_sliceType] = x265_qp2qScale(rce->qpaRc);
             if (rce->poc == 0)
                  m_lastQScaleFor[P_SLICE] = m_lastQScaleFor[m_sliceType] * fabs(m_param->rc.ipFactor);
-            rce->frameSizePlanned = predictSize(&m_pred[m_sliceType], m_qp, (double)m_currentSatd);
+            rce->frameSizePlanned = predictSize(&m_pred[m_predType], m_qp, (double)m_currentSatd);
         }
     }
     m_framesDone++;
@@ -1103,6 +1111,14 @@ void RateControl::accumPQpUpdate()
         m_accumPQp += m_qp + m_ipOffset;
     else
         m_accumPQp += m_qp;
+}
+
+int RateControl::getPredictorType(int lowresSliceType, int sliceType)
+{
+    /* Use a different predictor for B Ref and B frames for vbv frame size predictions */
+    if (lowresSliceType == X265_TYPE_BREF)
+        return 3;
+    return sliceType;
 }
 
 double RateControl::getDiffLimitedQScale(RateControlEntry *rce, double q)
@@ -1379,6 +1395,7 @@ double RateControl::rateEstimateQscale(Frame* curFrame, RateControlEntry *rce)
             q += m_pbOffset;
 
         double qScale = x265_qp2qScale(q);
+        rce->qpNoVbv = q;
         double lmin = 0, lmax = 0;
         if (m_isVbv)
         {
@@ -1391,16 +1408,15 @@ double RateControl::rateEstimateQscale(Frame* curFrame, RateControlEntry *rce)
                     qScale = x265_clip3(lmin, lmax, qScale);
                 q = x265_qScale2qp(qScale);
             }
-            rce->qpNoVbv = q;
             if (!m_2pass)
             {
                 qScale = clipQscale(curFrame, rce, qScale);
                 /* clip qp to permissible range after vbv-lookahead estimation to avoid possible 
                  * mispredictions by initial frame size predictors */
-                if (m_pred[m_sliceType].count == 1)
+                if (m_pred[m_predType].count == 1)
                     qScale = x265_clip3(lmin, lmax, qScale);
                 m_lastQScaleFor[m_sliceType] = qScale;
-                rce->frameSizePlanned = predictSize(&m_pred[m_sliceType], qScale, (double)m_currentSatd);
+                rce->frameSizePlanned = predictSize(&m_pred[m_predType], qScale, (double)m_currentSatd);
             }
             else
                 rce->frameSizePlanned = qScale2bits(rce, qScale);
@@ -1544,7 +1560,7 @@ double RateControl::rateEstimateQscale(Frame* curFrame, RateControlEntry *rce)
             q = clipQscale(curFrame, rce, q);
             /*  clip qp to permissible range after vbv-lookahead estimation to avoid possible
              * mispredictions by initial frame size predictors */
-            if (!m_2pass && m_isVbv && m_pred[m_sliceType].count == 1)
+            if (!m_2pass && m_isVbv && m_pred[m_predType].count == 1)
                 q = x265_clip3(lqmin, lqmax, q);
         }
         m_lastQScaleFor[m_sliceType] = q;
@@ -1554,7 +1570,7 @@ double RateControl::rateEstimateQscale(Frame* curFrame, RateControlEntry *rce)
         if (m_2pass && m_isVbv)
             rce->frameSizePlanned = qScale2bits(rce, q);
         else
-            rce->frameSizePlanned = predictSize(&m_pred[m_sliceType], q, (double)m_currentSatd);
+            rce->frameSizePlanned = predictSize(&m_pred[m_predType], q, (double)m_currentSatd);
 
         /* Always use up the whole VBV in this case. */
         if (m_singleFrameVbv)
@@ -1707,7 +1723,7 @@ double RateControl::clipQscale(Frame* curFrame, RateControlEntry* rce, double q)
             {
                 double frameQ[3];
                 double curBits;
-                curBits = predictSize(&m_pred[m_sliceType], q, (double)m_currentSatd);
+                curBits = predictSize(&m_pred[m_predType], q, (double)m_currentSatd);
                 double bufferFillCur = m_bufferFill - curBits;
                 double targetFill;
                 double totalDuration = m_frameDuration;
@@ -1726,7 +1742,8 @@ double RateControl::clipQscale(Frame* curFrame, RateControlEntry* rce, double q)
                         bufferFillCur += wantedFrameSize;
                     int64_t satd = curFrame->m_lowres.plannedSatd[j] >> (X265_DEPTH - 8);
                     type = IS_X265_TYPE_I(type) ? I_SLICE : IS_X265_TYPE_B(type) ? B_SLICE : P_SLICE;
-                    curBits = predictSize(&m_pred[type], frameQ[type], (double)satd);
+                    int predType = getPredictorType(curFrame->m_lowres.plannedType[j], type);
+                    curBits = predictSize(&m_pred[predType], frameQ[type], (double)satd);
                     bufferFillCur -= curBits;
                 }
 
@@ -1766,7 +1783,7 @@ double RateControl::clipQscale(Frame* curFrame, RateControlEntry* rce, double q)
             }
             // Now a hard threshold to make sure the frame fits in VBV.
             // This one is mostly for I-frames.
-            double bits = predictSize(&m_pred[m_sliceType], q, (double)m_currentSatd);
+            double bits = predictSize(&m_pred[m_predType], q, (double)m_currentSatd);
 
             // For small VBVs, allow the frame to use up the entire VBV.
             double maxFillFactor;
@@ -1783,18 +1800,21 @@ double RateControl::clipQscale(Frame* curFrame, RateControlEntry* rce, double q)
                 bits *= qf;
                 if (bits < m_bufferRate / minFillFactor)
                     q *= bits * minFillFactor / m_bufferRate;
-                bits = predictSize(&m_pred[m_sliceType], q, (double)m_currentSatd);
+                bits = predictSize(&m_pred[m_predType], q, (double)m_currentSatd);
             }
 
             q = X265_MAX(q0, q);
         }
 
         /* Apply MinCR restrictions */
-        double pbits = predictSize(&m_pred[m_sliceType], q, (double)m_currentSatd);
+        double pbits = predictSize(&m_pred[m_predType], q, (double)m_currentSatd);
         if (pbits > rce->frameSizeMaximum)
             q *= pbits / rce->frameSizeMaximum;
-
-        if (!m_isCbr || (m_isAbr && m_currentSatd >= rce->movingAvgSum && q <= q0 / 2))
+        /* To detect frames that are more complex in SATD costs compared to prev window, yet 
+         * lookahead vbv reduces its qscale by half its value. Be on safer side and avoid drastic 
+         * qscale reductions for frames high in complexity */
+        bool mispredCheck = rce->movingAvgSum && m_currentSatd >= rce->movingAvgSum && q <= q0 / 2;
+        if (!m_isCbr || (m_isAbr && mispredCheck))
             q = X265_MAX(q0, q);
 
         if (m_rateFactorMaxIncrement)
@@ -1838,18 +1858,26 @@ double RateControl::predictRowsSizeSum(Frame* curFrame, RateControlEntry* rce, d
         if (satdCostForPendingCus  > 0)
         {
             double pred_s = predictSize(rce->rowPred[0], qScale, satdCostForPendingCus);
-            uint32_t refRowSatdCost = 0, refRowBits = 0, intraCost = 0;
+            uint32_t refRowSatdCost = 0, refRowBits = 0, intraCostForPendingCus = 0;
             double refQScale = 0;
 
             if (picType != I_SLICE)
             {
                 FrameData& refEncData = *refFrame->m_encData;
                 uint32_t endCuAddr = maxCols * (row + 1);
-                for (uint32_t cuAddr = curEncData.m_rowStat[row].numEncodedCUs + 1; cuAddr < endCuAddr; cuAddr++)
+                uint32_t startCuAddr = curEncData.m_rowStat[row].numEncodedCUs;
+                if (startCuAddr)
                 {
-                    refRowSatdCost += refEncData.m_cuStat[cuAddr].vbvCost;
-                    refRowBits += refEncData.m_cuStat[cuAddr].totalBits;
-                    intraCost += curEncData.m_cuStat[cuAddr].intraVbvCost;
+                    for (uint32_t cuAddr = startCuAddr + 1 ; cuAddr < endCuAddr; cuAddr++)
+                    {
+                        refRowSatdCost += refEncData.m_cuStat[cuAddr].vbvCost;
+                        refRowBits += refEncData.m_cuStat[cuAddr].totalBits;
+                    }
+                }
+                else
+                {
+                    refRowBits = refEncData.m_rowStat[row].encodedBits;
+                    refRowSatdCost = refEncData.m_rowStat[row].satdForVbv;
                 }
 
                 refRowSatdCost >>= X265_DEPTH - 8;
@@ -1859,7 +1887,7 @@ double RateControl::predictRowsSizeSum(Frame* curFrame, RateControlEntry* rce, d
             if (picType == I_SLICE || qScale >= refQScale)
             {
                 if (picType == P_SLICE 
-                    && !refFrame 
+                    && refFrame 
                     && refFrame->m_encData->m_slice->m_sliceType == picType
                     && refQScale > 0
                     && refRowSatdCost > 0)
@@ -1875,8 +1903,9 @@ double RateControl::predictRowsSizeSum(Frame* curFrame, RateControlEntry* rce, d
             }
             else if (picType == P_SLICE)
             {
+                intraCostForPendingCus = curEncData.m_rowStat[row].intraSatdForVbv - curEncData.m_rowStat[row].diagIntraSatd;
                 /* Our QP is lower than the reference! */
-                double pred_intra = predictSize(rce->rowPred[1], qScale, intraCost);
+                double pred_intra = predictSize(rce->rowPred[1], qScale, intraCostForPendingCus);
                 /* Sum: better to overestimate than underestimate by using only one of the two predictors. */
                 totalSatdBits += (int32_t)(pred_intra + pred_s);
             }
@@ -2099,8 +2128,10 @@ void RateControl::updatePredictor(Predictor *p, double q, double var, double bit
 
 void RateControl::updateVbv(int64_t bits, RateControlEntry* rce)
 {
+    int predType = rce->sliceType;
+    predType = rce->sliceType == B_SLICE && rce->keptAsRef ? 3 : predType;
     if (rce->lastSatd >= m_ncu)
-        updatePredictor(&m_pred[rce->sliceType], x265_qp2qScale(rce->qpaRc), (double)rce->lastSatd, (double)bits);
+        updatePredictor(&m_pred[predType], x265_qp2qScale(rce->qpaRc), (double)rce->lastSatd, (double)bits);
     if (!m_isVbv)
         return;
 
@@ -2156,23 +2187,24 @@ int RateControl::rateControlEnd(Frame* curFrame, int64_t bits, RateControlEntry*
     {
         if (m_isVbv)
         {
+            /* determine avg QP decided by VBV rate control */
             for (uint32_t i = 0; i < slice->m_sps->numCuInHeight; i++)
                 curEncData.m_avgQpRc += curEncData.m_rowStat[i].sumQpRc;
 
             curEncData.m_avgQpRc /= slice->m_sps->numCUsInFrame;
             rce->qpaRc = curEncData.m_avgQpRc;
-
-            // copy avg RC qp to m_avgQpAq. To print out the correct qp when aq/cutree is disabled.
-            curEncData.m_avgQpAq = curEncData.m_avgQpRc;
         }
 
         if (m_param->rc.aqMode)
         {
+            /* determine actual avg encoded QP, after AQ/cutree adjustments */
             for (uint32_t i = 0; i < slice->m_sps->numCuInHeight; i++)
                 curEncData.m_avgQpAq += curEncData.m_rowStat[i].sumQpAq;
 
-            curEncData.m_avgQpAq /= slice->m_sps->numCUsInFrame;
+            curEncData.m_avgQpAq /= (slice->m_sps->numCUsInFrame * NUM_4x4_PARTITIONS);
         }
+        else
+            curEncData.m_avgQpAq = curEncData.m_avgQpRc;
     }
 
     // Write frame stats into the stats file if 2 pass is enabled.
@@ -2301,7 +2333,7 @@ void RateControl::setFinalFrameCount(int count)
 {
     m_finalFrameCount = count;
     /* unblock waiting threads */
-    m_startEndOrder.set(m_startEndOrder.get());
+    m_startEndOrder.poke();
 }
 
 /* called when the encoder is closing, and no more frames will be output.
@@ -2311,7 +2343,7 @@ void RateControl::terminate()
 {
     m_bTerminated = true;
     /* unblock waiting threads */
-    m_startEndOrder.set(m_startEndOrder.get());
+    m_startEndOrder.poke();
 }
 
 void RateControl::destroy()

@@ -27,7 +27,7 @@
 #include "common.h"
 #include "slice.h"
 
-namespace x265 {
+namespace X265_NS {
 // private namespace
 
 class RDCost
@@ -88,10 +88,17 @@ public:
         m_lambda = (uint64_t)floor(256.0 * lambda);
     }
 
-    inline uint64_t calcRdCost(uint32_t distortion, uint32_t bits) const
+    inline uint64_t calcRdCost(sse_ret_t distortion, uint32_t bits) const
     {
+#if X265_DEPTH <= 10
         X265_CHECK(bits <= (UINT64_MAX - 128) / m_lambda2,
-                   "calcRdCost wrap detected dist: %u, bits %u, lambda: "X265_LL"\n", distortion, bits, m_lambda2);
+                   "calcRdCost wrap detected dist: %u, bits %u, lambda: " X265_LL "\n",
+                   distortion, bits, m_lambda2);
+#else
+        X265_CHECK(bits <= (UINT64_MAX - 128) / m_lambda2,
+                   "calcRdCost wrap detected dist: " X265_LL ", bits %u, lambda: " X265_LL "\n",
+                   distortion, bits, m_lambda2);
+#endif
         return distortion + ((bits * m_lambda2 + 128) >> 8);
     }
 
@@ -108,7 +115,7 @@ public:
     }
 
     /* return the RD cost of this prediction, including the effect of psy-rd */
-    inline uint64_t calcPsyRdCost(uint32_t distortion, uint32_t bits, uint32_t psycost) const
+    inline uint64_t calcPsyRdCost(sse_ret_t distortion, uint32_t bits, uint32_t psycost) const
     {
         return distortion + ((m_lambda * m_psyRd * psycost) >> 24) + ((bits * m_lambda2) >> 8);
     }
@@ -116,15 +123,22 @@ public:
     inline uint64_t calcRdSADCost(uint32_t sadCost, uint32_t bits) const
     {
         X265_CHECK(bits <= (UINT64_MAX - 128) / m_lambda,
-                   "calcRdSADCost wrap detected dist: %u, bits %u, lambda: "X265_LL"\n", sadCost, bits, m_lambda);
+                   "calcRdSADCost wrap detected dist: %u, bits %u, lambda: " X265_LL "\n", sadCost, bits, m_lambda);
         return sadCost + ((bits * m_lambda + 128) >> 8);
     }
 
-    inline uint32_t scaleChromaDist(uint32_t plane, uint32_t dist) const
+    inline sse_ret_t scaleChromaDist(uint32_t plane, sse_ret_t dist) const
     {
+#if X265_DEPTH <= 10
         X265_CHECK(dist <= (UINT64_MAX - 128) / m_chromaDistWeight[plane - 1],
-                   "scaleChromaDist wrap detected dist: %u, lambda: %u\n", dist, m_chromaDistWeight[plane - 1]);
-        return (uint32_t)((dist * (uint64_t)m_chromaDistWeight[plane - 1] + 128) >> 8);
+                   "scaleChromaDist wrap detected dist: %u, lambda: %u\n",
+                   dist, m_chromaDistWeight[plane - 1]);
+#else
+        X265_CHECK(dist <= (UINT64_MAX - 128) / m_chromaDistWeight[plane - 1],
+                   "scaleChromaDist wrap detected dist: " X265_LL " lambda: %u\n",
+                   dist, m_chromaDistWeight[plane - 1]);
+#endif
+        return (sse_ret_t)((dist * (uint64_t)m_chromaDistWeight[plane - 1] + 128) >> 8);
     }
 
     inline uint32_t getCost(uint32_t bits) const

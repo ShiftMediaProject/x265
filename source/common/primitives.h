@@ -33,7 +33,7 @@
 #include "common.h"
 #include "cpu.h"
 
-namespace x265 {
+namespace X265_NS {
 // x265 private namespace
 
 enum LumaPU
@@ -112,6 +112,8 @@ enum ChromaCU422
 
 typedef int  (*pixelcmp_t)(const pixel* fenc, intptr_t fencstride, const pixel* fref, intptr_t frefstride); // fenc is aligned
 typedef int  (*pixelcmp_ss_t)(const int16_t* fenc, intptr_t fencstride, const int16_t* fref, intptr_t frefstride);
+typedef sse_ret_t (*pixel_sse_t)(const pixel* fenc, intptr_t fencstride, const pixel* fref, intptr_t frefstride); // fenc is aligned
+typedef sse_ret_t (*pixel_sse_ss_t)(const int16_t* fenc, intptr_t fencstride, const int16_t* fref, intptr_t frefstride);
 typedef int  (*pixel_ssd_s_t)(const int16_t* fenc, intptr_t fencstride);
 typedef void (*pixelcmp_x4_t)(const pixel* fenc, const pixel* fref0, const pixel* fref1, const pixel* fref2, const pixel* fref3, intptr_t frefstride, int32_t* res);
 typedef void (*pixelcmp_x3_t)(const pixel* fenc, const pixel* fref0, const pixel* fref1, const pixel* fref2, intptr_t frefstride, int32_t* res);
@@ -173,6 +175,13 @@ typedef void (*saoCuOrgE1_t)(pixel* rec, int8_t* upBuff1, int8_t* offsetEo, intp
 typedef void (*saoCuOrgE2_t)(pixel* rec, int8_t* pBufft, int8_t* pBuff1, int8_t* offsetEo, int lcuWidth, intptr_t stride);
 typedef void (*saoCuOrgE3_t)(pixel* rec, int8_t* upBuff1, int8_t* m_offsetEo, intptr_t stride, int startX, int endX);
 typedef void (*saoCuOrgB0_t)(pixel* rec, const int8_t* offsetBo, int ctuWidth, int ctuHeight, intptr_t stride);
+
+typedef void (*saoCuStatsBO_t)(const pixel *fenc, const pixel *rec, intptr_t stride, int endX, int endY, int32_t *stats, int32_t *count);
+typedef void (*saoCuStatsE0_t)(const pixel *fenc, const pixel *rec, intptr_t stride, int endX, int endY, int32_t *stats, int32_t *count);
+typedef void (*saoCuStatsE1_t)(const pixel *fenc, const pixel *rec, intptr_t stride, int8_t *upBuff1, int endX, int endY, int32_t *stats, int32_t *count);
+typedef void (*saoCuStatsE2_t)(const pixel *fenc, const pixel *rec, intptr_t stride, int8_t *upBuff1, int8_t *upBuff, int endX, int endY, int32_t *stats, int32_t *count);
+typedef void (*saoCuStatsE3_t)(const pixel *fenc, const pixel *rec, intptr_t stride, int8_t *upBuff1, int endX, int endY, int32_t *stats, int32_t *count);
+
 typedef void (*sign_t)(int8_t *dst, const pixel *src1, const pixel *src2, const int endX);
 typedef void (*planecopy_cp_t) (const uint8_t* src, intptr_t srcStride, pixel* dst, intptr_t dstStride, int width, int height, int shift);
 typedef void (*planecopy_sp_t) (const uint16_t* src, intptr_t srcStride, pixel* dst, intptr_t dstStride, int width, int height, int shift, uint16_t mask);
@@ -181,6 +190,10 @@ typedef void (*cutree_propagate_cost) (int* dst, const uint16_t* propagateIn, co
 
 typedef int (*scanPosLast_t)(const uint16_t *scan, const coeff_t *coeff, uint16_t *coeffSign, uint16_t *coeffFlag, uint8_t *coeffNum, int numSig, const uint16_t* scanCG4x4, const int trSize);
 typedef uint32_t (*findPosFirstLast_t)(const int16_t *dstCoeff, const intptr_t trSize, const uint16_t scanTbl[16]);
+
+typedef uint32_t (*costCoeffNxN_t)(const uint16_t *scan, const coeff_t *coeff, intptr_t trSize, uint16_t *absCoeff, const uint8_t *tabSigCtx, uint32_t scanFlagMask, uint8_t *baseCtx, int offset, int scanPosSigOff, int subPosBase);
+typedef uint32_t (*costCoeffRemain_t)(uint16_t *absCoeff, int numNonZero, int idx);
+typedef uint32_t (*costC1C2Flag_t)(uint16_t *absCoeff, intptr_t numC1Flag, uint8_t *baseCtxMod, intptr_t ctxOffset);
 
 /* Function pointers to optimized encoder primitives. Each pointer can reference
  * either an assembly routine, a SIMD intrinsic primitive, or a C function */
@@ -242,8 +255,9 @@ struct EncoderPrimitives
         copy_pp_t       copy_pp;       // alias to pu[].copy_pp
 
         var_t           var;           // block internal variance
-        pixelcmp_t      sse_pp;        // Sum of Square Error (pixel, pixel) fenc alignment not assumed
-        pixelcmp_ss_t   sse_ss;        // Sum of Square Error (short, short) fenc alignment not assumed
+
+        pixel_sse_t     sse_pp;        // Sum of Square Error (pixel, pixel) fenc alignment not assumed
+        pixel_sse_ss_t  sse_ss;        // Sum of Square Error (short, short) fenc alignment not assumed
         pixelcmp_t      psy_cost_pp;   // difference in AC energy between two pixel blocks
         pixelcmp_ss_t   psy_cost_ss;   // difference in AC energy between two signed residual blocks
         pixel_ssd_s_t   ssd_s;         // Sum of Square Error (residual coeff to self)
@@ -289,12 +303,19 @@ struct EncoderPrimitives
     saoCuOrgE3_t          saoCuOrgE3[2];
     saoCuOrgB0_t          saoCuOrgB0;
 
+    saoCuStatsBO_t        saoCuStatsBO;
+    saoCuStatsE0_t        saoCuStatsE0;
+    saoCuStatsE1_t        saoCuStatsE1;
+    saoCuStatsE2_t        saoCuStatsE2;
+    saoCuStatsE3_t        saoCuStatsE3;
+
     downscale_t           frameInitLowres;
     cutree_propagate_cost propagateCost;
 
     extendCURowBorder_t   extendRowBorder;
     planecopy_cp_t        planecopy_cp;
     planecopy_sp_t        planecopy_sp;
+    planecopy_sp_t        planecopy_sp_shl;
 
     weightp_sp_t          weight_sp;
     weightp_pp_t          weight_pp;
@@ -302,6 +323,11 @@ struct EncoderPrimitives
 
     scanPosLast_t         scanPosLast;
     findPosFirstLast_t    findPosFirstLast;
+
+    costCoeffNxN_t        costCoeffNxN;
+    costCoeffRemain_t     costCoeffRemain;
+    costC1C2Flag_t        costC1C2Flag;
+
 
     /* There is one set of chroma primitives per color space. An encoder will
      * have just a single color space and thus it will only ever use one entry
@@ -335,7 +361,7 @@ struct EncoderPrimitives
         struct CUChroma
         {
             pixelcmp_t     sa8d;    // if chroma CU is not multiple of 8x8, will use satd
-            pixelcmp_t     sse_pp;
+            pixel_sse_t    sse_pp;
             pixel_sub_ps_t sub_ps;
             pixel_add_ps_t add_ps;
 
@@ -376,5 +402,11 @@ void setupInstrinsicPrimitives(EncoderPrimitives &p, int cpuMask);
 void setupAssemblyPrimitives(EncoderPrimitives &p, int cpuMask);
 void setupAliasPrimitives(EncoderPrimitives &p);
 }
+
+#if !EXPORT_C_API
+extern const int   PFX(max_bit_depth);
+extern const char* PFX(version_str);
+extern const char* PFX(build_info_str);
+#endif
 
 #endif // ifndef X265_PRIMITIVES_H

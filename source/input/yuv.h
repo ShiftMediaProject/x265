@@ -30,7 +30,7 @@
 
 #define QUEUE_SIZE 5
 
-namespace x265 {
+namespace X265_NS {
 // private x265 namespace
 
 class YUVInput : public InputFile, public Thread
@@ -80,6 +80,10 @@ public:
     bool readPicture(x265_picture&);
 
     const char *getName() const                   { return "yuv"; }
+
+    int getWidth() const                          { return width; }
+
+    int getHeight() const                         { return height; }
 };
 }
 

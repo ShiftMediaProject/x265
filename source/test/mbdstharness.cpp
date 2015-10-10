@@ -27,7 +27,7 @@
 #include "common.h"
 #include "mbdstharness.h"
 
-using namespace x265;
+using namespace X265_NS;
 
 struct DctConf
 {
@@ -53,7 +53,7 @@ const DctConf idctInfo[] =
 
 MBDstHarness::MBDstHarness()
 {
-    const int idct_max = (1 << (BIT_DEPTH + 4)) - 1;
+    const int idct_max = (1 << (X265_DEPTH + 4)) - 1;
 
     /* [0] --- Random values
      * [1] --- Minimum
@@ -215,8 +215,14 @@ bool MBDstHarness::check_quant_primitive(quant_t ref, quant_t opt)
         uint32_t optReturnValue = 0;
         uint32_t refReturnValue = 0;
 
-        int bits = (rand() % 24) + 8;
-        int valueToAdd = rand() % (1 << bits);
+        int sliceType = rand() % 2;
+        int log2TrSize = rand() % 4 + 2;
+        int qp = rand() % (QP_MAX_SPEC + QP_BD_OFFSET + 1);
+        int per = qp / 6;
+        int transformShift = MAX_TR_DYNAMIC_RANGE - X265_DEPTH - log2TrSize;
+
+        int bits = QUANT_SHIFT + per + transformShift;
+        int valueToAdd = (sliceType == 1 ? 171 : 85) << (bits - 9);
         int cmp_size = sizeof(int) * height * width;
         int cmp_size1 = sizeof(short) * height * width;
         int numCoeff = height * width;

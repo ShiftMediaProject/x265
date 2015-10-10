@@ -113,6 +113,62 @@ cglobal pixel_ssd_ss_%1x%2, 4,7,8
     RET
 %endmacro
 
+; Function to find ssd for 32x16 block, sse2, 12 bit depth
+; Defined sepeartely to be called from SSD_ONE_32 macro
+INIT_XMM sse2
+cglobal ssd_ss_32x16
+    pxor        m8, m8
+    mov         r4d, 16
+.loop:
+    movu        m0, [r0]
+    movu        m1, [r0+mmsize]
+    movu        m2, [r0+2*mmsize]
+    movu        m3, [r0+3*mmsize]
+    movu        m4, [r2]
+    movu        m5, [r2+mmsize]
+    movu        m6, [r2+2*mmsize]
+    movu        m7, [r2+3*mmsize]
+    psubw       m0, m4
+    psubw       m1, m5
+    psubw       m2, m6
+    psubw       m3, m7
+    add         r0, r1
+    add         r2, r3
+    pmaddwd     m0, m0
+    pmaddwd     m1, m1
+    pmaddwd     m2, m2
+    pmaddwd     m3, m3
+    paddd       m2, m3
+    paddd       m0, m1
+    paddd       m0, m2
+    paddd       m8, m0
+    dec         r4d
+    jnz         .loop
+
+    mova        m4, m8
+    pxor        m5, m5
+    punpckldq   m8, m5
+    punpckhdq   m4, m5
+    paddq       m4, m8
+    movhlps     m5, m4
+    paddq       m4, m5
+    paddq       m9, m4
+    ret
+
+%macro SSD_ONE_32 0
+cglobal pixel_ssd_ss_32x64, 4,7,10
+    add         r1d, r1d
+    add         r3d, r3d
+    pxor        m9, m9
+    xor         r4, r4
+    call        ssd_ss_32x16
+    call        ssd_ss_32x16
+    call        ssd_ss_32x16
+    call        ssd_ss_32x16
+    movq        rax, m9
+    RET
+%endmacro
+
 %macro SSD_TWO 2
 cglobal pixel_ssd_ss_%1x%2, 4,7,8
     FIX_STRIDES r1, r3
@@ -312,6 +368,124 @@ cglobal pixel_ssd_ss_%1x%2, 4,7,8
     movd   eax, xm0
     RET
 %endmacro
+
+INIT_YMM avx2
+cglobal pixel_ssd_16x16, 4,7,8
+    FIX_STRIDES r1, r3
+    lea     r5, [3 * r1]
+    lea     r6, [3 * r3]
+    mov    r4d, 4
+    pxor    m0, m0
+.loop:
+    movu    m1, [r0]
+    movu    m2, [r0 + r1]
+    movu    m3, [r0 + r1 * 2]
+    movu    m4, [r0 + r5]
+    movu    m6, [r2]
+    movu    m7, [r2 + r3]
+    psubw   m1, m6
+    psubw   m2, m7
+    movu    m6, [r2 + r3 * 2]
+    movu    m7, [r2 + r6]
+    psubw   m3, m6
+    psubw   m4, m7
+
+    lea     r0, [r0 + r1 * 4]
+    lea     r2, [r2 + r3 * 4]
+
+    pmaddwd m1, m1
+    pmaddwd m2, m2
+    pmaddwd m3, m3
+    pmaddwd m4, m4
+    paddd   m1, m2
+    paddd   m3, m4
+    paddd   m0, m1
+    paddd   m0, m3
+
+    dec    r4d
+    jg .loop
+
+    HADDD   m0, m5
+    movd   eax, xm0
+    RET
+
+INIT_YMM avx2
+cglobal pixel_ssd_32x32, 4,7,8
+    add     r1, r1
+    add     r3, r3
+    mov     r4d, 16
+    pxor    m0, m0
+.loop:
+    movu    m1, [r0]
+    movu    m2, [r0 + 32]
+    movu    m3, [r0 + r1]
+    movu    m4, [r0 + r1 + 32]
+    movu    m6, [r2]
+    movu    m7, [r2 + 32]
+    psubw   m1, m6
+    psubw   m2, m7
+    movu    m6, [r2 + r3]
+    movu    m7, [r2 + r3 + 32]
+    psubw   m3, m6
+    psubw   m4, m7
+
+    lea     r0, [r0 + r1 * 2]
+    lea     r2, [r2 + r3 * 2]
+
+    pmaddwd m1, m1
+    pmaddwd m2, m2
+    pmaddwd m3, m3
+    pmaddwd m4, m4
+    paddd   m1, m2
+    paddd   m3, m4
+    paddd   m0, m1
+    paddd   m0, m3
+
+    dec    r4d
+    jg .loop
+
+    HADDD   m0, m5
+    movd   eax, xm0
+    RET
+
+INIT_YMM avx2
+cglobal pixel_ssd_64x64, 4,7,8
+    FIX_STRIDES r1, r3
+    mov    r4d, 64
+    pxor    m0, m0
+.loop:
+    movu    m1, [r0]
+    movu    m2, [r0+32]
+    movu    m3, [r0+32*2]
+    movu    m4, [r0+32*3]
+    movu    m6, [r2]
+    movu    m7, [r2+32]
+    psubw   m1, m6
+    psubw   m2, m7
+    movu    m6, [r2+32*2]
+    movu    m7, [r2+32*3]
+    psubw   m3, m6
+    psubw   m4, m7
+
+    lea     r0, [r0+r1]
+    lea     r2, [r2+r3]
+
+    pmaddwd m1, m1
+    pmaddwd m2, m2
+    pmaddwd m3, m3
+    pmaddwd m4, m4
+    paddd   m1, m2
+    paddd   m3, m4
+    paddd   m0, m1
+    paddd   m0, m3
+
+    dec    r4d
+    jg .loop
+
+    HADDD   m0, m5
+    movd   eax, xm0
+    RET
+
 INIT_MMX mmx2
 SSD_ONE     4,  4
 SSD_ONE     4,  8
@@ -338,7 +512,13 @@ SSD_ONE    32,  8
 SSD_ONE    32, 16
 SSD_ONE    32, 24
 SSD_ONE    32, 32
-SSD_ONE    32, 64
+
+%if BIT_DEPTH <= 10
+    SSD_ONE    32, 64
+%else
+    SSD_ONE_32
+%endif
+
 SSD_TWO    48, 64
 SSD_TWO    64, 16
 SSD_TWO    64, 32
@@ -347,6 +527,10 @@ SSD_TWO    64, 64
 INIT_YMM avx2
 SSD_ONE    16,  8
 SSD_ONE    16, 16
+SSD_ONE    32, 32
+SSD_ONE    64, 64
+SSD_ONE    16, 32
+SSD_ONE    32, 64
 %endif ; HIGH_BIT_DEPTH
 
 ;-----------------------------------------------------------------------------
@@ -983,7 +1167,7 @@ cglobal pixel_ssd_%1x%2, 0,0,0
     mov     al, %1*%2/mmsize/2
 
 %if %1 != %2
-    jmp mangle(x265_pixel_ssd_%1x%1 %+ SUFFIX %+ .startloop)
+    jmp mangle(private_prefix %+ _ %+ pixel_ssd_%1x%1 %+ SUFFIX %+ .startloop)
 %else
 
 .startloop:

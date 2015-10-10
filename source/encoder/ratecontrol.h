@@ -29,7 +29,7 @@
 #include "common.h"
 #include "sei.h"
 
-namespace x265 {
+namespace X265_NS {
 // encoder namespace
 
 class Encoder;
@@ -45,23 +45,6 @@ struct SPS;
 #define MIN_AMORTIZE_FRAME 10
 #define MIN_AMORTIZE_FRACTION 0.2
 #define CLIP_DURATION(f) x265_clip3(MIN_FRAME_DURATION, MAX_FRAME_DURATION, f)
-
-/* Current frame stats for 2 pass */
-struct FrameStats
-{
-    int         mvBits;    /* MV bits (MV+Ref+Block Type) */
-    int         coeffBits; /* Texture bits (DCT coefs) */
-    int         miscBits;
-
-    int         iCuCnt;
-    int         pCuCnt;
-    int         skipCuCnt;
-    
-    /* CU type counts stored as percentage */
-    double      percentIntra;
-    double      percentInter;
-    double      percentSkip;
-};
 
 struct Predictor
 {
@@ -164,7 +147,6 @@ public:
     double  m_pbOffset;
     int64_t m_bframeBits;
     int64_t m_currentSatd;
-    int     m_leadingBframes;
     int     m_qpConstant[3];
     int     m_lastNonBPictType;
     int     m_framesDone;        /* # of frames passed through RateCotrol already */
@@ -190,6 +172,8 @@ public:
     int64_t m_lastBsliceSatdCost;
     int     m_numBframesInPattern;
     bool    m_isPatternPresent;
+    bool    m_isSceneTransition;
+    int     m_lastPredictorReset;
 
     /* a common variable on which rateControlStart, rateControlEnd and rateControUpdateStats waits to
      * sync the calls to these functions. For example
@@ -241,12 +225,12 @@ public:
     // to be called for each curFrame to process RateControl and set QP
     int  rateControlStart(Frame* curFrame, RateControlEntry* rce, Encoder* enc);
     void rateControlUpdateStats(RateControlEntry* rce);
-    int  rateControlEnd(Frame* curFrame, int64_t bits, RateControlEntry* rce, FrameStats* stats);
+    int  rateControlEnd(Frame* curFrame, int64_t bits, RateControlEntry* rce);
     int  rowDiagonalVbvRateControl(Frame* curFrame, uint32_t row, RateControlEntry* rce, double& qpVbv);
     int  rateControlSliceType(int frameNum);
     bool cuTreeReadFor2Pass(Frame* curFrame);
     void hrdFullness(SEIBufferingPeriod* sei);
-
+    int writeRateControlFrameStats(Frame* curFrame, RateControlEntry* rce);
 protected:
 
     static const int   s_slidingWindowFrames;
@@ -274,6 +258,7 @@ protected:
     void   checkAndResetABR(RateControlEntry* rce, bool isFrameDone);
     double predictRowsSizeSum(Frame* pic, RateControlEntry* rce, double qpm, int32_t& encodedBits);
     bool   initPass2();
+    void   initFramePredictors();
     double getDiffLimitedQScale(RateControlEntry *rce, double q);
     double countExpectedBits();
     bool   vbv2Pass(uint64_t allAvailableBits);

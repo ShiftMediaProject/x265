@@ -1,7 +1,21 @@
 # vim: syntax=cmake
 
+list(APPEND VFLAGS "-DX265_VERSION=${X265_VERSION}")
+if(EXTRA_LIB)
+    if(LINKED_8BIT)
+        list(APPEND VFLAGS "-DLINKED_8BIT=1")
+    endif(LINKED_8BIT)
+    if(LINKED_10BIT)
+        list(APPEND VFLAGS "-DLINKED_10BIT=1")
+    endif(LINKED_10BIT)
+    if(LINKED_12BIT)
+        list(APPEND VFLAGS "-DLINKED_12BIT=1")
+    endif(LINKED_12BIT)
+endif(EXTRA_LIB)
+
 if(ENABLE_ASSEMBLY)
     set_source_files_properties(threading.cpp primitives.cpp PROPERTIES COMPILE_FLAGS -DENABLE_ASSEMBLY=1)
+    list(APPEND VFLAGS "-DENABLE_ASSEMBLY=1")
 
     set(SSE3  vec/dct-sse3.cpp)
     set(SSSE3 vec/dct-ssse3.cpp)
@@ -46,7 +60,7 @@ if(ENABLE_ASSEMBLY)
                mc-a2.asm pixel-util8.asm blockcopy8.asm
                pixeladd8.asm dct8.asm)
     if(HIGH_BIT_DEPTH)
-        set(A_SRCS ${A_SRCS} sad16-a.asm intrapred16.asm ipfilter16.asm)
+        set(A_SRCS ${A_SRCS} sad16-a.asm intrapred16.asm ipfilter16.asm loopfilter.asm)
     else()
         set(A_SRCS ${A_SRCS} sad-a.asm intrapred8.asm intrapred8_allangs.asm ipfilter8.asm loopfilter.asm)
     endif()
@@ -69,6 +83,10 @@ if(ENABLE_ASSEMBLY)
     source_group(Assembly FILES ${ASM_PRIMITIVES})
 endif(ENABLE_ASSEMBLY)
 
+# set_target_properties can't do list expansion
+string(REPLACE ";" " " VERSION_FLAGS "${VFLAGS}")
+set_source_files_properties(version.cpp PROPERTIES COMPILE_FLAGS ${VERSION_FLAGS})
+
 check_symbol_exists(strtok_r "string.h" HAVE_STRTOK_R)
 if(HAVE_STRTOK_R)
     set_source_files_properties(param.cpp PROPERTIES COMPILE_FLAGS -DHAVE_STRTOK_R=1)
@@ -81,11 +99,8 @@ if(WIN32)
     set(WINXP winxp.h winxp.cpp)
 endif(WIN32)
 
-set_source_files_properties(version.cpp PROPERTIES COMPILE_FLAGS -DX265_VERSION=${X265_VERSION})
-
 add_library(common OBJECT
-    ${ASM_PRIMITIVES} ${VEC_PRIMITIVES}
-    ${LIBCOMMON_SRC} ${LIBCOMMON_HDR} ${WINXP}
+    ${ASM_PRIMITIVES} ${VEC_PRIMITIVES} ${WINXP}
     primitives.cpp primitives.h
     pixel.cpp dct.cpp ipfilter.cpp intrapred.cpp loopfilter.cpp
     constants.cpp constants.h

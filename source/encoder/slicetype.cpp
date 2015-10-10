@@ -40,7 +40,7 @@
 #define ProfileLookaheadTime(elapsed, count)
 #endif
 
-using namespace x265;
+using namespace X265_NS;
 
 namespace {
 
@@ -94,9 +94,7 @@ void LookaheadTLD::calcAdaptiveQuantFrame(Frame *curFrame, x265_param* param)
     /* Actual adaptive quantization */
     int maxCol = curFrame->m_fencPic->m_picWidth;
     int maxRow = curFrame->m_fencPic->m_picHeight;
-    int blockWidth = ((param->sourceWidth / 2) + X265_LOWRES_CU_SIZE - 1) >> X265_LOWRES_CU_BITS;
-    int blockHeight = ((param->sourceHeight / 2) + X265_LOWRES_CU_SIZE - 1) >> X265_LOWRES_CU_BITS;
-    int blockCount = blockWidth * blockHeight;
+    int blockCount = curFrame->m_lowres.maxBlocksInRow * curFrame->m_lowres.maxBlocksInCol;
 
     for (int y = 0; y < 3; y++)
     {
@@ -133,15 +131,16 @@ void LookaheadTLD::calcAdaptiveQuantFrame(Frame *curFrame, x265_param* param)
     {
         blockXY = 0;
         double avg_adj_pow2 = 0, avg_adj = 0, qp_adj = 0;
-        if (param->rc.aqMode == X265_AQ_AUTO_VARIANCE)
+        double bias_strength = 0.f;
+        if (param->rc.aqMode == X265_AQ_AUTO_VARIANCE || param->rc.aqMode == X265_AQ_AUTO_VARIANCE_BIASED)
         {
-            double bit_depth_correction = pow(1 << (X265_DEPTH - 8), 0.5);
+            double bit_depth_correction = 1.f / (1 << (2*(X265_DEPTH-8)));
             for (blockY = 0; blockY < maxRow; blockY += 16)
             {
                 for (blockX = 0; blockX < maxCol; blockX += 16)
                 {
                     uint32_t energy = acEnergyCu(curFrame, blockX, blockY, param->internalCsp);
-                    qp_adj = pow(energy + 1, 0.1);
+                    qp_adj = pow(energy * bit_depth_correction + 1, 0.1);
                     curFrame->m_lowres.qpCuTreeOffset[blockXY] = qp_adj;
                     avg_adj += qp_adj;
                     avg_adj_pow2 += qp_adj * qp_adj;
@@ -151,8 +150,9 @@ void LookaheadTLD::calcAdaptiveQuantFrame(Frame *curFrame, x265_param* param)
 
             avg_adj /= blockCount;
             avg_adj_pow2 /= blockCount;
-            strength = param->rc.aqStrength * avg_adj / bit_depth_correction;
-            avg_adj = avg_adj - 0.5f * (avg_adj_pow2 - (11.f * bit_depth_correction)) / avg_adj;
+            strength = param->rc.aqStrength * avg_adj;
+            avg_adj = avg_adj - 0.5f * (avg_adj_pow2 - (11.f)) / avg_adj;
+            bias_strength = param->rc.aqStrength;
         }
         else
             strength = param->rc.aqStrength * 1.0397f;
@@ -162,7 +162,12 @@ void LookaheadTLD::calcAdaptiveQuantFrame(Frame *curFrame, x265_param* param)
         {
             for (blockX = 0; blockX < maxCol; blockX += 16)
             {
-                if (param->rc.aqMode == X265_AQ_AUTO_VARIANCE)
+                if (param->rc.aqMode == X265_AQ_AUTO_VARIANCE_BIASED)
+                {
+                    qp_adj = curFrame->m_lowres.qpCuTreeOffset[blockXY];
+                    qp_adj = strength * (qp_adj - avg_adj) + bias_strength * (1.f - 11.f / (qp_adj * qp_adj));
+                }
+                else if (param->rc.aqMode == X265_AQ_AUTO_VARIANCE)
                 {
                     qp_adj = curFrame->m_lowres.qpCuTreeOffset[blockXY];
                     qp_adj = strength * (qp_adj - avg_adj);
@@ -464,6 +469,7 @@ Lookahead::Lookahead(x265_param *param, ThreadPool* pool)
     m_pool  = pool;
 
     m_lastNonB = NULL;
+    m_isSceneTransition = false;
     m_scratch  = NULL;
     m_tld      = NULL;
     m_filled   = false;
@@ -1248,7 +1254,9 @@ void Lookahead::slicetypeAnalyse(Lowres **frames, bool bKeyframe)
 
     int numBFrames = 0;
     int numAnalyzed = numFrames;
-    if (m_param->scenecutThreshold && scenecut(frames, 0, 1, true, origNumFrames, maxSearch))
+    bool isScenecut = scenecut(frames, 0, 1, true, origNumFrames);
+    /* When scenecut threshold is set, use scenecut detection for I frame placements */
+    if (m_param->scenecutThreshold && isScenecut)
     {
         frames[1]->sliceType = X265_TYPE_I;
         return;
@@ -1338,14 +1346,13 @@ void Lookahead::slicetypeAnalyse(Lowres **frames, bool bKeyframe)
         /* Check scenecut on the first minigop. */
         for (int j = 1; j < numBFrames + 1; j++)
         {
-            if (m_param->scenecutThreshold && scenecut(frames, j, j + 1, false, origNumFrames, maxSearch))
+            if (scenecut(frames, j, j + 1, false, origNumFrames))
             {
                 frames[j]->sliceType = X265_TYPE_P;
                 numAnalyzed = j;
                 break;
             }
         }
-
         resetStart = bKeyframe ? 1 : X265_MIN(numBFrames + 2, numAnalyzed + 1);
     }
     else
@@ -1369,50 +1376,99 @@ void Lookahead::slicetypeAnalyse(Lowres **frames, bool bKeyframe)
     if (bIsVbvLookahead)
         vbvLookahead(frames, numFrames, bKeyframe);
 
+     int maxp1 = X265_MIN(m_param->bframes + 1, origNumFrames);
     /* Restore frame types for all frames that haven't actually been decided yet. */
     for (int j = resetStart; j <= numFrames; j++)
+    {
         frames[j]->sliceType = X265_TYPE_AUTO;
+        /* If any frame marked as scenecut is being restarted for sliceDecision, 
+         * undo scene Transition flag */
+        if (j <= maxp1 && frames[j]->bScenecut && m_isSceneTransition)
+            m_isSceneTransition = false;
+    }
 }
 
-bool Lookahead::scenecut(Lowres **frames, int p0, int p1, bool bRealScenecut, int numFrames, int maxSearch)
+bool Lookahead::scenecut(Lowres **frames, int p0, int p1, bool bRealScenecut, int numFrames)
 {
     /* Only do analysis during a normal scenecut check. */
     if (bRealScenecut && m_param->bframes)
     {
         int origmaxp1 = p0 + 1;
         /* Look ahead to avoid coding short flashes as scenecuts. */
-        if (m_param->bFrameAdaptive == X265_B_ADAPT_TRELLIS)
-            /* Don't analyse any more frames than the trellis would have covered. */
-            origmaxp1 += m_param->bframes;
-        else
-            origmaxp1++;
+        origmaxp1 += m_param->bframes;
         int maxp1 = X265_MIN(origmaxp1, numFrames);
-
+        bool fluctuate = false;
+        bool noScenecuts = false;
+        int64_t avgSatdCost = 0;
+        if (frames[0]->costEst[1][0] > -1)
+            avgSatdCost = frames[0]->costEst[1][0];
+        int cnt = 1;
         /* Where A and B are scenes: AAAAAABBBAAAAAA
          * If BBB is shorter than (maxp1-p0), it is detected as a flash
          * and not considered a scenecut. */
         for (int cp1 = p1; cp1 <= maxp1; cp1++)
         {
             if (!scenecutInternal(frames, p0, cp1, false))
+            {
                 /* Any frame in between p0 and cur_p1 cannot be a real scenecut. */
                 for (int i = cp1; i > p0; i--)
+                {
                     frames[i]->bScenecut = false;
+                    noScenecuts = false;
+                }
+            }
+            else if (scenecutInternal(frames, cp1 - 1, cp1, false))
+            {
+                /* If current frame is a Scenecut from p0 frame as well as Scenecut from
+                 * preceeding frame, mark it as a Scenecut */
+                frames[cp1]->bScenecut = true;
+                noScenecuts = true;
+            }
+
+            /* compute average satdcost of all the frames in the mini-gop to confirm 
+             * whether there is any great fluctuation among them to rule out false positives */
+            X265_CHECK(frames[cp1]->costEst[cp1 - p0][0]!= -1, "costEst is not done \n");
+            avgSatdCost += frames[cp1]->costEst[cp1 - p0][0];
+            cnt++;
         }
 
-        /* Where A-F are scenes: AAAAABBCCDDEEFFFFFF
-         * If each of BB ... EE are shorter than (maxp1-p0), they are
-         * detected as flashes and not considered scenecuts.
-         * Instead, the first F frame becomes a scenecut.
-         * If the video ends before F, no frame becomes a scenecut. */
-        for (int cp0 = p0; cp0 <= maxp1; cp0++)
+        /* Identify possible scene fluctuations by comparing the satd cost of the frames.
+         * This could denote the beginning or ending of scene transitions.
+         * During a scene transition(fade in/fade outs), if fluctuate remains false,
+         * then the scene had completed its transition or stabilized */
+        if (noScenecuts)
         {
-            if (origmaxp1 > maxSearch || (cp0 < maxp1 && scenecutInternal(frames, cp0, maxp1, false)))
-                /* If cur_p0 is the p0 of a scenecut, it cannot be the p1 of a scenecut. */
-                frames[cp0]->bScenecut = false;
+            fluctuate = false;
+            avgSatdCost /= cnt;
+            for (int i = p1; i <= maxp1; i++)
+            {
+                int64_t curCost  = frames[i]->costEst[i - p0][0];
+                int64_t prevCost = frames[i - 1]->costEst[i - 1 - p0][0];
+                if (fabs((double)(curCost - avgSatdCost)) > 0.1 * avgSatdCost || 
+                    fabs((double)(curCost - prevCost)) > 0.1 * prevCost)
+                {
+                    fluctuate = true;
+                    if (!m_isSceneTransition && frames[i]->bScenecut)
+                    {
+                        m_isSceneTransition = true;
+                        /* just mark the first scenechange in the scene transition as a scenecut. */
+                        for (int j = i + 1; j <= maxp1; j++)
+                            frames[j]->bScenecut = false;
+                        break;
+                    }
+                }
+                frames[i]->bScenecut = false;
+            }
         }
+        if (!fluctuate && !noScenecuts)
+            m_isSceneTransition = false; /* Signal end of scene transitioning */
     }
 
-    /* Ignore frames that are part of a flash, i.e. cannot be real scenecuts. */
+    /* A frame is always analysed with bRealScenecut = true first, and then bRealScenecut = false,
+       the former for I decisions and the latter for P/B decisions. It's possible that the first 
+       analysis detected scenecuts which were later nulled due to scene transitioning, in which 
+       case do not return a true scenecut for this frame */
+
     if (!frames[p1]->bScenecut)
         return false;
     return scenecutInternal(frames, p0, p1, bRealScenecut);
@@ -1432,22 +1488,23 @@ bool Lookahead::scenecutInternal(Lowres **frames, int p0, int p1, bool bRealScen
 
     /* magic numbers pulled out of thin air */
     float threshMin = (float)(threshMax * 0.25);
-    float bias;
-
-    if (m_param->keyframeMin == m_param->keyframeMax)
-        threshMin = threshMax;
-    if (gopSize <= m_param->keyframeMin / 4)
-        bias = threshMin / 4;
-    else if (gopSize <= m_param->keyframeMin)
-        bias = threshMin * gopSize / m_param->keyframeMin;
-    else
+    double bias = 0.05;
+    if (bRealScenecut)
     {
-        bias = threshMin
-            + (threshMax - threshMin)
-            * (gopSize - m_param->keyframeMin)
-            / (m_param->keyframeMax - m_param->keyframeMin);
+        if (m_param->keyframeMin == m_param->keyframeMax)
+            threshMin = threshMax;
+        if (gopSize <= m_param->keyframeMin / 4)
+            bias = threshMin / 4;
+        else if (gopSize <= m_param->keyframeMin)
+            bias = threshMin * gopSize / m_param->keyframeMin;
+        else
+        {
+            bias = threshMin
+                + (threshMax - threshMin)
+                * (gopSize - m_param->keyframeMin)
+                / (m_param->keyframeMax - m_param->keyframeMin);
+        }
     }
-
     bool res = pcost >= (1.0 - bias) * icost;
     if (res && bRealScenecut)
     {

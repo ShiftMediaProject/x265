@@ -42,7 +42,30 @@
 #include <sys/sysctl.h>
 #endif
 
-#ifdef __GNUC__               /* GCCs builtin atomics */
+#if NO_ATOMICS
+
+#include <sys/time.h>
+#include <unistd.h>
+
+namespace X265_NS {
+// x265 private namespace
+int no_atomic_or(int* ptr, int mask);
+int no_atomic_and(int* ptr, int mask);
+int no_atomic_inc(int* ptr);
+int no_atomic_dec(int* ptr);
+int no_atomic_add(int* ptr, int val);
+}
+
+#define CLZ(id, x)            id = (unsigned long)__builtin_clz(x) ^ 31
+#define CTZ(id, x)            id = (unsigned long)__builtin_ctz(x)
+#define ATOMIC_OR(ptr, mask)  no_atomic_or((int*)ptr, mask)
+#define ATOMIC_AND(ptr, mask) no_atomic_and((int*)ptr, mask)
+#define ATOMIC_INC(ptr)       no_atomic_inc((int*)ptr)
+#define ATOMIC_DEC(ptr)       no_atomic_dec((int*)ptr)
+#define ATOMIC_ADD(ptr, val)  no_atomic_add((int*)ptr, val)
+#define GIVE_UP_TIME()        usleep(0)
+
+#elif __GNUC__               /* GCCs builtin atomics */
 
 #include <sys/time.h>
 #include <unistd.h>
@@ -71,7 +94,7 @@
 
 #endif // ifdef __GNUC__
 
-namespace x265 {
+namespace X265_NS {
 // x265 private namespace
 
 #ifdef _WIN32
@@ -463,6 +486,6 @@ public:
 
     void stop();
 };
-} // end namespace x265
+} // end namespace X265_NS
 
 #endif // ifndef X265_THREADING_H

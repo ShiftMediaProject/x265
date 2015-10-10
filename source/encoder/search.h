@@ -48,7 +48,7 @@
 #define ProfileCounter(cu, count)
 #endif
 
-namespace x265 {
+namespace X265_NS {
 // private namespace
 
 class Entropy;
@@ -109,7 +109,9 @@ struct Mode
     uint64_t   sa8dCost;   // sum of partition sa8d distortion costs   (sa8d(fenc, pred) + lambda * bits)
     uint32_t   sa8dBits;   // signal bits used in sa8dCost calculation
     uint32_t   psyEnergy;  // sum of partition psycho-visual energy difference
-    uint32_t   distortion; // sum of partition SSE distortion
+    sse_ret_t  lumaDistortion;
+    sse_ret_t  chromaDistortion;
+    sse_ret_t  distortion; // sum of partition SSE distortion
     uint32_t   totalBits;  // sum of partition bits (mv + coeff)
     uint32_t   mvBits;     // Mv bits + Ref + block type (or intra mode)
     uint32_t   coeffBits;  // Texture bits (DCT Coeffs)
@@ -120,6 +122,8 @@ struct Mode
         sa8dCost = 0;
         sa8dBits = 0;
         psyEnergy = 0;
+        lumaDistortion = 0;
+        chromaDistortion = 0;
         distortion = 0;
         totalBits = 0;
         mvBits = 0;
@@ -133,7 +137,15 @@ struct Mode
         sa8dCost = UINT64_MAX / 2;
         sa8dBits = MAX_UINT / 2;
         psyEnergy = MAX_UINT / 2;
+#if X265_DEPTH <= 10
+        lumaDistortion = MAX_UINT / 2;
+        chromaDistortion = MAX_UINT / 2;
         distortion = MAX_UINT / 2;
+#else
+        lumaDistortion = UINT64_MAX / 2;
+        chromaDistortion = UINT64_MAX / 2;
+        distortion = UINT64_MAX / 2;
+#endif
         totalBits = MAX_UINT / 2;
         mvBits = MAX_UINT / 2;
         coeffBits = MAX_UINT / 2;
@@ -141,14 +153,29 @@ struct Mode
 
     bool ok() const
     {
+#if X265_DEPTH <= 10
+        return !(rdCost >= UINT64_MAX / 2 ||
+            sa8dCost >= UINT64_MAX / 2 ||
+            sa8dBits >= MAX_UINT / 2 ||
+            psyEnergy >= MAX_UINT / 2 ||
+            lumaDistortion >= MAX_UINT / 2 ||
+            chromaDistortion >= MAX_UINT / 2 ||
+            distortion >= MAX_UINT / 2 ||
+            totalBits >= MAX_UINT / 2 ||
+            mvBits >= MAX_UINT / 2 ||
+            coeffBits >= MAX_UINT / 2);
+#else
         return !(rdCost >= UINT64_MAX / 2 ||
                  sa8dCost >= UINT64_MAX / 2 ||
                  sa8dBits >= MAX_UINT / 2 ||
                  psyEnergy >= MAX_UINT / 2 ||
-                 distortion >= MAX_UINT / 2 ||
+                 lumaDistortion >= UINT64_MAX / 2 ||
+                 chromaDistortion >= UINT64_MAX / 2 ||
+                 distortion >= UINT64_MAX / 2 ||
                  totalBits >= MAX_UINT / 2 ||
                  mvBits >= MAX_UINT / 2 ||
                  coeffBits >= MAX_UINT / 2);
+#endif
     }
 
     void addSubCosts(const Mode& subMode)
@@ -159,6 +186,8 @@ struct Mode
         sa8dCost += subMode.sa8dCost;
         sa8dBits += subMode.sa8dBits;
         psyEnergy += subMode.psyEnergy;
+        lumaDistortion += subMode.lumaDistortion;
+        chromaDistortion += subMode.chromaDistortion;
         distortion += subMode.distortion;
         totalBits += subMode.totalBits;
         mvBits += subMode.mvBits;
@@ -185,6 +214,11 @@ struct CUStats
     int64_t  pmodeBlockTime;                    // elapsed worker time blocked for pmode batch completion
     int64_t  weightAnalyzeTime;                 // elapsed worker time analyzing reference weights
     int64_t  totalCTUTime;                      // elapsed worker time in compressCTU (includes pmode master)
+
+    uint32_t skippedMotionReferences[NUM_CU_DEPTH];
+    uint32_t totalMotionReferences[NUM_CU_DEPTH];
+    uint32_t skippedIntraCU[NUM_CU_DEPTH];
+    uint32_t totalIntraCU[NUM_CU_DEPTH];
 
     uint64_t countIntraRDO[NUM_CU_DEPTH];
     uint64_t countInterRDO[NUM_CU_DEPTH];
@@ -213,6 +247,10 @@ struct CUStats
             interRDOElapsedTime[i] += other.interRDOElapsedTime[i];
             countIntraRDO[i] += other.countIntraRDO[i];
             countInterRDO[i] += other.countInterRDO[i];
+            skippedMotionReferences[i] += other.skippedMotionReferences[i];
+            totalMotionReferences[i] += other.totalMotionReferences[i];
+            skippedIntraCU[i] += other.skippedIntraCU[i];
+            totalIntraCU[i] += other.totalIntraCU[i];
         }
 
         intraAnalysisElapsedTime += other.intraAnalysisElapsedTime;
@@ -301,7 +339,7 @@ public:
     void     encodeIntraInInter(Mode& intraMode, const CUGeom& cuGeom);
 
     // estimation inter prediction (non-skip)
-    void     predInterSearch(Mode& interMode, const CUGeom& cuGeom, bool bChromaMC);
+    void     predInterSearch(Mode& interMode, const CUGeom& cuGeom, bool bChromaMC, uint32_t masks[2]);
 
     // encode residual and compute rd-cost for inter mode
     void     encodeResAndCalcRdInterCU(Mode& interMode, const CUGeom& cuGeom);
@@ -319,6 +357,8 @@ public:
     void checkDQP(Mode& mode, const CUGeom& cuGeom);
     void checkDQPForSplitPred(Mode& mode, const CUGeom& cuGeom);
 
+    MV getLowresMV(const CUData& cu, const PredictionUnit& pu, int list, int ref);
+
     class PME : public BondedTaskGroup
     {
     public:
@@ -328,6 +368,11 @@ public:
         const CUGeom& cuGeom;
         const PredictionUnit& pu;
         int           puIdx;
+
+        struct {
+            int ref[2][MAX_NUM_REF];
+            int refCnt[2];
+        } m_jobs;
 
         PME(Search& s, Mode& m, const CUGeom& g, const PredictionUnit& u, int p) : master(s), mode(m), cuGeom(g), pu(u), puIdx(p) {}
 
@@ -365,7 +410,7 @@ protected:
     {
         uint64_t rdcost;
         uint32_t bits;
-        uint32_t distortion;
+        sse_ret_t distortion;
         uint32_t energy;
         Cost() { rdcost = 0; bits = 0; distortion = 0; energy = 0; }
     };

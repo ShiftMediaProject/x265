@@ -31,9 +31,9 @@
 #define MIN_FRAME_RATE 1
 #define MAX_FRAME_RATE 300
 
-#include "x265.h"
+#include "common.h"
 
-namespace x265 {
+namespace X265_NS {
 // private x265 namespace
 
 struct InputFileInfo
@@ -79,6 +79,10 @@ public:
     virtual bool isFail() = 0;
 
     virtual const char *getName() const = 0;
+
+    virtual int getWidth() const = 0;
+
+    virtual int getHeight() const = 0;
 };
 }
 

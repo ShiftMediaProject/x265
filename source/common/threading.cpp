@@ -21,21 +21,73 @@
  * For more information, contact us at license @ x265.com
  *****************************************************************************/
 
+#include "common.h"
 #include "threading.h"
+#include "cpu.h"
 
-namespace x265 {
+namespace X265_NS {
 // x265 private namespace
 
 #if X265_ARCH_X86 && !defined(X86_64) && ENABLE_ASSEMBLY && defined(__GNUC__)
-extern "C" intptr_t x265_stack_align(void (*func)(), ...);
-#define x265_stack_align(func, ...) x265_stack_align((void (*)())func, __VA_ARGS__)
+extern "C" intptr_t PFX(stack_align)(void (*func)(), ...);
+#define STACK_ALIGN(func, ...) PFX(stack_align)((void (*)())func, __VA_ARGS__)
 #else
-#define x265_stack_align(func, ...) func(__VA_ARGS__)
+#define STACK_ALIGN(func, ...) func(__VA_ARGS__)
+#endif
+
+#if NO_ATOMICS
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+int no_atomic_or(int* ptr, int mask)
+{ 
+    pthread_mutex_lock(&g_mutex);
+    int ret = *ptr;
+    *ptr |= mask;
+    pthread_mutex_unlock(&g_mutex);
+    return ret;
+}
+
+int no_atomic_and(int* ptr, int mask)
+{
+    pthread_mutex_lock(&g_mutex);
+    int ret = *ptr;
+    *ptr &= mask;
+    pthread_mutex_unlock(&g_mutex);
+    return ret;
+}
+
+int no_atomic_inc(int* ptr)
+{
+    pthread_mutex_lock(&g_mutex);
+    *ptr += 1;
+    int ret = *ptr;
+    pthread_mutex_unlock(&g_mutex);
+    return ret;
+}
+
+int no_atomic_dec(int* ptr)
+{
+    pthread_mutex_lock(&g_mutex);
+    *ptr -= 1;
+    int ret = *ptr;
+    pthread_mutex_unlock(&g_mutex);
+    return ret;
+}
+
+int no_atomic_add(int* ptr, int val)
+{
+    pthread_mutex_lock(&g_mutex);
+    *ptr += val;
+    int ret = *ptr;
+    pthread_mutex_unlock(&g_mutex);
+    return ret;
+}
 #endif
 
 /* C shim for forced stack alignment */
 static void stackAlignMain(Thread *instance)
 {
+    // defer processing to the virtual function implemented in the derived class
     instance->threadMain();
 }
 
@@ -43,8 +95,7 @@ static void stackAlignMain(Thread *instance)
 
 static DWORD WINAPI ThreadShim(Thread *instance)
 {
-    // defer processing to the virtual function implemented in the derived class
-    x265_stack_align(stackAlignMain, instance);
+    STACK_ALIGN(stackAlignMain, instance);
 
     return 0;
 }
@@ -77,7 +128,7 @@ static void *ThreadShim(void *opaque)
     // defer processing to the virtual function implemented in the derived class
     Thread *instance = reinterpret_cast<Thread *>(opaque);
 
-    x265_stack_align(stackAlignMain, instance);
+    STACK_ALIGN(stackAlignMain, instance);
 
     return NULL;
 }

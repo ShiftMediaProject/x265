@@ -10,17 +10,11 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{e346e246-00f7-48a5-ac0e-0febe12be908}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\filters">
-      <UniqueIdentifier>{fbc22b00-ca7d-4a29-9958-4ce45d815a5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\input">
       <UniqueIdentifier>{6fc90f3a-0195-4014-bbc8-d8b673d2e98b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\output">
       <UniqueIdentifier>{3ae51a12-4e66-495d-bbbf-68b60b4f55ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\filters">
-      <UniqueIdentifier>{a87e1152-a0de-4249-a486-1b00f486ba3e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\input">
       <UniqueIdentifier>{1879876e-eeef-4dc1-9df2-7021d025afe0}</UniqueIdentifier>
@@ -38,9 +32,6 @@
   <ItemGroup>
     <ClInclude Include="x265_config.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\filters\filters.h">
-      <Filter>Header Files\filters</Filter>
     </ClInclude>
     <ClInclude Include="..\source\input\input.h">
       <Filter>Header Files\input</Filter>
@@ -82,9 +73,6 @@
     <ClCompile Include="..\source\x265.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\filters\filters.cpp">
-      <Filter>Source Files\filters</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\input\input.cpp">
       <Filter>Source Files\input</Filter>
     </ClCompile>
@@ -111,6 +99,9 @@
     </ClCompile>
     <ClCompile Include="..\source\output\raw.cpp">
       <Filter>Source Files\output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\x265-extras.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1402,10 +1402,16 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClCompile Include="..\source\common\vec\dct-sse3.cpp">
       <Optimization Condition="'$(Configuration)'=='Debug'">MaxSpeed</Optimization>
       <Optimization Condition="'$(Configuration)'=='DebugDLL'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Debug_10b'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Debug_12b'">MaxSpeed</Optimization>
       <DebugInformationFormat Condition="'$(Configuration)'=='Debug'">ProgramDatabase</DebugInformationFormat>
       <DebugInformationFormat Condition="'$(Configuration)'=='DebugDLL'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug_10b'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug_12b'">ProgramDatabase</DebugInformationFormat>
       <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug'">Default</BasicRuntimeChecks>
       <BasicRuntimeChecks Condition="'$(Configuration)'=='DebugDLL'">Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug_10b'">Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug_12b'">Default</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="..\source\common\vec\dct-sse41.cpp" />
     <ClCompile Include="..\source\common\vec\dct-ssse3.cpp" />

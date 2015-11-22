@@ -46,12 +46,8 @@
     <ClCompile Include="..\source\output\output.cpp" />
     <ClCompile Include="..\source\output\raw.cpp" />
     <ClCompile Include="..\source\output\reconplay.cpp" />
-    <ClCompile Include="..\source\output\y4m.cpp">
-      <ObjectFileName>$(IntDir)\y4m_output.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\source\output\yuv.cpp">
-      <ObjectFileName>$(IntDir)\yuv_output.obj</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="..\source\output\y4m.cpp" />
+    <ClCompile Include="..\source\output\yuv.cpp" />
     <ClCompile Include="..\source\x265-extras.cpp" />
     <ClCompile Include="..\source\x265.cpp">
       <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -131,7 +127,6 @@
     <ClCompile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>HAVE_STRING_H;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;EXPORT_C_API=1;X265_NS=x265;_WIN32_WINNT=0x0502;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -139,7 +134,6 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4530;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -147,11 +141,9 @@
       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libx265d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
       <ProgramDatabaseFile>$(OutDir)\lib\x86\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(IntDir)\$(TargetName).pgd</ProfileGuidedDatabase>
-      <ImportLibrary>
-      </ImportLibrary>
-      <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <YASM>
       <IncludePaths>$(ProjectDir)\..\common\x86;%(IncludePaths)</IncludePaths>
@@ -176,7 +168,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <ClCompile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>HAVE_STRING_H;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;EXPORT_C_API=1;X265_NS=x265;X86_64=1;_WIN32_WINNT=0x0600;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -184,7 +175,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4530;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -194,9 +184,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <SubSystem>Console</SubSystem>
       <ProgramDatabaseFile>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(IntDir)\$(TargetName).pgd</ProfileGuidedDatabase>
-      <ImportLibrary>
-      </ImportLibrary>
-      <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <YASM>
       <IncludePaths>$(ProjectDir)\..\common\x86;%(IncludePaths)</IncludePaths>
@@ -220,7 +207,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -238,7 +224,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4530;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -250,9 +235,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <SubSystem>Console</SubSystem>
       <ProgramDatabaseFile>$(OutDir)\lib\x86\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(IntDir)\$(TargetName).pgd</ProfileGuidedDatabase>
-      <ImportLibrary>
-      </ImportLibrary>
-      <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <YASM>
       <IncludePaths>$(ProjectDir)\..\common\x86;%(IncludePaths)</IncludePaths>
@@ -276,7 +258,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -294,7 +275,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4391;4530;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -306,9 +286,6 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <SubSystem>Console</SubSystem>
       <ProgramDatabaseFile>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(IntDir)\$(TargetName).pgd</ProfileGuidedDatabase>
-      <ImportLibrary>
-      </ImportLibrary>
-      <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <YASM>
       <IncludePaths>$(ProjectDir)\..\common\x86;%(IncludePaths)</IncludePaths>

@@ -391,8 +391,8 @@
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Debug_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Debug_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -433,8 +433,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Debug_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Debug_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -483,8 +483,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Debug_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Debug_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
@@ -526,8 +526,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Debug_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Debug_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -574,8 +574,8 @@ MSBuild /property:Configuration="Debug_12b",Platform="$(Platform)" /verbosity:m 
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Release_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Release_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -629,8 +629,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Release_10b",Platform="$(Platform)" /verbosity:m /nologo /property:WholeProgramOptimization=true $(ProjectFileName)
-MSBuild /property:Configuration="Release_12b",Platform="$(Platform)" /verbosity:m /nologo /property:WholeProgramOptimization=true $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -684,8 +684,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Release_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Release_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -739,8 +739,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Release_10b",Platform="$(Platform)" /verbosity:m /nologo /property:WholeProgramOptimization=true $(ProjectFileName)
-MSBuild /property:Configuration="Release_12b",Platform="$(Platform)" /verbosity:m /nologo /property:WholeProgramOptimization=true $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -795,8 +795,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Release_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Release_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -1070,8 +1070,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-MSBuild /property:Configuration="Release_10b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)
-MSBuild /property:Configuration="Release_12b",Platform="$(Platform)" /verbosity:m /nologo $(ProjectFileName)</Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include

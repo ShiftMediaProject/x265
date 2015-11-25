@@ -153,6 +153,12 @@
     <PreBuildEvent>
       <Command>if exist ..\x265_config.h (
 del ..\x265_config.h
+)
+if exist $(OutDir)\include\x265.h (
+del $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del $(OutDir)\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <PostBuildEvent>
@@ -190,6 +196,12 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     <PreBuildEvent>
       <Command>if exist ..\x265_config.h (
 del ..\x265_config.h
+)
+if exist $(OutDir)\include\x265.h (
+del $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del $(OutDir)\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <PostBuildEvent>

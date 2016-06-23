@@ -106,22 +106,26 @@
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265clid</TargetName>
     <LinkIncremental>false</LinkIncremental>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265clid</TargetName>
     <OutDir>..\..\..\msvc\</OutDir>
     <LinkIncremental>false</LinkIncremental>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265cli</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265cli</TargetName>
     <OutDir>..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -168,6 +172,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -211,6 +230,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -261,6 +295,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -311,6 +360,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

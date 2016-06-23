@@ -270,93 +270,111 @@
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265d</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265d</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265d</TargetName>
     <LinkIncremental>false</LinkIncremental>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265d</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <LinkIncremental>false</LinkIncremental>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTO|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTO|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_10b</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_10bd</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_12b</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_12bd</TargetName>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>x265</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_10b|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_10b</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_10b|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_10bd</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_12b|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_12b</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_12b|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>libx265_12bd</TargetName>
     <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -407,6 +425,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -455,6 +488,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
@@ -504,6 +552,21 @@ del $(OutDir)\include\x265_config.h
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
     <ClCompile>
@@ -553,6 +616,21 @@ del $(OutDir)\include\x265_config.h
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -614,6 +692,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTO|Win32'">
     <ClCompile>
@@ -675,6 +768,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -736,6 +844,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTO|x64'">
     <ClCompile>
@@ -797,6 +920,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
     <ClCompile>
@@ -859,6 +997,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">
     <ClCompile>
@@ -926,6 +1079,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <SubSystem>Windows</SubSystem>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">
     <ClCompile>
@@ -983,6 +1153,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <SubSystem>Windows</SubSystem>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">
     <ClCompile>
@@ -1048,6 +1235,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <SubSystem>Windows</SubSystem>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">
     <ClCompile>
@@ -1103,6 +1307,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <SubSystem>Windows</SubSystem>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
     <ClCompile>
@@ -1164,6 +1385,21 @@ copy .\x265_config.h $(OutDir)\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_10b|x64'">
     <ClCompile>
@@ -1226,6 +1462,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_10b|x64'">
     <ClCompile>
@@ -1278,6 +1531,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_12b|x64'">
     <ClCompile>
@@ -1340,6 +1610,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_12b|x64'">
     <ClCompile>
@@ -1392,6 +1679,23 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <CustomBuildStep>
+      <Command>if exist $(OutDir)\include\x265.h (
+del /f /q $(OutDir)\include\x265.h
+)
+if exist $(OutDir)\include\x265_config.h (
+del /f /q $(OutDir)\include\x265_config.h
+)
+if exist $(OutDir)\licenses\x265.txt (
+del /f /q $(OutDir)\licenses\x265.txt
+)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Custom Clean Step</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>force_clean</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\source\common\bitstream.h" />

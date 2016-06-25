@@ -415,8 +415,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -478,8 +478,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -549,8 +549,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Custom Clean Step</Message>
@@ -613,8 +613,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Custom Clean Step</Message>
@@ -682,8 +682,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\"  /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -758,8 +758,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -834,8 +834,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\"  /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -910,8 +910,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -987,8 +987,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -1375,8 +1375,8 @@ del $(OutDir)\include\x265.h
 if exist $(OutDir)\include\x265_config.h (
 del $(OutDir)\include\x265_config.h
 )
-MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
-MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
+MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo
+MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)",OutDir="$(OutDir)\" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include

@@ -381,7 +381,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
@@ -446,7 +446,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
@@ -506,7 +506,7 @@ del /f /q $(OutDir)\licenses\x265.txt
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -573,7 +573,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <ExceptionHandling>false</ExceptionHandling>
@@ -646,7 +646,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -722,7 +722,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -798,7 +798,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -874,7 +874,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -939,7 +939,7 @@ del /f /q $(OutDir)\licenses\x265.txt
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;_WIN32_WINNT=0x0502;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=0;X265_DEPTH=8;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1028,7 +1028,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;LINKED_10BIT=1;LINKED_12BIT;X265_NS=x265;EXPORT_C_API=1;ENABLE_ASSEMBLY=1;_WIN32_WINNT=0x0600;HIGH_BIT_DEPTH=0;X265_DEPTH=8;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1094,7 +1094,7 @@ del /f /q $(OutDir)\licenses\x265.txt
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0502;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0502;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1138,7 +1138,7 @@ del $(OutDir)\include\x265_config.h
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0502;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0502;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1172,7 +1172,7 @@ del $(OutDir)\include\x265_config.h
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0502;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0502;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1216,7 +1216,7 @@ del $(OutDir)\include\x265_config.h
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0502;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=0;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0502;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1261,7 +1261,7 @@ del $(OutDir)\include\x265_config.h
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0600;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0600;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1295,7 +1295,7 @@ del $(OutDir)\include\x265_config.h
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0600;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=10;X265_NS=x265_10bit;_WIN32_WINNT=0x0600;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1339,7 +1339,7 @@ del $(OutDir)\include\x265_config.h
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0600;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0600;X86_64=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1373,7 +1373,7 @@ del $(OutDir)\include\x265_config.h
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>X265_VERSION=1.9;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0600;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X265_VERSION=2.0;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;EXPORT_C_API=0;MAIN12=1;ENABLE_ASSEMBLY=1;HIGH_BIT_DEPTH=1;X265_DEPTH=12;X265_NS=x265_12bit;_WIN32_WINNT=0x0600;X86_64=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -1657,3 +1657,4 @@ del $(OutDir)\include\x265_config.h
     <Import Project="$(VCTargetsPath)\BuildCustomizations\vsyasm.targets" />
   </ImportGroup>
 </Project>
+

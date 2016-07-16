@@ -376,10 +376,10 @@ frame counts) are only applicable to the CLI application.
 
 .. option:: --dither
 
-	Enable high quality downscaling. Dithering is based on the diffusion
-	of errors from one row of pixels to the next row of pixels in a
-	picture. Only applicable when the input bit depth is larger than
-	8bits and internal bit depth is 8bits. Default disabled
+	Enable high quality downscaling to the encoder's internal bitdepth. 
+	Dithering is based on the diffusion	of errors from one row of pixels 
+	to the next row of pixels in a picture. Only applicable when the 
+	input bit depth is larger than 8bits. Default disabled
 
 	**CLI ONLY**
 
@@ -522,16 +522,14 @@ Profile, Level, Tier
 
 .. option:: --high-tier, --no-high-tier
 
-	If :option:`--level-idc` has been specified, the option adds the
-	intention to support the High tier of that level. If your specified
-	level does not support a High tier, a warning is issued and this
-	modifier flag is ignored. If :option:`--level-idc` has been specified,
-	but not --high-tier, then the encoder will attempt to encode at the 
-	specified level, main tier first, turning on high tier only if 
-	necessary and available at that level.
+	If :option:`--level-idc` has been specified, --high-tier allows the
+	support of high tier at that level. The encoder will first attempt to encode 
+	at the specified level, main tier first, turning on high tier only if 
+	necessary and available at that level.If your requested level does not 
+	support a High tier, high tier will not be supported. If --no-high-tier 
+	has been specified, then the encoder will attempt to encode only at the main tier.
 
-	If :option:`--level-idc` has not been specified, this argument is
-	ignored.
+	Default: enabled
 
 .. option:: --ref <1..16>
 
@@ -564,6 +562,15 @@ Profile, Level, Tier
 
 	Default: disabled
 
+.. option:: --uhd-bd
+
+    Enable Ultra HD Blu-ray format support. If specified with incompatible
+    encoding options, the encoder will attempt to modify/set the right 
+    encode specifications. If the encoder is unable to do so, this option
+    will be turned OFF. Highly experimental.
+	
+    Default: disabled
+	
 .. note::
 
 	:option:`--profile`, :option:`--level-idc`, and
@@ -600,7 +607,7 @@ Profile, Level, Tier
 Mode decision / Analysis
 ========================
 
-.. option:: --rd <0..6>
+.. option:: --rd <1..6>
 
 	Level of RDO in mode decision. The higher the value, the more
 	exhaustive the analysis and the more rate distortion optimization is
@@ -629,7 +636,7 @@ Mode decision / Analysis
 	| 6     | Currently same as 5                                           |
 	+-------+---------------------------------------------------------------+
 
-	**Range of values:** 0: least .. 6: full RDO analysis
+	**Range of values:** 1: least .. 6: full RDO analysis
 
 Options which affect the coding unit quad-tree, sometimes referred to as
 the prediction quad-tree.
@@ -722,8 +729,18 @@ the prediction quad-tree.
 
 .. option:: --early-skip, --no-early-skip
 
-	Measure full CU size (2Nx2N) merge candidates first; if no residual
-	is found the analysis is short circuited. Default disabled
+	Measure 2Nx2N merge candidates first; if no residual is found, 
+	additional modes at that depth are not analysed. Default disabled
+
+.. option:: --rskip, --no-rskip
+
+	This option determines early exit from CU depth recursion. When a skip CU is
+	found, additional heuristics (depending on rd-level) are used to decide whether
+	to terminate recursion. In rdlevels 5 and 6, comparison with inter2Nx2N is used, 
+	while at rdlevels 4 and neighbour costs are used to skip recursion.
+	Provides minimal quality degradation at good performance gains when enabled. 
+
+	Default: enabled, disabled for :option:`--tune grain`
 
 .. option:: --fast-intra, --no-fast-intra
 
@@ -755,6 +772,14 @@ the prediction quad-tree.
 	Only applicable if transform skip is enabled. For chroma, only
 	evaluate if luma used tskip. Inter block tskip analysis is
 	unmodified. Default disabled
+
+.. option:: --rd-refine, --no-rd-refine
+
+	For each analysed CU, calculate R-D cost on the best partition mode
+	for a range of QP values, to find the optimal rounding effect.
+	Default disabled.
+
+	Only effective at RD levels 5 and 6
 
 Analysis re-use options, to improve performance when encoding the same
 sequence multiple times (presumably at varying bitrates). The encoder
@@ -1039,7 +1064,7 @@ a drastic effect on rate control, forcing higher overall QP, and can
 cause ringing artifacts. psy-rdoq is less accurate than psy-rd, it is
 biasing towards energy in general while psy-rd biases towards the energy
 of the source image. But very large psy-rdoq values can sometimes be
-beneficial, preserving film grain for instance.
+beneficial.
 
 As a general rule, when both psycho-visual features are disabled, the
 encoder will tend to blur blocks in areas of difficult motion. Turning
@@ -1076,8 +1101,8 @@ areas of high motion.
 	energy in the reconstructed image. This generally improves perceived
 	visual quality at the cost of lower quality metric scores.  It only
 	has effect when :option:`--rdoq-level` is 1 or 2. High values can
-	be beneficial in preserving high-frequency detail like film grain.
-	Default: 1.0
+	be beneficial in preserving high-frequency detail.
+	Default: 0.0 (1.0 for presets slow, slower, veryslow)
 
 	**Range of values:** 0 .. 50.0
 
@@ -1336,13 +1361,13 @@ Quality, rate control and rate distortion options
 
 .. option:: --slow-firstpass, --no-slow-firstpass
 
-	Enable a slow and more detailed first pass encode in multi-pass rate
-	control mode.  Speed of the first pass encode is slightly lesser and
-	quality midly improved when compared to the default settings in a
-	multi-pass encode. Default disabled (turbo mode enabled)
+	Enable first pass encode with the exact settings specified. 
+	The quality in subsequent multi-pass encodes is better
+	(compared to first pass) when the settings match across each pass. 
+	Default enabled.
 
-	When **turbo** first pass is not disabled, these options are
-	set on the first pass to improve performance:
+	When slow first pass is disabled, a **turbo** encode with the following
+	go-fast options is used to improve performance:
 	
 	* :option:`--fast-intra`
 	* :option:`--no-rect`
@@ -1408,7 +1433,16 @@ Quality, rate control and rate distortion options
 
 	The maximum single adjustment in QP allowed to rate control. Default
 	4
+	
+.. option:: --rc-grain, --no-rc-grain
 
+   Enables a specialised ratecontrol algorithm for film grain content. This 
+   parameter strictly minimises QP fluctuations within and across frames 
+   and removes pulsing of grain. Default disabled. 
+   Enabled when :option:'--tune' grain is applied. It is highly recommended 
+   that this option is used through the tune grain feature where a combination 
+   of param options are used to improve visual quality.
+   
 .. option:: --qblur <float>
 
 	Temporally blur quants. Default 0.5
@@ -1660,10 +1694,13 @@ VUI fields must be manually specified.
 	a string which is parsed when the stream header SEI are emitted. The
 	string format is "G(%hu,%hu)B(%hu,%hu)R(%hu,%hu)WP(%hu,%hu)L(%u,%u)"
 	where %hu are unsigned 16bit integers and %u are unsigned 32bit
-	integers. The SEI includes X,Y display primaries for RGB channels,
-	white point X,Y and max,min luminance values. (HDR)
+	integers. The SEI includes X,Y display primaries for RGB channels
+	and white point (WP) in units of 0.00002 and max,min luminance (L)
+	values in units of 0.0001 candela per meter square. (HDR)
 
-	Example for D65P3 1000-nits:
+	Example for a P3D65 1000-nits monitor, where G(x=0.265, y=0.690),
+	B(x=0.150, y=0.060), R(x=0.680, y=0.320), WP(x=0.3127, y=0.3290),
+	L(max=1000, min=0.0001):
 
 		G(13250,34500)B(7500,3000)R(34000,16000)WP(15635,16450)L(10000000,1)
 
@@ -1672,14 +1709,20 @@ VUI fields must be manually specified.
 
 .. option:: --max-cll <string>
 
-	Maximum content light level and maximum frame average light level as
-	required by the Consumer Electronics Association 861.3 specification.
+	Maximum content light level (MaxCLL) and maximum frame average light
+	level (MaxFALL) as required by the Consumer Electronics Association
+	861.3 specification.
 
 	Specified as a string which is parsed when the stream header SEI are
 	emitted. The string format is "%hu,%hu" where %hu are unsigned 16bit
 	integers. The first value is the max content light level (or 0 if no
 	maximum is indicated), the second value is the maximum picture
 	average light level (or 0). (HDR)
+
+	Example for MaxCLL=1000 candela per square meter, MaxFALL=400
+	candela per square meter:
+
+		--max-cll “1000,400”
 
 	Note that this string value will need to be escaped or quoted to
 	protect against shell expansion on many platforms. No default.

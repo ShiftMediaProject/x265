@@ -545,6 +545,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <AdditionalDependencies>libx265_10bd.lib;libx265_12bd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(SolutionDir)obj\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
+      <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -609,6 +610,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <AdditionalDependencies>libx265_10bd.lib;libx265_12bd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(SolutionDir)obj\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
+      <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(OutDir)\include
@@ -991,6 +993,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(SolutionDir)obj\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
     </Link>
     <YASM>
       <IncludePaths>$(ProjectDir)\..\common\x86;%(IncludePaths)</IncludePaths>
@@ -1068,6 +1071,7 @@ del /f /q $(OutDir)\licenses\x265.txt
       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(SolutionDir)obj\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4006,4221 %(AdditionalOptions)</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
     </Link>
     <YASM>
       <IncludePaths>$(ProjectDir)\..\common\x86;%(IncludePaths)</IncludePaths>
@@ -1675,4 +1679,3 @@ del $(OutDir)\include\x265_config.h
     <Import Project="$(VCTargetsPath)\BuildCustomizations\vsyasm.targets" />
   </ImportGroup>
 </Project>
-

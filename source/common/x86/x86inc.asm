@@ -65,6 +65,15 @@
         %define UNIX64 1
     %endif
 %endif
+ 
+%define FORMAT_ELF 0
+%ifidn __OUTPUT_FORMAT__,elf
+    %define FORMAT_ELF 1
+%elifidn __OUTPUT_FORMAT__,elf32
+    %define FORMAT_ELF 1
+%elifidn __OUTPUT_FORMAT__,elf64
+    %define FORMAT_ELF 1
+%endif
 
 %ifdef PREFIX
     %define mangle(x) _ %+ x
@@ -90,6 +99,10 @@
 %endif
 %ifdef PIC
     default rel
+%endif
+
+%ifdef __NASM_VER__
+    %use smartalign
 %endif
 
 ; Macros to eliminate most code duplication between x86_32 and x86_64:
@@ -677,7 +690,7 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
         CAT_XDEFINE cglobaled_, %2, 1
     %endif
     %xdefine current_function %2
-    %ifidn __OUTPUT_FORMAT__,elf
+    %if FORMAT_ELF
         global %2:function %%VISIBILITY
     %else
         global %2
@@ -703,14 +716,16 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 
 ; like cextern, but without the prefix
 %macro cextern_naked 1
-    %xdefine %1 mangle(%1)
+    %ifdef PREFIX
+        %xdefine %1 mangle(%1)
+    %endif
     CAT_XDEFINE cglobaled_, %1, 1
     extern %1
 %endmacro
 
 %macro const 1-2+
     %xdefine %1 mangle(private_prefix %+ _ %+ %1)
-    %ifidn __OUTPUT_FORMAT__,elf
+    %if FORMAT_ELF
         global %1:data hidden
     %else
         global %1
@@ -721,7 +736,7 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 
 ; This is needed for ELF, otherwise the GNU linker assumes the stack is
 ; executable by default.
-%ifidn __OUTPUT_FORMAT__,elf
+%if FORMAT_ELF
 SECTION .note.GNU-stack noalloc noexec nowrite progbits
 %endif
 
@@ -792,9 +807,17 @@ SECTION .note.GNU-stack noalloc noexec nowrite progbits
     %endif
 
     %if ARCH_X86_64 || cpuflag(sse2)
-        CPU amdnop
+        %ifdef __NASM_VER__
+            ALIGNMODE k8
+        %else
+            CPU amdnop
+        %endif
     %else
-        CPU basicnop
+        %ifdef __NASM_VER__
+            ALIGNMODE nop
+        %else
+            CPU basicnop
+        %endif
     %endif
 %endmacro
 
@@ -1474,12 +1497,14 @@ FMA4_INSTR fnmsubsd, fnmsub132sd, fnmsub213sd, fnmsub231sd
 FMA4_INSTR fnmsubss, fnmsub132ss, fnmsub213ss, fnmsub231ss
 
 ; workaround: vpbroadcastq is broken in x86_32 due to a yasm bug
-%if ARCH_X86_64 == 0
-%macro vpbroadcastq 2
-%if sizeof%1 == 16
-    movddup %1, %2
-%else
-    vbroadcastsd %1, %2
-%endif
-%endmacro
+%ifdef __YASM_VER__
+    %if __YASM_VERSION_ID__ < 0x01030000 && ARCH_X86_64 == 0
+        %macro vpbroadcastq 2
+            %if sizeof%1 == 16
+                movddup %1, %2
+            %else
+                vbroadcastsd %1, %2
+            %endif
+        %endmacro
+    %endif
 %endif

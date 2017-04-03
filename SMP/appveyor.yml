@@ -46,7 +46,7 @@ before_build:
         </ItemGroup>
       </Target>
       <Target Name="Build" DependsOnTargets="List">
-        <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="true" />
+        <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="false" />
       </Target>
       <Target Name="GitLink" DependsOnTargets="Build" Outputs="%(PlatformList.Identity)">
         <PropertyGroup>

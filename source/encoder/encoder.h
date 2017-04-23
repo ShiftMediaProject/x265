@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (C) 2013 x265 project
+ * Copyright (C) 2013-2017 MulticoreWare, Inc
  *
  * Authors: Steve Borho <steve@borho.org>
  *
@@ -32,8 +32,11 @@
 #include "nal.h"
 #include "framedata.h"
 
-struct x265_encoder {};
+#ifdef ENABLE_DYNAMIC_HDR10
+    #include "dynamicHDR10\hdr10plus.h"
+#endif
 
+struct x265_encoder {};
 namespace X265_NS {
 // private namespace
 extern const char g_sliceTypeToChar[3];
@@ -153,6 +156,7 @@ public:
     bool               m_bZeroLatency;     // x265_encoder_encode() returns NALs for the input picture, zero lag
     bool               m_aborted;          // fatal error detected
     bool               m_reconfigure;      // Encoder reconfigure in progress
+    bool               m_reconfigureRc;
 
     /* Begin intra refresh when one not in progress or else begin one as soon as the current 
      * one is done. Requires bIntraRefresh to be set.*/
@@ -168,9 +172,26 @@ public:
 
     Lock               m_rpsInSpsLock;
     int                m_rpsInSpsCount;
+    /* For HDR*/
+    double                m_cB;
+    double                m_cR;
+
+    int                     m_bToneMap; // Enables tone-mapping
+
+#ifdef ENABLE_DYNAMIC_HDR10
+    const hdr10plus_api     *m_hdr10plus_api;
+#endif
+
+    x265_sei_payload        m_prevTonemapPayload;
 
     Encoder();
-    ~Encoder() {}
+    ~Encoder()
+    {
+#ifdef ENABLE_DYNAMIC_HDR10
+        if (m_prevTonemapPayload.payload != NULL)
+            X265_FREE(m_prevTonemapPayload.payload);
+#endif
+    };
 
     void create();
     void stopJobs();

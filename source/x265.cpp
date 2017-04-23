@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (C) 2013 x265 project
+ * Copyright (C) 2013-2017 MulticoreWare, Inc
  *
  * Authors: Steve Borho <steve@borho.org>
  *
@@ -50,6 +50,7 @@
 #define CONSOLE_TITLE_SIZE 200
 #ifdef _WIN32
 #include <windows.h>
+#define SetThreadExecutionState(es)
 static char orgConsoleTitle[CONSOLE_TITLE_SIZE] = "";
 #else
 #define GetConsoleTitle(t, n)

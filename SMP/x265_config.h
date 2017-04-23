@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (C) 2013 x265 project
+ * Copyright (C) 2013-2017 MulticoreWare, Inc
  *
  * Authors: Steve Borho <steve@borho.org>
  *
@@ -29,6 +29,6 @@
 /* Incremented each time public API is changed, X265_BUILD is used as
  * the shared library SONAME on platforms which support it. It also
  * prevents linking against a different version of the static lib */
-#define X265_BUILD 110
+#define X265_BUILD 116
 
 #endif

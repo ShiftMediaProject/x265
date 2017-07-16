@@ -2272,7 +2272,7 @@ double RateControl::predictRowsSizeSum(Frame* curFrame, RateControlEntry* rce, d
             uint32_t refRowSatdCost = 0, refRowBits = 0, intraCostForPendingCus = 0;
             double refQScale = 0;
 
-            if (picType != I_SLICE)
+            if (picType != I_SLICE && !m_param->rc.bEnableConstVbv)
             {
                 FrameData& refEncData = *refFrame->m_encData;
                 uint32_t endCuAddr = maxCols * (row + 1);
@@ -2301,7 +2301,8 @@ double RateControl::predictRowsSizeSum(Frame* curFrame, RateControlEntry* rce, d
                     && refFrame 
                     && refFrame->m_encData->m_slice->m_sliceType == picType
                     && refQScale > 0
-                    && refRowSatdCost > 0)
+                    && refRowBits > 0
+                    && !m_param->rc.bEnableConstVbv)
                 {
                     if (abs((int32_t)(refRowSatdCost - satdCostForPendingCus)) < (int32_t)satdCostForPendingCus / 2)
                     {
@@ -2343,7 +2344,7 @@ int RateControl::rowVbvRateControl(Frame* curFrame, uint32_t row, RateControlEnt
     }
     rowSatdCost >>= X265_DEPTH - 8;
     updatePredictor(rce->rowPred[0], qScaleVbv, (double)rowSatdCost, encodedBits);
-    if (curEncData.m_slice->m_sliceType != I_SLICE)
+    if (curEncData.m_slice->m_sliceType != I_SLICE && !m_param->rc.bEnableConstVbv)
     {
         Frame* refFrame = curEncData.m_slice->m_refFrameList[0][0];
         if (qpVbv < refFrame->m_encData->m_rowStat[row].rowQp)
@@ -2613,7 +2614,7 @@ int RateControl::rateControlEnd(Frame* curFrame, int64_t bits, RateControlEntry*
             for (uint32_t i = 0; i < slice->m_sps->numCuInHeight; i++)
                 avgQpAq += curEncData.m_rowStat[i].sumQpAq;
 
-            avgQpAq /= (slice->m_sps->numCUsInFrame * NUM_4x4_PARTITIONS);
+            avgQpAq /= (slice->m_sps->numCUsInFrame * m_param->num4x4Partitions);
             curEncData.m_avgQpAq = avgQpAq;
         }
         else
@@ -2711,6 +2712,13 @@ int RateControl::rateControlEnd(Frame* curFrame, int64_t bits, RateControlEntry*
     {
         *filler = updateVbv(actualBits, rce);
 
+        curFrame->m_rcData->bufferFillFinal = m_bufferFillFinal;
+        for (int i = 0; i < 4; i++)
+        {
+            curFrame->m_rcData->coeff[i] = m_pred[i].coeff;
+            curFrame->m_rcData->count[i] = m_pred[i].count;
+            curFrame->m_rcData->offset[i] = m_pred[i].offset;
+        }
         if (m_param->bEmitHRDSEI)
         {
             const VUI *vui = &curEncData.m_slice->m_sps->vuiParameters;

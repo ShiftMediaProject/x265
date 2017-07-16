@@ -34,6 +34,18 @@
     <Filter Include="Header Files\source\encoder">
       <UniqueIdentifier>{9c84b548-66da-46be-b0e4-509b7025d7e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\dynamicHDR10">
+      <UniqueIdentifier>{b674ec05-cf27-43b7-a470-f04b362d406d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\source\dynamicHDR10">
+      <UniqueIdentifier>{2209f7b7-c3f9-4337-b19e-9dad82100441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\source\dynamicHDR10\json11">
+      <UniqueIdentifier>{34b4395d-abe2-4edc-9ff6-9e769a663284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dynamicHDR10\json11">
+      <UniqueIdentifier>{189e0faf-bf47-47eb-b547-5a1f82fe81ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="x265_config.h">
@@ -200,6 +212,24 @@
     </ClInclude>
     <ClInclude Include="..\source\x265-extras.h">
       <Filter>Header Files\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\dynamicHDR10\BasicStructures.h">
+      <Filter>Header Files\source\dynamicHDR10</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\dynamicHDR10\hdr10plus.h">
+      <Filter>Header Files\source\dynamicHDR10</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\dynamicHDR10\JsonHelper.h">
+      <Filter>Header Files\source\dynamicHDR10</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\dynamicHDR10\metadataFromJson.h">
+      <Filter>Header Files\source\dynamicHDR10</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\dynamicHDR10\SeiMetadataDictionary.h">
+      <Filter>Header Files\source\dynamicHDR10</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\dynamicHDR10\json11\json11.h">
+      <Filter>Header Files\source\dynamicHDR10\json11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -377,6 +407,21 @@
     </ClCompile>
     <ClCompile Include="..\source\x265-extras.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\api.cpp">
+      <Filter>Source Files\dynamicHDR10</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\JsonHelper.cpp">
+      <Filter>Source Files\dynamicHDR10</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\metadataFromJson.cpp">
+      <Filter>Source Files\dynamicHDR10</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\SeiMetadataDictionary.cpp">
+      <Filter>Source Files\dynamicHDR10</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\json11\json11.cpp">
+      <Filter>Source Files\dynamicHDR10\json11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

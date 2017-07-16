@@ -195,6 +195,12 @@
     <ClInclude Include="..\source\encoder\search.h">
       <Filter>Header Files\source\encoder</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\common\x86\seaintegral.h">
+      <Filter>Header Files\source\common\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\x265-extras.h">
+      <Filter>Header Files\source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libx265.def">
@@ -369,6 +375,9 @@
     <ClCompile Include="..\source\encoder\sao.cpp">
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\x265-extras.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <YASM Include="..\source\common\x86\intrapred8.asm">
@@ -426,6 +435,9 @@
       <Filter>Source Files\common\x86</Filter>
     </YASM>
     <YASM Include="..\source\common\x86\ipfilter16.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </YASM>
+    <YASM Include="..\source\common\x86\seaintegral.asm">
       <Filter>Source Files\common\x86</Filter>
     </YASM>
   </ItemGroup>

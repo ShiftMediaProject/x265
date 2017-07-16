@@ -100,8 +100,5 @@
     <ClCompile Include="..\source\output\raw.cpp">
       <Filter>Source Files\output</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\x265-extras.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

@@ -48,7 +48,6 @@
     <ClCompile Include="..\source\output\reconplay.cpp" />
     <ClCompile Include="..\source\output\y4m.cpp" />
     <ClCompile Include="..\source\output\yuv.cpp" />
-    <ClCompile Include="..\source\x265-extras.cpp" />
     <ClCompile Include="..\source\x265.cpp">
       <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

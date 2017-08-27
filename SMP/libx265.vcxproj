@@ -424,19 +424,19 @@
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -445,11 +445,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -488,19 +488,19 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -509,11 +509,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -546,9 +546,9 @@ del /f /q $(OutDir)\licenses\x265.txt
       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -561,11 +561,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
@@ -575,11 +575,11 @@ MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Plat
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -612,9 +612,9 @@ del /f /q $(OutDir)\licenses\x265.txt
       <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -627,11 +627,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
@@ -641,11 +641,11 @@ MSBuild  $(ProjectFileName) /property:Configuration="Debug_12b",Platform="$(Plat
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -692,19 +692,19 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -713,11 +713,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -764,19 +764,19 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -785,11 +785,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -836,19 +836,19 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -857,11 +857,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -908,19 +908,19 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -929,11 +929,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -983,19 +983,19 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -1004,11 +1004,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -1057,19 +1057,19 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )
 MSBuild  $(ProjectFileName) /property:Configuration="Release_10b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo
 MSBuild  $(ProjectFileName) /property:Configuration="Release_12b",Platform="$(Platform)",SolutionDir="$(SolutionDir)\",SolutionFileName="$(SolutionFileName)" /verbosity:m /nologo </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)\include
-copy ..\source\x265.h $(OutDir)\include
-copy .\x265_config.h $(OutDir)\include
+      <Command>mkdir "$(OutDir)"\include
+copy ..\source\x265.h "$(OutDir)"\include
+copy .\x265_config.h "$(OutDir)"\include
 mkdir $(OutDir)\licenses
 copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
@@ -1078,11 +1078,11 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>force_clean</Outputs>
-      <Command>if exist $(OutDir)\include\x265.h (
-del /f /q $(OutDir)\include\x265.h
+      <Command>if exist "$(OutDir)"\include\x265.h (
+del /f /q "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del /f /q $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del /f /q "$(OutDir)"\include\x265_config.h
 )
 if exist $(OutDir)\licenses\x265.txt (
 del /f /q $(OutDir)\licenses\x265.txt
@@ -1120,11 +1120,11 @@ del /f /q $(OutDir)\licenses\x265.txt
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>
@@ -1155,11 +1155,11 @@ del $(OutDir)\include\x265_config.h
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>
@@ -1199,11 +1199,11 @@ del $(OutDir)\include\x265_config.h
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>
@@ -1234,11 +1234,11 @@ del $(OutDir)\include\x265_config.h
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>
@@ -1278,11 +1278,11 @@ del $(OutDir)\include\x265_config.h
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>
@@ -1313,11 +1313,11 @@ del $(OutDir)\include\x265_config.h
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>
@@ -1357,11 +1357,11 @@ del $(OutDir)\include\x265_config.h
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>
@@ -1392,11 +1392,11 @@ del $(OutDir)\include\x265_config.h
       <Command>if exist ..\source\x265_config.h (
 del ..\source\x265_config.h
 )
-if exist $(OutDir)\include\x265.h (
-del $(OutDir)\include\x265.h
+if exist "$(OutDir)"\include\x265.h (
+del "$(OutDir)"\include\x265.h
 )
-if exist $(OutDir)\include\x265_config.h (
-del $(OutDir)\include\x265_config.h
+if exist "$(OutDir)"\include\x265_config.h (
+del "$(OutDir)"\include\x265_config.h
 )</Command>
     </PreBuildEvent>
     <Lib>

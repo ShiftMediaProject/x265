@@ -210,9 +210,6 @@
     <ClInclude Include="..\source\common\x86\seaintegral.h">
       <Filter>Header Files\source\common\x86</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\x265-extras.h">
-      <Filter>Header Files\source</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\dynamicHDR10\BasicStructures.h">
       <Filter>Header Files\source\dynamicHDR10</Filter>
     </ClInclude>
@@ -405,9 +402,6 @@
     <ClCompile Include="..\source\encoder\sao.cpp">
       <Filter>Source Files\encoder</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\x265-extras.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\dynamicHDR10\api.cpp">
       <Filter>Source Files\dynamicHDR10</Filter>
     </ClCompile>
@@ -422,6 +416,9 @@
     </ClCompile>
     <ClCompile Include="..\source\dynamicHDR10\json11\json11.cpp">
       <Filter>Source Files\dynamicHDR10\json11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\lowpassdct.cpp">
+      <Filter>Source Files\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

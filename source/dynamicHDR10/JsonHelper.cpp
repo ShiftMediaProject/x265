@@ -1,16 +1,13 @@
 /**
- * @file                       JsonHelper.cpp
- * @brief                      Helper class for JSON parsing
- * @author                     Daniel Maximiliano Valenzuela, Seongnam Oh.
- * @create date                03/01/2017
- * @version                    0.0.1
+ * Copyright (C) 2013-2017 MulticoreWare, Inc
  *
- * Copyright @ 2017 Samsung Electronics, DMS Lab, Samsung Research America and Samsung Research Tijuana
+ * Authors: Bhavna Hariharan <bhavna@multicorewareinc.com>
+ *          Kavitha Sampath <kavitha@multicorewareinc.com>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,8 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
+ *
+ * This program is also available under a commercial proprietary license.
+ * For more information, contact us at license @ x265.com.
 **/
 
 #include "JsonHelper.h"
@@ -188,9 +187,15 @@ JsonArray JsonHelper::readJsonArray(const string &path)
 
     tfile.close();
 
-    size_t beginning = json_str2.find_first_of("[");
-    int fixchar = json_str2[json_str2.size() - 2] == ']' ? 1 : 0;
-    return Json::parse(json_str2.substr(beginning,json_str2.size() - fixchar),err).array_items();
+    vector<Json> data;
+    if (json_str2.size() != 0)
+    {
+        size_t beginning = json_str2.find_first_of("[");
+        int fixchar = json_str2[json_str2.size() - 2] == ']' ? 1 : 0;
+        return Json::parse(json_str2.substr(beginning, json_str2.size() - fixchar), err).array_items();
+    }
+    else
+        return data;
 }
 
 bool JsonHelper::validatePathExtension(string &path)

@@ -75,6 +75,15 @@
     %define FORMAT_ELF 1
 %endif
 
+%define FORMAT_ELF 0
+%ifidn __OUTPUT_FORMAT__,elf
+    %define FORMAT_ELF 1
+%elifidn __OUTPUT_FORMAT__,elf32
+    %define FORMAT_ELF 1
+%elifidn __OUTPUT_FORMAT__,elf64
+    %define FORMAT_ELF 1
+%endif
+
 %ifdef PREFIX
     %define mangle(x) _ %+ x
 %else
@@ -742,9 +751,8 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
     %1: %2
 %endmacro
 
-; This is needed for ELF, otherwise the GNU linker assumes the stack is
-; executable by default.
-%ifidn __OUTPUT_FORMAT__,elf
+; This is needed for ELF, otherwise the GNU linker assumes the stack is executable by default.
+%if FORMAT_ELF
     [SECTION .note.GNU-stack noalloc noexec nowrite progbits]
 %endif
 
@@ -817,7 +825,7 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 
     %if ARCH_X86_64 || cpuflag(sse2)
         %ifdef __NASM_VER__
-            ALIGNMODE k8
+            ALIGNMODE p6
         %else
             CPU amdnop
         %endif
@@ -1490,7 +1498,7 @@ FMA_INSTR pmadcswd, pmaddwd, paddd
                 v%5%6 %1, %2, %3, %4
             %elifidn %1, %2
                 ; If %3 or %4 is a memory operand it needs to be encoded as the last operand.
-                %ifid %3
+                %ifnum sizeof%3
                     v%{5}213%6 %2, %3, %4
                 %else
                     v%{5}132%6 %2, %4, %3
@@ -1514,14 +1522,3 @@ FMA4_INSTR fmsub,    pd, ps, sd, ss
 FMA4_INSTR fmsubadd, pd, ps
 FMA4_INSTR fnmadd,   pd, ps, sd, ss
 FMA4_INSTR fnmsub,   pd, ps, sd, ss
-
-; workaround: vpbroadcastq is broken in x86_32 due to a yasm bug (fixed in 1.3.0)
-%if __YASM_VERSION_ID__ < 0x01030000 && ARCH_X86_64 == 0
-    %macro vpbroadcastq 2
-        %if sizeof%1 == 16
-            movddup %1, %2
-        %else
-            vbroadcastsd %1, %2
-        %endif
-    %endmacro
-%endif

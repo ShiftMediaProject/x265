@@ -422,65 +422,80 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <YASM Include="..\source\common\x86\intrapred8.asm">
+    <NASM Include="..\source\common\x86\h4-ipfilter16.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\ipfilter8.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\h-ipfilter16.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\loopfilter.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\v4-ipfilter16.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\mc-a.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\h-ipfilter8.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\mc-a2.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\v4-ipfilter8.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\pixel-32.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\blockcopy8.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\pixel-a.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\const-a.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\pixeladd8.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\cpu-a.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\pixel-util8.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\dct8.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\sad-a.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\intrapred8.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\ssd-a.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\intrapred8_allangs.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\blockcopy8.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\intrapred16.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\const-a.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\ipfilter8.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\cpu-a.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\ipfilter16.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\dct8.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\loopfilter.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\intrapred8_allangs.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\mc-a.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\intrapred16.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\mc-a2.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\sad16-a.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\pixel-32.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\ipfilter16.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\pixel-a.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
-    <YASM Include="..\source\common\x86\seaintegral.asm">
+    </NASM>
+    <NASM Include="..\source\common\x86\pixeladd8.asm">
       <Filter>Source Files\common\x86</Filter>
-    </YASM>
+    </NASM>
+    <NASM Include="..\source\common\x86\pixel-util8.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </NASM>
+    <NASM Include="..\source\common\x86\sad16-a.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </NASM>
+    <NASM Include="..\source\common\x86\sad-a.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </NASM>
+    <NASM Include="..\source\common\x86\seaintegral.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </NASM>
+    <NASM Include="..\source\common\x86\ssd-a.asm">
+      <Filter>Source Files\common\x86</Filter>
+    </NASM>
   </ItemGroup>
 </Project>

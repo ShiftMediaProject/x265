@@ -72,7 +72,7 @@ protected:
 #include <x86intrin.h>
 #elif ( !defined(__APPLE__) && defined (__GNUC__) && defined(__ARM_NEON__))
 #include <arm_neon.h>
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && (!defined(__clang__) || __clang_major__ < 4)
 /* fallback for older GCC/MinGW */
 static inline uint32_t __rdtsc(void)
 {
@@ -91,7 +91,7 @@ static inline uint32_t __rdtsc(void)
 }
 #endif // ifdef _MSC_VER
 
-#define BENCH_RUNS 1000
+#define BENCH_RUNS 2000
 
 // Adapted from checkasm.c, runs each optimized primitive four times, measures rdtsc
 // and discards invalid times.  Repeats 1000 times to get a good average.  Then measures

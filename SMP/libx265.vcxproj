@@ -1613,6 +1613,7 @@ del "$(OutDir)"\include\x265_config.h
     </NASM>
     <NASM Include="..\source\common\x86\ipfilter16.asm">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Release_10b|x64'And'$(Configuration)|$(Platform)'!='Release_12b|x64'And'$(Configuration)|$(Platform)'!='Debug_10b|x64'And'$(Configuration)|$(Platform)'!='Debug_12b|x64'">true</ExcludedFromBuild>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </NASM>
     <NASM Include="..\source\common\x86\ipfilter8.asm">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>

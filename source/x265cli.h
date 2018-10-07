@@ -152,6 +152,8 @@ static const struct option long_options[] =
     { "vbv-init",       required_argument, NULL, 0 },
     { "vbv-end",        required_argument, NULL, 0 },
     { "vbv-end-fr-adj", required_argument, NULL, 0 },
+    { "chunk-start",    required_argument, NULL, 0 },
+    { "chunk-end",      required_argument, NULL, 0 },
     { "bitrate",        required_argument, NULL, 0 },
     { "qp",             required_argument, NULL, 'q' },
     { "aq-mode",        required_argument, NULL, 0 },
@@ -300,8 +302,9 @@ static const struct option long_options[] =
     { "no-idr-recovery-sei",  no_argument, NULL, 0 },
     { "single-sei", no_argument, NULL, 0 },
     { "no-single-sei", no_argument, NULL, 0 },
-	{ "atc-sei", required_argument, NULL, 0 },
-	{ "pic-struct", required_argument, NULL, 0 },
+    { "atc-sei", required_argument, NULL, 0 },
+    { "pic-struct", required_argument, NULL, 0 },
+    { "nalu-file", required_argument, NULL, 0 },
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
@@ -352,6 +355,7 @@ static void showHelp(x265_param *param)
     H0("   --dhdr10-info <filename>      JSON file containing the Creative Intent Metadata to be encoded as Dynamic Tone Mapping\n");
     H0("   --[no-]dhdr10-opt             Insert tone mapping SEI only for IDR frames and when the tone mapping information changes. Default disabled\n");
 #endif
+    H0("   --nalu-file <filename>        Text file containing SEI messages in the following format : <POC><space><PREFIX><space><NAL UNIT TYPE>/<SEI TYPE><space><SEI Payload>\n");
     H0("-f/--frames <integer>            Maximum number of frames to encode. Default all\n");
     H0("   --seek <integer>              First frame to encode\n");
     H1("   --[no-]interlace <bff|tff>    Indicate input pictures are interlace fields in temporal order. Default progressive\n");
@@ -398,7 +402,7 @@ static void showHelp(x265_param *param)
     H0("   --[no-]early-skip             Enable early SKIP detection. Default %s\n", OPT(param->bEnableEarlySkip));
     H0("   --[no-]rskip                  Enable early exit from recursion. Default %s\n", OPT(param->bEnableRecursionSkip));
     H1("   --[no-]tskip-fast             Enable fast intra transform skipping. Default %s\n", OPT(param->bEnableTSkipFast));
-    H1("   --[no-]splitrd-skip           Enable skipping split RD analysis when sum of split CU rdCost larger than none split CU rdCost for Intra CU. Default %s\n", OPT(param->bEnableSplitRdSkip));
+    H1("   --[no-]splitrd-skip           Enable skipping split RD analysis when sum of split CU rdCost larger than one split CU rdCost for Intra CU. Default %s\n", OPT(param->bEnableSplitRdSkip));
     H1("   --nr-intra <integer>          An integer value in range of 0 to 2000, which denotes strength of noise reduction in intra CUs. Default 0\n");
     H1("   --nr-inter <integer>          An integer value in range of 0 to 2000, which denotes strength of noise reduction in inter CUs. Default 0\n");
     H0("   --ctu-info <integer>          Enable receiving ctu information asynchronously and determine reaction to the CTU information (0, 1, 2, 4, 6) Default 0\n"
@@ -468,6 +472,8 @@ static void showHelp(x265_param *param)
     H0("   --vbv-init <float>            Initial VBV buffer occupancy (fraction of bufsize or in kbits). Default %.2f\n", param->rc.vbvBufferInit);
     H0("   --vbv-end <float>             Final VBV buffer emptiness (fraction of bufsize or in kbits). Default 0 (disabled)\n");
     H0("   --vbv-end-fr-adj <float>      Frame from which qp has to be adjusted to achieve final decode buffer emptiness. Default 0\n");
+    H0("   --chunk-start <integer>       First frame of the chunk. Default 0 (disabled)\n");
+    H0("   --chunk-end <integer>         Last frame of the chunk. Default 0 (disabled)\n");
     H0("   --pass                        Multi pass rate control.\n"
        "                                   - 1 : First pass, creates stats file\n"
        "                                   - 2 : Last pass, does not overwrite stats file\n"
@@ -565,8 +571,8 @@ static void showHelp(x265_param *param)
     H0("   --[no-]temporal-layers        Enable a temporal sublayer for unreferenced B frames. Default %s\n", OPT(param->bEnableTemporalSubLayers));
     H0("   --[no-]aud                    Emit access unit delimiters at the start of each access unit. Default %s\n", OPT(param->bEnableAccessUnitDelimiters));
     H1("   --hash <integer>              Decoded Picture Hash SEI 0: disabled, 1: MD5, 2: CRC, 3: Checksum. Default %d\n", param->decodedPictureHashSEI);
-	H0("   --atc-sei <integer>           Emit the alternative transfer characteristics SEI message where the integer is the preferred transfer characteristics. Default disabled\n");
-	H0("   --pic-struct <integer>        Set the picture structure and emits it in the picture timing SEI message. Values in the range 0..12. See D.3.3 of the HEVC spec. for a detailed explanation.\n");
+    H0("   --atc-sei <integer>           Emit the alternative transfer characteristics SEI message where the integer is the preferred transfer characteristics. Default disabled\n");
+    H0("   --pic-struct <integer>        Set the picture structure and emits it in the picture timing SEI message. Values in the range 0..12. See D.3.3 of the HEVC spec. for a detailed explanation.\n");
     H0("   --log2-max-poc-lsb <integer>  Maximum of the picture order count\n");
     H0("   --[no-]vui-timing-info        Emit VUI timing information in the bistream. Default %s\n", OPT(param->bEmitVUITimingInfo));
     H0("   --[no-]vui-hrd-info           Emit VUI HRD information in the bistream. Default %s\n", OPT(param->bEmitVUIHRDInfo));

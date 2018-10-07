@@ -88,6 +88,11 @@ struct FrameStats
     uint64_t    cntInterPu[NUM_CU_DEPTH][INTER_MODES - 1];
     uint64_t    cntMergePu[NUM_CU_DEPTH][INTER_MODES - 1];
 
+    /* Feature values per row for dynamic refinement */
+    uint64_t       rowRdDyn[MAX_NUM_DYN_REFINE];
+    uint32_t       rowVarDyn[MAX_NUM_DYN_REFINE];
+    uint32_t       rowCntDyn[MAX_NUM_DYN_REFINE];
+
     FrameStats()
     {
         memset(this, 0, sizeof(FrameStats));
@@ -172,48 +177,6 @@ public:
     void reinit(const SPS& sps);
     void destroy();
     inline CUData* getPicCTU(uint32_t ctuAddr) { return &m_picCTU[ctuAddr]; }
-};
-
-/* Stores intra analysis data for a single frame. This struct needs better packing */
-struct analysis_intra_data
-{
-    uint8_t*  depth;
-    uint8_t*  modes;
-    char*     partSizes;
-    uint8_t*  chromaModes;
-};
-
-/* Stores inter analysis data for a single frame */
-struct analysis_inter_data
-{
-    int32_t*    ref;
-    uint8_t*    depth;
-    uint8_t*    modes;
-    uint8_t*    partSize;
-    uint8_t*    mergeFlag;
-    uint8_t*    interDir;
-    uint8_t*    mvpIdx[2];
-    int8_t*     refIdx[2];
-    MV*         mv[2];
-   int64_t*     sadCost;
-};
-
-struct analysis2PassFrameData
-{
-    uint8_t*      depth;
-    MV*           m_mv[2];
-    int*          mvpIdx[2];
-    int32_t*      ref[2];
-    uint8_t*      modes;
-    sse_t*        distortion;
-    sse_t*        ctuDistortion;
-    double*       scaledDistortion;
-    double        averageDistortion;
-    double        sdDistortion;
-    uint32_t      highDistortionCtuCount;
-    uint32_t      lowDistortionCtuCount;
-    double*       offset;
-    double*       threshold;
 };
 
 }

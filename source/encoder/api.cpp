@@ -94,6 +94,7 @@ x265_encoder *x265_encoder_open(x265_param *p)
     Encoder* encoder = NULL;
     x265_param* param = PARAM_NS::x265_param_alloc();
     x265_param* latestParam = PARAM_NS::x265_param_alloc();
+    x265_param* zoneParam = PARAM_NS::x265_param_alloc();
     if (!param || !latestParam)
         goto fail;
 
@@ -126,6 +127,13 @@ x265_encoder *x265_encoder_open(x265_param *p)
     }
 
     encoder->create();
+
+    memcpy(zoneParam, param, sizeof(x265_param));
+    for (int i = 0; i < param->rc.zonefileCount; i++)
+    {
+        encoder->configureZone(zoneParam, param->rc.zones[i].zoneParam);
+    }
+
     /* Try to open CSV file handle */
     if (encoder->m_param->csvfn)
     {
@@ -213,6 +221,7 @@ int x265_encoder_reconfig(x265_encoder* enc, x265_param* param_in)
     }
     else
     {
+        encoder->configure(encoder->m_latestParam);
         if (encoder->m_latestParam->scalingLists && encoder->m_latestParam->scalingLists != encoder->m_param->scalingLists)
         {
             if (encoder->m_param->bRepeatHeaders)
@@ -251,6 +260,9 @@ int x265_encoder_reconfig(x265_encoder* enc, x265_param* param_in)
         }
         encoder->printReconfigureParams();
     }
+    /* Zones support modifying num of Refs. Requires determining level at each zone start*/
+    if (encoder->m_param->rc.zonefileCount)
+        determineLevel(*encoder->m_latestParam, encoder->m_vps);
     return ret;
 }
 
@@ -408,6 +420,7 @@ void x265_alloc_analysis_data(x265_param *param, x265_analysis_data* analysis)
     x265_analysis_inter_data *interData = analysis->interData = NULL;
     x265_analysis_intra_data *intraData = analysis->intraData = NULL;
     x265_analysis_distortion_data *distortionData = analysis->distortionData = NULL;
+
     bool isVbv = param->rc.vbvMaxBitrate > 0 && param->rc.vbvBufferSize > 0;
     int numDir = 2; //irrespective of P or B slices set direction as 2
     uint32_t numPlanes = param->internalCsp == X265_CSP_I400 ? 1 : 3;
@@ -419,18 +432,19 @@ void x265_alloc_analysis_data(x265_param *param, x265_analysis_data* analysis)
 #else
     uint32_t numCUs_sse_t = analysis->numCUsInFrame;
 #endif
-
-    //Allocate memory for distortionData pointer
-    CHECKED_MALLOC_ZERO(distortionData, x265_analysis_distortion_data, 1);
-    CHECKED_MALLOC_ZERO(distortionData->distortion, sse_t, analysis->numPartitions * numCUs_sse_t);
-    if (param->rc.bStatRead)
+    if (param->analysisMultiPassRefine || param->analysisMultiPassDistortion || param->ctuDistortionRefine)
     {
-        CHECKED_MALLOC_ZERO(distortionData->ctuDistortion, sse_t, numCUs_sse_t);
-        CHECKED_MALLOC_ZERO(distortionData->scaledDistortion, double, analysis->numCUsInFrame);
-        CHECKED_MALLOC_ZERO(distortionData->offset, double, analysis->numCUsInFrame);
-        CHECKED_MALLOC_ZERO(distortionData->threshold, double, analysis->numCUsInFrame);
+        //Allocate memory for distortionData pointer
+        CHECKED_MALLOC_ZERO(distortionData, x265_analysis_distortion_data, 1);
+        CHECKED_MALLOC_ZERO(distortionData->ctuDistortion, sse_t, analysis->numPartitions * numCUs_sse_t);
+        if (param->analysisLoad || param->rc.bStatRead)
+        {
+            CHECKED_MALLOC_ZERO(distortionData->scaledDistortion, double, analysis->numCUsInFrame);
+            CHECKED_MALLOC_ZERO(distortionData->offset, double, analysis->numCUsInFrame);
+            CHECKED_MALLOC_ZERO(distortionData->threshold, double, analysis->numCUsInFrame);
+        }
+        analysis->distortionData = distortionData;
     }
-    analysis->distortionData = distortionData;
 
     if (param->bDisableLookahead && isVbv)
     {
@@ -441,7 +455,7 @@ void x265_alloc_analysis_data(x265_param *param, x265_analysis_data* analysis)
     }
 
     //Allocate memory for weightParam pointer
-    if (!(param->bMVType == AVC_INFO))
+    if (!(param->bAnalysisType == AVC_INFO))
         CHECKED_MALLOC_ZERO(analysis->wt, x265_weight_param, numPlanes * numDir);
 
     if (param->analysisReuseLevel < 2)
@@ -450,16 +464,20 @@ void x265_alloc_analysis_data(x265_param *param, x265_analysis_data* analysis)
     //Allocate memory for intraData pointer
     CHECKED_MALLOC_ZERO(intraData, x265_analysis_intra_data, 1);
     CHECKED_MALLOC(intraData->depth, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
-    CHECKED_MALLOC(intraData->modes, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
-    CHECKED_MALLOC(intraData->partSizes, char, analysis->numPartitions * analysis->numCUsInFrame);
-    CHECKED_MALLOC(intraData->chromaModes, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
+    CHECKED_MALLOC_ZERO(intraData->modes, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
+    CHECKED_MALLOC_ZERO(intraData->partSizes, char, analysis->numPartitions * analysis->numCUsInFrame);
+    CHECKED_MALLOC_ZERO(intraData->chromaModes, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
+    if (param->rc.cuTree)
+        CHECKED_MALLOC_ZERO(intraData->cuQPOff, int8_t, analysis->numPartitions * analysis->numCUsInFrame);
     analysis->intraData = intraData;
 
     //Allocate memory for interData pointer based on ReuseLevels
     CHECKED_MALLOC_ZERO(interData, x265_analysis_inter_data, 1);
     CHECKED_MALLOC(interData->depth, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
-    CHECKED_MALLOC(interData->modes, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
+    CHECKED_MALLOC_ZERO(interData->modes, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
 
+    if (param->rc.cuTree)
+        CHECKED_MALLOC_ZERO(interData->cuQPOff, int8_t, analysis->numPartitions * analysis->numCUsInFrame);
     CHECKED_MALLOC_ZERO(interData->mvpIdx[0], uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
     CHECKED_MALLOC_ZERO(interData->mvpIdx[1], uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
     CHECKED_MALLOC_ZERO(interData->mv[0], x265_analysis_MV, analysis->numPartitions * analysis->numCUsInFrame);
@@ -467,16 +485,16 @@ void x265_alloc_analysis_data(x265_param *param, x265_analysis_data* analysis)
 
     if (param->analysisReuseLevel > 4)
     {
-        CHECKED_MALLOC(interData->partSize, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
+        CHECKED_MALLOC_ZERO(interData->partSize, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
         CHECKED_MALLOC_ZERO(interData->mergeFlag, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
     }
     if (param->analysisReuseLevel >= 7)
     {
-        CHECKED_MALLOC(interData->interDir, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
-        CHECKED_MALLOC(interData->sadCost, int64_t, analysis->numPartitions * analysis->numCUsInFrame);
+        CHECKED_MALLOC_ZERO(interData->interDir, uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
+        CHECKED_MALLOC_ZERO(interData->sadCost, int64_t, analysis->numPartitions * analysis->numCUsInFrame);
         for (int dir = 0; dir < numDir; dir++)
         {
-            CHECKED_MALLOC(interData->refIdx[dir], int8_t, analysis->numPartitions * analysis->numCUsInFrame);
+            CHECKED_MALLOC_ZERO(interData->refIdx[dir], int8_t, analysis->numPartitions * analysis->numCUsInFrame);
             CHECKED_MALLOC_ZERO(analysis->modeFlag[dir], uint8_t, analysis->numPartitions * analysis->numCUsInFrame);
         }
     }
@@ -512,10 +530,9 @@ void x265_free_analysis_data(x265_param *param, x265_analysis_data* analysis)
     //Free memory for distortionData pointers
     if (analysis->distortionData)
     {
-        X265_FREE((analysis->distortionData)->distortion);
-        if (param->rc.bStatRead)
+        X265_FREE((analysis->distortionData)->ctuDistortion);
+        if (param->rc.bStatRead || param->analysisLoad)
         {
-            X265_FREE((analysis->distortionData)->ctuDistortion);
             X265_FREE((analysis->distortionData)->scaledDistortion);
             X265_FREE((analysis->distortionData)->offset);
             X265_FREE((analysis->distortionData)->threshold);
@@ -524,7 +541,7 @@ void x265_free_analysis_data(x265_param *param, x265_analysis_data* analysis)
     }
 
     /* Early exit freeing weights alone if level is 1 (when there is no analysis inter/intra) */
-    if (analysis->wt && !(param->bMVType == AVC_INFO))
+    if (analysis->wt && !(param->bAnalysisType == AVC_INFO))
         X265_FREE(analysis->wt);
 
     if (param->analysisReuseLevel < 2)
@@ -537,6 +554,8 @@ void x265_free_analysis_data(x265_param *param, x265_analysis_data* analysis)
         X265_FREE((analysis->intraData)->modes);
         X265_FREE((analysis->intraData)->partSizes);
         X265_FREE((analysis->intraData)->chromaModes);
+        if (param->rc.cuTree)
+            X265_FREE((analysis->intraData)->cuQPOff);
         X265_FREE(analysis->intraData);
         analysis->intraData = NULL;
     }
@@ -546,6 +565,8 @@ void x265_free_analysis_data(x265_param *param, x265_analysis_data* analysis)
     {
         X265_FREE((analysis->interData)->depth);
         X265_FREE((analysis->interData)->modes);
+        if (param->rc.cuTree)
+            X265_FREE((analysis->interData)->cuQPOff);
         X265_FREE((analysis->interData)->mvpIdx[0]);
         X265_FREE((analysis->interData)->mvpIdx[1]);
         X265_FREE((analysis->interData)->mv[0]);
@@ -598,8 +619,10 @@ void x265_picture_init(x265_param *param, x265_picture *pic)
     pic->quantOffsets = NULL;
     pic->userSEI.payloads = NULL;
     pic->userSEI.numPayloads = 0;
+    pic->rpu.payloadSize = 0;
+    pic->rpu.payload = NULL;
 
-    if ((param->analysisSave || param->analysisLoad) || (param->bMVType == AVC_INFO))
+    if ((param->analysisSave || param->analysisLoad) || (param->bAnalysisType == AVC_INFO))
     {
         uint32_t widthInCU = (param->sourceWidth + param->maxCUSize - 1) >> param->maxLog2CUSize;
         uint32_t heightInCU = (param->sourceHeight + param->maxCUSize - 1) >> param->maxLog2CUSize;
@@ -612,6 +635,8 @@ void x265_picture_init(x265_param *param, x265_picture *pic)
 
 void x265_picture_free(x265_picture *p)
 {
+    if (p->rpu.payload)
+        X265_FREE(p->rpu.payload);
     return x265_free(p);
 }
 
@@ -661,9 +686,9 @@ static const x265_api libapi =
 #if ENABLE_LIBVMAF
     &x265_calculate_vmafscore,
     &x265_calculate_vmaf_framelevelscore,
-    &x265_vmaf_encoder_log
+    &x265_vmaf_encoder_log,
 #endif
-
+    &PARAM_NS::x265_zone_param_parse
 };
 
 typedef const x265_api* (*api_get_func)(int bitDepth);
@@ -681,9 +706,11 @@ typedef const x265_api* (*api_query_func)(int bitDepth, int apiVersion, int* err
 #include <dlfcn.h>
 #define ext ".so"
 #endif
+#if defined(__GNUC__) && __GNUC__ >= 8
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
 
 static int g_recursion /* = 0 */;
-
 const x265_api* x265_api_get(int bitDepth)
 {
     if (bitDepth && bitDepth != X265_DEPTH)
@@ -1483,11 +1510,11 @@ fail_or_end:
 double x265_calculate_vmafscore(x265_param *param, x265_vmaf_data *data)
 {
     double score;
-    
+
     data->width = param->sourceWidth;
     data->height = param->sourceHeight;
     data->internalBitDepth = param->internalBitDepth;
-   
+
     if (param->internalCsp == X265_CSP_I420)
     {
         if ((param->sourceWidth * param->sourceHeight) % 2 != 0)
@@ -1500,8 +1527,8 @@ double x265_calculate_vmafscore(x265_param *param, x265_vmaf_data *data)
         data->offset = param->sourceWidth * param->sourceHeight * 2;
     else
         x265_log(NULL, X265_LOG_ERROR, "Invalid format\n");
-  
-    compute_vmaf(&score, vcd->format, data->width, data->height, read_frame, data, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool); 
+
+    compute_vmaf(&score, vcd->format, data->width, data->height, read_frame, data, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool, vcd->thread, vcd->subsample, vcd->enable_conf_interval);
 
     return score;
 }
@@ -1514,11 +1541,11 @@ int read_frame_10bit(float *reference_data, float *distorted_data, float *temp_d
     PicYuv *distorted_frame = (PicYuv *)user_data->distorted_frame;
 
     if(!user_data->frame_set) {
- 
+
         int reference_stride = reference_frame->m_stride;
         int distorted_stride = distorted_frame->m_stride;
 
-        const uint16_t *reference_ptr = (const uint16_t *)reference_frame->m_picOrg[0]; 
+        const uint16_t *reference_ptr = (const uint16_t *)reference_frame->m_picOrg[0];
         const uint16_t *distorted_ptr = (const uint16_t *)distorted_frame->m_picOrg[0];
 
         temp_data = reference_data;
@@ -1534,7 +1561,7 @@ int read_frame_10bit(float *reference_data, float *distorted_data, float *temp_d
             reference_ptr += reference_stride;
             temp_data += stride / sizeof(*temp_data);
         }
-        
+
         temp_data = distorted_data;
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
@@ -1546,8 +1573,8 @@ int read_frame_10bit(float *reference_data, float *distorted_data, float *temp_d
 
         user_data->frame_set = 1;
         return 0;
-    }                                                             
-    return 2;                                                               
+    }
+    return 2;
 }
 
 int read_frame_8bit(float *reference_data, float *distorted_data, float *temp_data, int stride, void *s)
@@ -1578,7 +1605,7 @@ int read_frame_8bit(float *reference_data, float *distorted_data, float *temp_da
             reference_ptr += reference_stride;
             temp_data += stride / sizeof(*temp_data);
         }
-        
+
         temp_data = distorted_data;
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
@@ -1590,8 +1617,8 @@ int read_frame_8bit(float *reference_data, float *distorted_data, float *temp_da
 
         user_data->frame_set = 1;
         return 0;
-    }                                                             
-    return 2;                                                               
+    }
+    return 2;
 }
 
 double x265_calculate_vmaf_framelevelscore(x265_vmaf_framedata *vmafframedata)
@@ -1603,8 +1630,8 @@ double x265_calculate_vmaf_framelevelscore(x265_vmaf_framedata *vmafframedata)
         read_frame = read_frame_8bit;
     else
         read_frame = read_frame_10bit;
-    compute_vmaf(&score, vcd->format, vmafframedata->width, vmafframedata->height, read_frame, vmafframedata, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool);
- 
+    compute_vmaf(&score, vcd->format, vmafframedata->width, vmafframedata->height, read_frame, vmafframedata, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool, vcd->thread, vcd->subsample, vcd->enable_conf_interval);
+
     return score;
 }
 #endif

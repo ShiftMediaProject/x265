@@ -335,7 +335,7 @@ void FrameEncoder::threadMain()
             while (!m_frame->m_ctuInfo)
                 m_frame->m_copied.wait();
         }
-        if ((m_param->bMVType == AVC_INFO) && !m_param->analysisSave && !m_param->analysisLoad && !(IS_X265_TYPE_I(m_frame->m_lowres.sliceType)))
+        if ((m_param->bAnalysisType == AVC_INFO) && !m_param->analysisSave && !m_param->analysisLoad && !(IS_X265_TYPE_I(m_frame->m_lowres.sliceType)))
         {
             while (((m_frame->m_analysisData.interData == NULL && m_frame->m_analysisData.intraData == NULL) || (uint32_t)m_frame->m_poc != m_frame->m_analysisData.poc))
                 m_frame->m_copyMVType.wait();
@@ -657,6 +657,8 @@ void FrameEncoder::compressFrame()
             bpSei->m_auCpbRemovalDelayDelta = 1;
             bpSei->m_cpbDelayOffset = 0;
             bpSei->m_dpbDelayOffset = 0;
+            bpSei->m_concatenationFlag = (m_param->bEnableHRDConcatFlag && !m_frame->m_poc) ? true : false;
+
             // hrdFullness() calculates the initial CPB removal delay and offset
             m_top->m_rateControl->hrdFullness(bpSei);
             bpSei->writeSEImessages(m_bs, *slice->m_sps, NAL_UNIT_PREFIX_SEI, m_nalList, m_param->bSingleSeiNal);
@@ -1061,6 +1063,14 @@ void FrameEncoder::compressFrame()
         bytes += m_nalList.m_nal[m_nalList.m_numNal - 1].sizeBytes;
         bytes -= 3; //exclude start code prefix
         m_accessUnitBits = bytes << 3;
+    }
+
+    if (m_frame->m_rpu.payloadSize)
+    {
+        m_bs.resetBits();
+        for (int i = 0; i < m_frame->m_rpu.payloadSize; i++)
+            m_bs.write(m_frame->m_rpu.payload[i], 8);
+        m_nalList.serialize(NAL_UNIT_UNSPECIFIED, m_bs);
     }
 
     m_endCompressTime = x265_mdate();
@@ -1599,11 +1609,11 @@ void FrameEncoder::processRowEncoder(int intRow, ThreadLocalData& tld)
             if (!m_param->bEnableWavefront && col == numCols - 1)
             {
                 double qpBase = curEncData.m_cuStat[cuAddr].baseQp;
-                int reEncode = m_top->m_rateControl->rowVbvRateControl(m_frame, row, &m_rce, qpBase, m_sliceBaseRow, sliceId);
+                curRow.reEncode = m_top->m_rateControl->rowVbvRateControl(m_frame, row, &m_rce, qpBase, m_sliceBaseRow, sliceId);
                 qpBase = x265_clip3((double)m_param->rc.qpMin, (double)m_param->rc.qpMax, qpBase);
                 curEncData.m_rowStat[row].rowQp = qpBase;
                 curEncData.m_rowStat[row].rowQpScale = x265_qp2qScale(qpBase);
-                if (reEncode < 0)
+                if (curRow.reEncode < 0)
                 {
                     x265_log(m_param, X265_LOG_DEBUG, "POC %d row %d - encode restart required for VBV, to %.2f from %.2f\n",
                         m_frame->m_poc, row, qpBase, curEncData.m_cuStat[cuAddr].baseQp);
@@ -1642,17 +1652,19 @@ void FrameEncoder::processRowEncoder(int intRow, ThreadLocalData& tld)
                             curEncData.m_rowStat[r].sumQpRc += curEncData.m_cuStat[c].baseQp;
                             curEncData.m_rowStat[r].numEncodedCUs = c;
                         }
+                        if (curRow.reEncode < 0)
+                            break;
                         startCuAddr = EndCuAddr - numCols;
                         EndCuAddr = startCuAddr + 1;
                     }
                 }
                 double qpBase = curEncData.m_cuStat[cuAddr].baseQp;
-                int reEncode = m_top->m_rateControl->rowVbvRateControl(m_frame, row, &m_rce, qpBase, m_sliceBaseRow, sliceId);
+                curRow.reEncode = m_top->m_rateControl->rowVbvRateControl(m_frame, row, &m_rce, qpBase, m_sliceBaseRow, sliceId);
                 qpBase = x265_clip3((double)m_param->rc.qpMin, (double)m_param->rc.qpMax, qpBase);
                 curEncData.m_rowStat[row].rowQp = qpBase;
                 curEncData.m_rowStat[row].rowQpScale = x265_qp2qScale(qpBase);
 
-                if (reEncode < 0)
+                if (curRow.reEncode < 0)
                 {
                     x265_log(m_param, X265_LOG_DEBUG, "POC %d row %d - encode restart required for VBV, to %.2f from %.2f\n",
                              m_frame->m_poc, row, qpBase, curEncData.m_cuStat[cuAddr].baseQp);

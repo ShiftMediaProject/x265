@@ -2319,6 +2319,17 @@ void setupAssemblyPrimitives(EncoderPrimitives &p, int cpuMask) // Main10
         p.cu[BLOCK_16x16].psyRdoQuant_1p = PFX(psyRdoQuant_1p16_avx2);
         p.cu[BLOCK_32x32].psyRdoQuant_1p = PFX(psyRdoQuant_1p32_avx2);
 
+        p.cu[BLOCK_4x4].ssimDist = PFX(ssimDist4_avx2);
+        p.cu[BLOCK_8x8].ssimDist = PFX(ssimDist8_avx2);
+        p.cu[BLOCK_16x16].ssimDist = PFX(ssimDist16_avx2);
+        p.cu[BLOCK_32x32].ssimDist = PFX(ssimDist32_avx2);
+        p.cu[BLOCK_64x64].ssimDist = PFX(ssimDist64_avx2);
+
+        p.cu[BLOCK_8x8].normFact = PFX(normFact8_avx2);
+        p.cu[BLOCK_16x16].normFact = PFX(normFact16_avx2);
+        p.cu[BLOCK_32x32].normFact = PFX(normFact32_avx2);
+        p.cu[BLOCK_64x64].normFact = PFX(normFact64_avx2);
+
         /* TODO: This kernel needs to be modified to work with HIGH_BIT_DEPTH only 
         p.planeClipAndMax = PFX(planeClipAndMax_avx2); */
 
@@ -2526,7 +2537,7 @@ void setupAssemblyPrimitives(EncoderPrimitives &p, int cpuMask) // Main10
         p.pu[LUMA_32x24].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_32x24_avx512);
         p.pu[LUMA_32x32].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_32x32_avx512);
         p.pu[LUMA_32x64].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_32x64_avx512);
-        p.pu[LUMA_48x64].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_48x64_avx512);
+        //p.pu[LUMA_48x64].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_48x64_avx512);
         p.pu[LUMA_64x16].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_64x16_avx512);
         p.pu[LUMA_64x32].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_64x32_avx512);
         p.pu[LUMA_64x48].pixelavg_pp[ALIGNED] = PFX(pixel_avg_aligned_64x48_avx512);
@@ -4705,6 +4716,17 @@ void setupAssemblyPrimitives(EncoderPrimitives &p, int cpuMask) // Main
         p.cu[BLOCK_8x8].psyRdoQuant_1p = PFX(psyRdoQuant_1p8_avx2);
         p.cu[BLOCK_16x16].psyRdoQuant_1p = PFX(psyRdoQuant_1p16_avx2);
         p.cu[BLOCK_32x32].psyRdoQuant_1p = PFX(psyRdoQuant_1p32_avx2);
+
+        p.cu[BLOCK_4x4].ssimDist = PFX(ssimDist4_avx2);
+        p.cu[BLOCK_8x8].ssimDist = PFX(ssimDist8_avx2);
+        p.cu[BLOCK_16x16].ssimDist = PFX(ssimDist16_avx2);
+        p.cu[BLOCK_32x32].ssimDist = PFX(ssimDist32_avx2);
+        p.cu[BLOCK_64x64].ssimDist = PFX(ssimDist64_avx2);
+
+        p.cu[BLOCK_8x8].normFact = PFX(normFact8_avx2);
+        p.cu[BLOCK_16x16].normFact = PFX(normFact16_avx2);
+        p.cu[BLOCK_32x32].normFact = PFX(normFact32_avx2);
+        p.cu[BLOCK_64x64].normFact = PFX(normFact64_avx2);
 
     }
     if (cpuMask & X265_CPU_AVX512)

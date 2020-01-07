@@ -45,7 +45,9 @@
     </ClCompile>
     <ClCompile Include="..\source\output\output.cpp" />
     <ClCompile Include="..\source\output\raw.cpp" />
-    <ClCompile Include="..\source\output\reconplay.cpp" />
+    <ClCompile Include="..\source\output\reconplay.cpp">
+      <PreprocessorDefinitions>X265_DEPTH=8;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="..\source\output\y4m.cpp" />
     <ClCompile Include="..\source\output\yuv.cpp" />
     <ClCompile Include="..\source\x265.cpp">
@@ -144,7 +146,7 @@
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>HAVE_STRING_H;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;ENABLE_HDR10_PLUS=1;EXPORT_C_API=1;X265_NS=x265;_WIN32_WINNT=0x0502;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <DisableSpecificWarnings>4391;4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MinimalRebuild>false</MinimalRebuild>
@@ -207,7 +209,7 @@ del /f /q "$(OutDir)"\licenses\x265.txt
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>HAVE_STRING_H;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;ENABLE_HDR10_PLUS=1;EXPORT_C_API=1;X265_NS=x265;X86_64=1;_WIN32_WINNT=0x0600;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <C99Support>true</C99Support>
       <DisableSpecificWarnings>4391;4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MinimalRebuild>false</MinimalRebuild>
@@ -273,7 +275,7 @@ del /f /q "$(OutDir)"\licenses\x265.txt
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
       <PreprocessorDefinitions>HAVE_STRING_H;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;ENABLE_HDR10_PLUS=1;EXPORT_C_API=1;X265_NS=x265;_WIN32_WINNT=0x0502;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>
@@ -336,7 +338,7 @@ del /f /q "$(OutDir)"\licenses\x265.txt
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
       <PreprocessorDefinitions>HAVE_STRING_H;__ICL;WIN32;_WINDOWS;X265_ARCH_X86=1;HAVE_INT_TYPES_H=1;ENABLE_HDR10_PLUS=1;EXPORT_C_API=1;X265_NS=x265;X86_64=1;_WIN32_WINNT=0x0600;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\source;..\source\Lib;..\source\common;..\source\compat\getopt;..\source\encoder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <UseProcessorExtensions>SSE3</UseProcessorExtensions>
       <C99Support>true</C99Support>

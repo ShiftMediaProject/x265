@@ -3,7 +3,7 @@ similarity index 100%
 rename from source/common/IntraPred.cpp
 rename to source/common/intrapred.cpp
 diff --git a/source/common/x86/x86inc.asm b/source/common/x86/x86inc.asm
-index dde6b7e0b..d13cdcf44 100644
+index 670699ec6..3a094345a 100644
 --- a/source/common/x86/x86inc.asm
 +++ b/source/common/x86/x86inc.asm
 @@ -64,6 +64,15 @@

@@ -63,6 +63,9 @@
     <ClInclude Include="..\source\output\reconplay.h">
       <Filter>Header Files\output</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\abrEncApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="x265.rc">
@@ -99,6 +102,12 @@
     </ClCompile>
     <ClCompile Include="..\source\output\raw.cpp">
       <Filter>Source Files\output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\x265cli.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\abrEncApp.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

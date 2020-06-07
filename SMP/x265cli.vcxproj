@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\abrEncApp.h" />
     <ClInclude Include="..\source\compat\getopt\getopt.h" />
     <ClInclude Include="..\source\input\input.h" />
     <ClInclude Include="..\source\input\y4m.h" />
@@ -35,6 +36,7 @@
     <ResourceCompile Include="x265.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\abrEncApp.cpp" />
     <ClCompile Include="..\source\compat\getopt\getopt.c" />
     <ClCompile Include="..\source\input\input.cpp" />
     <ClCompile Include="..\source\input\y4m.cpp">
@@ -53,6 +55,7 @@
     <ClCompile Include="..\source\x265.cpp">
       <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="..\source\x265cli.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23B73CAF-85E7-442F-AACA-D0ECDDA50E1A}</ProjectGuid>

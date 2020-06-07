@@ -228,6 +228,9 @@
     <ClInclude Include="..\source\dynamicHDR10\json11\json11.h">
       <Filter>Header Files\source\dynamicHDR10\json11</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\common\scaler.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libx265.def">
@@ -418,6 +421,9 @@
       <Filter>Source Files\dynamicHDR10\json11</Filter>
     </ClCompile>
     <ClCompile Include="..\source\common\lowpassdct.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\scaler.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
   </ItemGroup>

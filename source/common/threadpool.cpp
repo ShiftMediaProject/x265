@@ -269,7 +269,7 @@ ThreadPool* ThreadPool::allocThreadPools(x265_param* p, int& numPools, bool isTh
 #endif
 
 
-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7
+#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 && (!defined(WINAPI_FAMILY_PARTITION) || !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) || WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP))
     PGROUP_AFFINITY groupAffinityPointer = new GROUP_AFFINITY;
     for (int i = 0; i < numNumaNodes; i++)
     {
@@ -475,7 +475,7 @@ bool ThreadPool::create(int numThreads, int maxProviders, uint64_t nodeMask)
 {
     X265_CHECK(numThreads <= MAX_POOL_THREADS, "a single thread pool cannot have more than MAX_POOL_THREADS threads\n");
 
-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
+#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 && (!defined(WINAPI_FAMILY_PARTITION) || !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) || WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP))
     memset(&m_groupAffinity, 0, sizeof(GROUP_AFFINITY));
     for (int i = 0; i < getNumaNodeCount(); i++)
     {
@@ -568,7 +568,7 @@ void ThreadPool::setCurrentThreadAffinity()
 
 void ThreadPool::setThreadNodeAffinity(void *numaMask)
 {
-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
+#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 && (!defined(WINAPI_FAMILY_PARTITION) || !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) || WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP))
     UNREFERENCED_PARAMETER(numaMask);
     GROUP_AFFINITY groupAffinity;
     memset(&groupAffinity, 0, sizeof(GROUP_AFFINITY));
@@ -597,7 +597,7 @@ void ThreadPool::setThreadNodeAffinity(void *numaMask)
 /* static */
 int ThreadPool::getNumaNodeCount()
 {
-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
+#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 && (!defined(WINAPI_FAMILY_PARTITION) || !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) || WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP))
     ULONG num = 1;
     if (GetNumaHighestNodeNumber(&num))
         num++;
@@ -615,7 +615,7 @@ int ThreadPool::getNumaNodeCount()
 /* static */
 int ThreadPool::getCpuCount()
 {
-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7
+#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 && (!defined(WINAPI_FAMILY_PARTITION) || !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) || WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP))
     enum { MAX_NODE_NUM = 127 };
     int cpus = 0;
     int numNumaNodes = X265_MIN(getNumaNodeCount(), MAX_NODE_NUM);

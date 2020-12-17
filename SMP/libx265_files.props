@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\source\common\bitstream.h" />
+    <ClInclude Include="..\source\common\common.h" />
+    <ClInclude Include="..\source\common\constants.h" />
+    <ClInclude Include="..\source\common\contexts.h" />
+    <ClInclude Include="..\source\common\cpu.h" />
+    <ClInclude Include="..\source\common\cudata.h" />
+    <ClInclude Include="..\source\common\deblock.h" />
+    <ClInclude Include="..\source\common\frame.h" />
+    <ClInclude Include="..\source\common\framedata.h" />
+    <ClInclude Include="..\source\common\lowres.h" />
+    <ClInclude Include="..\source\common\md5.h" />
+    <ClInclude Include="..\source\common\mv.h" />
+    <ClInclude Include="..\source\common\param.h" />
+    <ClInclude Include="..\source\common\piclist.h" />
+    <ClInclude Include="..\source\common\picyuv.h" />
+    <ClInclude Include="..\source\common\predict.h" />
+    <ClInclude Include="..\source\common\primitives.h" />
+    <ClInclude Include="..\source\common\quant.h" />
+    <ClInclude Include="..\source\common\scaler.h" />
+    <ClInclude Include="..\source\common\scalinglist.h" />
+    <ClInclude Include="..\source\common\shortyuv.h" />
+    <ClInclude Include="..\source\common\slice.h" />
+    <ClInclude Include="..\source\common\threading.h" />
+    <ClInclude Include="..\source\common\threadpool.h" />
+    <ClInclude Include="..\source\common\wavefront.h" />
+    <ClInclude Include="..\source\common\winxp.h" />
+    <ClInclude Include="..\source\common\x86\blockcopy8.h" />
+    <ClInclude Include="..\source\common\x86\dct8.h" />
+    <ClInclude Include="..\source\common\x86\intrapred.h" />
+    <ClInclude Include="..\source\common\x86\ipfilter8.h" />
+    <ClInclude Include="..\source\common\x86\loopfilter.h" />
+    <ClInclude Include="..\source\common\x86\mc.h" />
+    <ClInclude Include="..\source\common\x86\pixel-util.h" />
+    <ClInclude Include="..\source\common\x86\pixel.h" />
+    <ClInclude Include="..\source\common\x86\seaintegral.h" />
+    <ClInclude Include="..\source\common\yuv.h" />
+    <ClInclude Include="..\source\dynamicHDR10\BasicStructures.h" />
+    <ClInclude Include="..\source\dynamicHDR10\hdr10plus.h" />
+    <ClInclude Include="..\source\dynamicHDR10\json11\json11.h" />
+    <ClInclude Include="..\source\dynamicHDR10\JsonHelper.h" />
+    <ClInclude Include="..\source\dynamicHDR10\metadataFromJson.h" />
+    <ClInclude Include="..\source\dynamicHDR10\SeiMetadataDictionary.h" />
+    <ClInclude Include="..\source\encoder\analysis.h" />
+    <ClInclude Include="..\source\encoder\bitcost.h" />
+    <ClInclude Include="..\source\encoder\dpb.h" />
+    <ClInclude Include="..\source\encoder\encoder.h" />
+    <ClInclude Include="..\source\encoder\entropy.h" />
+    <ClInclude Include="..\source\encoder\frameencoder.h" />
+    <ClInclude Include="..\source\encoder\framefilter.h" />
+    <ClInclude Include="..\source\encoder\level.h" />
+    <ClInclude Include="..\source\encoder\motion.h" />
+    <ClInclude Include="..\source\encoder\nal.h" />
+    <ClInclude Include="..\source\encoder\ratecontrol.h" />
+    <ClInclude Include="..\source\encoder\rdcost.h" />
+    <ClInclude Include="..\source\encoder\reference.h" />
+    <ClInclude Include="..\source\encoder\sao.h" />
+    <ClInclude Include="..\source\encoder\search.h" />
+    <ClInclude Include="..\source\encoder\sei.h" />
+    <ClInclude Include="..\source\encoder\slicetype.h" />
+    <ClInclude Include="..\source\x265.h" />
+    <ClInclude Include="x265_config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libx265.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="x265.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)'!='DebugDLL'And'$(Configuration)'!='ReleaseDLL'">true</ExcludedFromBuild>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\common\bitstream.cpp" />
+    <ClCompile Include="..\source\common\common.cpp" />
+    <ClCompile Include="..\source\common\constants.cpp" />
+    <ClCompile Include="..\source\common\cpu.cpp" />
+    <ClCompile Include="..\source\common\cudata.cpp" />
+    <ClCompile Include="..\source\common\dct.cpp" />
+    <ClCompile Include="..\source\common\deblock.cpp" />
+    <ClCompile Include="..\source\common\frame.cpp" />
+    <ClCompile Include="..\source\common\framedata.cpp" />
+    <ClCompile Include="..\source\common\IntraPred.cpp" />
+    <ClCompile Include="..\source\common\ipfilter.cpp" />
+    <ClCompile Include="..\source\common\loopfilter.cpp">
+      <ObjectFileName>$(IntDir)\loopfilter_c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\source\common\lowpassdct.cpp" />
+    <ClCompile Include="..\source\common\lowres.cpp" />
+    <ClCompile Include="..\source\common\md5.cpp" />
+    <ClCompile Include="..\source\common\param.cpp" />
+    <ClCompile Include="..\source\common\piclist.cpp" />
+    <ClCompile Include="..\source\common\picyuv.cpp" />
+    <ClCompile Include="..\source\common\pixel.cpp" />
+    <ClCompile Include="..\source\common\predict.cpp" />
+    <ClCompile Include="..\source\common\primitives.cpp" />
+    <ClCompile Include="..\source\common\quant.cpp" />
+    <ClCompile Include="..\source\common\scaler.cpp" />
+    <ClCompile Include="..\source\common\scalinglist.cpp" />
+    <ClCompile Include="..\source\common\shortyuv.cpp" />
+    <ClCompile Include="..\source\common\slice.cpp" />
+    <ClCompile Include="..\source\common\threading.cpp" />
+    <ClCompile Include="..\source\common\threadpool.cpp" />
+    <ClCompile Include="..\source\common\vec\dct-sse3.cpp">
+      <Optimization Condition="'$(Configuration)'=='Debug'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)'=='DebugDLL'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Debug_10b'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Debug_12b'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Debug_10bWinRT'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Debug_12bWinRT'">MaxSpeed</Optimization>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)'=='DebugDLL'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug_10b'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug_12b'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug_10bWinRT'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug_12bWinRT'">ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug'">Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='DebugDLL'">Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug_10b'">Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug_12b'">Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug_10bWinRT'">Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks Condition="'$(Configuration)'=='Debug_12bWinRT'">Default</BasicRuntimeChecks>
+    </ClCompile>
+    <ClCompile Include="..\source\common\vec\dct-sse41.cpp" />
+    <ClCompile Include="..\source\common\vec\dct-ssse3.cpp" />
+    <ClCompile Include="..\source\common\vec\vec-primitives.cpp" />
+    <ClCompile Include="..\source\common\version.cpp" />
+    <ClCompile Include="..\source\common\wavefront.cpp" />
+    <ClCompile Include="..\source\common\winxp.cpp" />
+    <ClCompile Include="..\source\common\x86\asm-primitives.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\source\common\yuv.cpp" />
+    <ClCompile Include="..\source\dynamicHDR10\api.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+      <ObjectFileName>$(IntDir)\apiHDR10.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\json11\json11.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\JsonHelper.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\metadataFromJson.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\source\dynamicHDR10\SeiMetadataDictionary.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\source\encoder\analysis.cpp" />
+    <ClCompile Include="..\source\encoder\api.cpp" />
+    <ClCompile Include="..\source\encoder\bitcost.cpp" />
+    <ClCompile Include="..\source\encoder\dpb.cpp" />
+    <ClCompile Include="..\source\encoder\encoder.cpp" />
+    <ClCompile Include="..\source\encoder\entropy.cpp" />
+    <ClCompile Include="..\source\encoder\frameencoder.cpp" />
+    <ClCompile Include="..\source\encoder\framefilter.cpp" />
+    <ClCompile Include="..\source\encoder\level.cpp" />
+    <ClCompile Include="..\source\encoder\motion.cpp" />
+    <ClCompile Include="..\source\encoder\nal.cpp" />
+    <ClCompile Include="..\source\encoder\ratecontrol.cpp" />
+    <ClCompile Include="..\source\encoder\reference.cpp" />
+    <ClCompile Include="..\source\encoder\sao.cpp" />
+    <ClCompile Include="..\source\encoder\search.cpp" />
+    <ClCompile Include="..\source\encoder\sei.cpp" />
+    <ClCompile Include="..\source\encoder\slicetype.cpp" />
+    <ClCompile Include="..\source\encoder\weightPrediction.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <NASM Include="..\source\common\x86\blockcopy8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\const-a.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\cpu-a.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\dct8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\h-ipfilter16.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Release_10b|x64'And'$(Configuration)|$(Platform)'!='Release_12b|x64'And'$(Configuration)|$(Platform)'!='Debug_10b|x64'And'$(Configuration)|$(Platform)'!='Debug_12b|x64'And'$(Configuration)|$(Platform)'!='Release_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Release_12bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_12bWinRT|x64'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\h-ipfilter8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\h4-ipfilter16.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Release_10b|x64'And'$(Configuration)|$(Platform)'!='Release_12b|x64'And'$(Configuration)|$(Platform)'!='Debug_10b|x64'And'$(Configuration)|$(Platform)'!='Debug_12b|x64'And'$(Configuration)|$(Platform)'!='Release_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Release_12bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_12bWinRT|x64'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\intrapred16.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Release_10b|x64'And'$(Configuration)|$(Platform)'!='Release_12b|x64'And'$(Configuration)|$(Platform)'!='Debug_10b|x64'And'$(Configuration)|$(Platform)'!='Debug_12b|x64'And'$(Configuration)|$(Platform)'!='Release_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Release_12bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_12bWinRT|x64'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\intrapred8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\intrapred8_allangs.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\ipfilter16.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Release_10b|x64'And'$(Configuration)|$(Platform)'!='Release_12b|x64'And'$(Configuration)|$(Platform)'!='Debug_10b|x64'And'$(Configuration)|$(Platform)'!='Debug_12b|x64'And'$(Configuration)|$(Platform)'!='Release_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Release_12bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_12bWinRT|x64'">true</ExcludedFromBuild>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </NASM>
+    <NASM Include="..\source\common\x86\ipfilter8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\loopfilter.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\mc-a.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\mc-a2.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\pixel-32.asm">
+      <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\pixel-a.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\pixel-util8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\pixeladd8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\sad-a.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\sad16-a.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Release_10b|x64'And'$(Configuration)|$(Platform)'!='Release_12b|x64'And'$(Configuration)|$(Platform)'!='Debug_10b|x64'And'$(Configuration)|$(Platform)'!='Debug_12b|x64'And'$(Configuration)|$(Platform)'!='Release_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Release_12bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_12bWinRT|x64'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\seaintegral.asm" />
+    <NASM Include="..\source\common\x86\ssd-a.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12b|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_10bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_12bWinRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_12bWinRT|Win32'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\v4-ipfilter16.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Release_10b|x64'And'$(Configuration)|$(Platform)'!='Release_12b|x64'And'$(Configuration)|$(Platform)'!='Debug_10b|x64'And'$(Configuration)|$(Platform)'!='Debug_12b|x64'And'$(Configuration)|$(Platform)'!='Release_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Release_12bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_10bWinRT|x64'And'$(Configuration)|$(Platform)'!='Debug_12bWinRT|x64'">true</ExcludedFromBuild>
+    </NASM>
+    <NASM Include="..\source\common\x86\v4-ipfilter8.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12b'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_10bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release_12bWinRT'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_12bWinRT'">true</ExcludedFromBuild>
+    </NASM>
+  </ItemGroup>
+</Project>

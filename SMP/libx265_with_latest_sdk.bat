@@ -1,6 +1,6 @@
 @ECHO OFF
 
-SET PROJECT=libx265
+SET PROJECT=x265
 
 @REM Detect the newest available Windows SDK
 CALL :GetWindowsSdkVer

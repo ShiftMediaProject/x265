@@ -23,7 +23,8 @@
     </Lib>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>PREFIX;STACK_ALIGNMENT=4;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;PREFIX;STACK_ALIGNMENT=4;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (
@@ -73,7 +74,8 @@ del /f /q $(OutDir)\licenses\x265.txt
     </Lib>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>STACK_ALIGNMENT=16;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;STACK_ALIGNMENT=16;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (
@@ -131,7 +133,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>PREFIX;STACK_ALIGNMENT=4;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;PREFIX;STACK_ALIGNMENT=4;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (
@@ -182,7 +185,8 @@ copy ..\COPYING $(OutDir)\licenses\x265.txt</Command>
     </PostBuildEvent>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>STACK_ALIGNMENT=16;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;STACK_ALIGNMENT=16;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (
@@ -225,7 +229,8 @@ del /f /q $(OutDir)\licenses\x265.txt
     </Lib>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>PREFIX;STACK_ALIGNMENT=4;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;PREFIX;STACK_ALIGNMENT=4;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (
@@ -275,7 +280,8 @@ del /f /q $(OutDir)\licenses\x265.txt
     </Lib>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>STACK_ALIGNMENT=16;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;STACK_ALIGNMENT=16;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (
@@ -326,7 +332,8 @@ del /f /q $(OutDir)\licenses\x265.txt
     </Link>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>PREFIX;STACK_ALIGNMENT=4;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;PREFIX;STACK_ALIGNMENT=4;ARCH_X86_64=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (
@@ -377,7 +384,8 @@ del /f /q $(OutDir)\licenses\x265.txt
     </Link>
     <NASM>
       <IncludePaths>$(ProjectDir)\..\source\common\x86;%(IncludePaths)</IncludePaths>
-      <PreprocessorDefinitions>STACK_ALIGNMENT=16;HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;X265_DEPTH=8;BIT_DEPTH=8;X265_NS=x265;WIN32=1;STACK_ALIGNMENT=16;ARCH_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-w-macro-params-legacy %(AdditionalOptions)</AdditionalOptions>
     </NASM>
     <PreBuildEvent>
       <Command>if exist ..\source\x265_config.h (

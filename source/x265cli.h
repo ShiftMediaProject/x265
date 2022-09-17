@@ -33,11 +33,9 @@
 
 #include <getopt.h>
 
-#define CONSOLE_TITLE_SIZE 200
 #ifdef _WIN32
 #include <windows.h>
 #define SetThreadExecutionState(es)
-static char orgConsoleTitle[CONSOLE_TITLE_SIZE] = "";
 #else
 #define GetConsoleTitle(t, n)
 #define SetConsoleTitle(t)
@@ -148,10 +146,8 @@ static const struct option long_options[] =
     { "hist-threshold", required_argument, NULL, 0},
     { "fades",                no_argument, NULL, 0 },
     { "no-fades",             no_argument, NULL, 0 },
-    { "scenecut-aware-qp",    no_argument, NULL, 0 },
-    { "no-scenecut-aware-qp", no_argument, NULL, 0 },
-    { "scenecut-window",required_argument, NULL, 0 },
-    { "max-qp-delta",   required_argument, NULL, 0 },
+    { "scenecut-aware-qp", required_argument, NULL, 0 },
+    { "masking-strength",  required_argument, NULL, 0 },
     { "radl",           required_argument, NULL, 0 },
     { "ctu-info",       required_argument, NULL, 0 },
     { "intra-refresh",        no_argument, NULL, 0 },
@@ -283,6 +279,8 @@ static const struct option long_options[] =
     { "no-multi-pass-opt-analysis",    no_argument, NULL, 0 },
     { "multi-pass-opt-distortion",     no_argument, NULL, 0 },
     { "no-multi-pass-opt-distortion",  no_argument, NULL, 0 },
+    { "vbv-live-multi-pass",           no_argument, NULL, 0 },
+    { "no-vbv-live-multi-pass",        no_argument, NULL, 0 },
     { "slow-firstpass",       no_argument, NULL, 0 },
     { "no-slow-firstpass",    no_argument, NULL, 0 },
     { "multi-pass-opt-rps",   no_argument, NULL, 0 },
@@ -373,6 +371,8 @@ static const struct option long_options[] =
     { "no-cll", no_argument, NULL, 0 },
     { "hme-range", required_argument, NULL, 0 },
     { "abr-ladder", required_argument, NULL, 0 },
+    { "min-vbv-fullness", required_argument, NULL, 0 },
+    { "max-vbv-fullness", required_argument, NULL, 0 },
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },

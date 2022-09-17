@@ -65,15 +65,6 @@
         %define UNIX64 1
     %endif
 %endif
- 
-%define FORMAT_ELF 0
-%ifidn __OUTPUT_FORMAT__,elf
-    %define FORMAT_ELF 1
-%elifidn __OUTPUT_FORMAT__,elf32
-    %define FORMAT_ELF 1
-%elifidn __OUTPUT_FORMAT__,elf64
-    %define FORMAT_ELF 1
-%endif
 
 %define FORMAT_ELF 0
 %ifidn __OUTPUT_FORMAT__,elf

@@ -33,7 +33,7 @@
 #include "svt.h"
 
 #if ENABLE_LIBVMAF
-#include "libvmaf.h"
+#include "libvmaf/libvmaf.h"
 #endif
 
 /* multilib namespace reflectors */
@@ -1084,17 +1084,6 @@ typedef const x265_api* (*api_query_func)(int bitDepth, int apiVersion, int* err
 
 #if _WIN32
 #define ext ".dll"
-#include <winapifamily.h>
-#if defined(WINAPI_FAMILY_PARTITION) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-static __inline HMODULE WINAPI LoadLibraryA(LPCSTR lpFileName)
-{
-    WCHAR wlpFilename[MAX_PATH];
-    if (MultiByteToWideChar(CP_UTF8, 0, lpFileName, -1, wlpFilename, MAX_PATH) == 0) {
-        return NULL;
-    }
-    return LoadPackagedLibrary(wlpFilename, 0);
-}
-#endif
 #elif MACOS
 #include <dlfcn.h>
 #define ext ".dylib"

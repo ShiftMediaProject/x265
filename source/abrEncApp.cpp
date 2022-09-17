@@ -98,13 +98,15 @@ namespace X265_NS {
                 x265_picture_init(m_passEnc[pass]->m_param, m_inputPicBuffer[pass][idx]);
             }
 
-            m_analysisBuffer[pass] = X265_MALLOC(x265_analysis_data, m_queueSize);
+            CHECKED_MALLOC_ZERO(m_analysisBuffer[pass], x265_analysis_data, m_queueSize);
             m_picIdxReadCnt[pass] = new ThreadSafeInteger[m_queueSize];
             m_analysisWrite[pass] = new ThreadSafeInteger[m_queueSize];
             m_analysisRead[pass] = new ThreadSafeInteger[m_queueSize];
             m_readFlag[pass] = X265_MALLOC(int, m_queueSize);
         }
         return true;
+    fail:
+        return false;
     }
 
     void AbrEncoder::destroy()
@@ -315,6 +317,7 @@ namespace X265_NS {
 
         x265_analysis_data *m_analysisInfo = &m_parent->m_analysisBuffer[m_id][index];
 
+        x265_free_analysis_data(m_param, m_analysisInfo);
         memcpy(m_analysisInfo, src, sizeof(x265_analysis_data));
         x265_alloc_analysis_data(m_param, m_analysisInfo);
 
@@ -814,7 +817,7 @@ ret:
             api->encoder_get_stats(m_encoder, &stats, sizeof(stats));
             if (m_param->csvfn && !b_ctrl_c)
 #if ENABLE_LIBVMAF
-                api->vmaf_encoder_log(m_encoder, m_cliopt.argCount, m_cliopt.argString, m_cliopt.param, vmafdata);
+                api->vmaf_encoder_log(m_encoder, m_cliopt.argCnt, m_cliopt.argString, m_cliopt.param, vmafdata);
 #else
                 api->encoder_log(m_encoder, m_cliopt.argCnt, m_cliopt.argString);
 #endif

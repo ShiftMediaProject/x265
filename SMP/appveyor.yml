@@ -135,8 +135,22 @@ build:
   parallel: true
   verbosity: minimal
 
+after_build:
+# Copy binary files to separate artifact folder
+- cmd: mkdir %APPVEYOR_BUILD_FOLDER%\build_bin\x86 >NUL 2>&1
+- cmd: mkdir %APPVEYOR_BUILD_FOLDER%\build_bin\x64 >NUL 2>&1
+- cmd: move /y %APPVEYOR_BUILD_FOLDER%\build_out\bin\x86\*.exe %APPVEYOR_BUILD_FOLDER%\build_bin\x86
+- cmd: move /y %APPVEYOR_BUILD_FOLDER%\build_out\bin\x64\*.exe %APPVEYOR_BUILD_FOLDER%\build_bin\x64
+- cmd: del %APPVEYOR_BUILD_FOLDER%\build_out\bin\x86\*.pdb
+- cmd: del %APPVEYOR_BUILD_FOLDER%\build_out\bin\x64\*.pdb
+- cmd: mkdir %APPVEYOR_BUILD_FOLDER%\build_bin\licenses >NUL 2>&1
+- cmd: copy /y %APPVEYOR_BUILD_FOLDER%\build_out\licenses\ %APPVEYOR_BUILD_FOLDER%\build_bin\licenses\
+
 artifacts:
 - path: build_out
+  name: lib$(APPVEYOR_PROJECT_NAME)_$(APPVEYOR_REPO_TAG_NAME)_msvc$(MSVC_VER)
+  type: zip
+- path: build_bin
   name: $(APPVEYOR_PROJECT_NAME)_$(APPVEYOR_REPO_TAG_NAME)_msvc$(MSVC_VER)
   type: zip
 
@@ -146,5 +160,5 @@ deploy:
   description: Pre-built static and shared libraries in 32b and 64b for $(APPVEYOR_PROJECT_NAME) $(APPVEYOR_REPO_TAG_NAME)
   auth_token:
     secure: c9Sads7Y16h7FP+LrR3IjVygYAgh8GByE8TtazxDg7jpPVxc+XDV81z7MoUc2Ada
-  artifact: $(APPVEYOR_PROJECT_NAME)_$(APPVEYOR_REPO_TAG_NAME)_msvc$(MSVC_VER)
+  artifact: lib$(APPVEYOR_PROJECT_NAME)_$(APPVEYOR_REPO_TAG_NAME)_msvc$(MSVC_VER), $(APPVEYOR_PROJECT_NAME)_$(APPVEYOR_REPO_TAG_NAME)_msvc$(MSVC_VER)
   force_update: true

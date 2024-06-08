@@ -231,6 +231,12 @@
     <ClInclude Include="..\source\common\scaler.h">
       <Filter>Header Files\source\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\common\temporalfilter.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\ringmem.h">
+      <Filter>Header Files\source\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libx265.def">
@@ -424,6 +430,12 @@
       <Filter>Source Files\common</Filter>
     </ClCompile>
     <ClCompile Include="..\source\common\scaler.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\temporalfilter.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\common\ringmem.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
   </ItemGroup>

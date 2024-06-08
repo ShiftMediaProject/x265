@@ -19,10 +19,12 @@
     <ClInclude Include="..\source\common\predict.h" />
     <ClInclude Include="..\source\common\primitives.h" />
     <ClInclude Include="..\source\common\quant.h" />
+    <ClInclude Include="..\source\common\ringmem.h" />
     <ClInclude Include="..\source\common\scaler.h" />
     <ClInclude Include="..\source\common\scalinglist.h" />
     <ClInclude Include="..\source\common\shortyuv.h" />
     <ClInclude Include="..\source\common\slice.h" />
+    <ClInclude Include="..\source\common\temporalfilter.h" />
     <ClInclude Include="..\source\common\threading.h" />
     <ClInclude Include="..\source\common\threadpool.h" />
     <ClInclude Include="..\source\common\wavefront.h" />
@@ -99,10 +101,12 @@
     <ClCompile Include="..\source\common\predict.cpp" />
     <ClCompile Include="..\source\common\primitives.cpp" />
     <ClCompile Include="..\source\common\quant.cpp" />
+    <ClCompile Include="..\source\common\ringmem.cpp" />
     <ClCompile Include="..\source\common\scaler.cpp" />
     <ClCompile Include="..\source\common\scalinglist.cpp" />
     <ClCompile Include="..\source\common\shortyuv.cpp" />
     <ClCompile Include="..\source\common\slice.cpp" />
+    <ClCompile Include="..\source\common\temporalfilter.cpp" />
     <ClCompile Include="..\source\common\threading.cpp" />
     <ClCompile Include="..\source\common\threadpool.cpp" />
     <ClCompile Include="..\source\common\vec\dct-sse3.cpp">

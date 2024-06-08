@@ -38,9 +38,13 @@ protected:
 
     int height;
 
+    uint32_t bitDepth;
+
     int colorSpace;
 
     uint32_t frameSize;
+
+    int inputDepth;
 
     std::ofstream ofs;
 
@@ -52,7 +56,7 @@ protected:
 
 public:
 
-    Y4MOutput(const char *filename, int width, int height, uint32_t fpsNum, uint32_t fpsDenom, int csp);
+    Y4MOutput(const char *filename, int width, int height, uint32_t bitdepth, uint32_t fpsNum, uint32_t fpsDenom, int csp, int inputDepth);
 
     virtual ~Y4MOutput();
 

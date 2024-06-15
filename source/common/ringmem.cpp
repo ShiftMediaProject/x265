@@ -135,6 +135,19 @@ namespace X265_NS {
             int32_t shrMemSize = (itemSize * itemCnt + sizeof(ShrMemCtrl) + RINGMEM_ALLIGNMENT - 1) & ~(RINGMEM_ALLIGNMENT - 1);
 
 #ifdef _WIN32
+#   if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
+            WCHAR wnameBuf[MAX_PATH];
+            if (MultiByteToWideChar(CP_UTF8, 0, nameBuf, -1, wnameBuf, MAX_PATH) == 0) {
+                return false;
+            }
+            HANDLE h = OpenFileMappingFromApp(FILE_MAP_WRITE | FILE_MAP_READ, FALSE, wnameBuf);
+            if (!h)
+            {
+                return false;
+            }
+
+            void* pool = MapViewOfFile3FromApp(h, GetCurrentProcess(), NULL, 0, 0, 0, PAGE_READWRITE, NULL, 0);
+#   else
             HANDLE h = OpenFileMappingA(FILE_MAP_WRITE | FILE_MAP_READ, FALSE, nameBuf);
             if (!h)
             {
@@ -149,6 +162,7 @@ namespace X265_NS {
             }
 
             void *pool = MapViewOfFile(h, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+#   endif
 
             ///< should not close the handle here, otherwise the OpenFileMapping would fail
             //CloseHandle(h);

@@ -1,0 +1,149 @@
+diff --git a/source/common/ringmem.cpp b/source/common/ringmem.cpp
+index cfd44e83d..14ec3d316 100644
+--- a/source/common/ringmem.cpp
++++ b/source/common/ringmem.cpp
+@@ -135,6 +135,19 @@ namespace X265_NS {
+             int32_t shrMemSize = (itemSize * itemCnt + sizeof(ShrMemCtrl) + RINGMEM_ALLIGNMENT - 1) & ~(RINGMEM_ALLIGNMENT - 1);
+ 
+ #ifdef _WIN32
++#   if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++            WCHAR wnameBuf[MAX_PATH];
++            if (MultiByteToWideChar(CP_UTF8, 0, nameBuf, -1, wnameBuf, MAX_PATH) == 0) {
++                return false;
++            }
++            HANDLE h = OpenFileMappingFromApp(FILE_MAP_WRITE | FILE_MAP_READ, FALSE, wnameBuf);
++            if (!h)
++            {
++                return false;
++            }
++
++            void* pool = MapViewOfFile3FromApp(h, GetCurrentProcess(), NULL, 0, 0, 0, PAGE_READWRITE, NULL, 0);
++#   else
+             HANDLE h = OpenFileMappingA(FILE_MAP_WRITE | FILE_MAP_READ, FALSE, nameBuf);
+             if (!h)
+             {
+@@ -149,6 +162,7 @@ namespace X265_NS {
+             }
+ 
+             void *pool = MapViewOfFile(h, FILE_MAP_ALL_ACCESS, 0, 0, 0);
++#   endif
+ 
+             ///< should not close the handle here, otherwise the OpenFileMapping would fail
+             //CloseHandle(h);
+diff --git a/source/common/threadpool.cpp b/source/common/threadpool.cpp
+index 9c27be783..5dde29e34 100644
+--- a/source/common/threadpool.cpp
++++ b/source/common/threadpool.cpp
+@@ -71,7 +71,7 @@
+ # define strcasecmp _stricmp
+ #endif
+ 
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7
++#ifdef USE_WIN32_AFFINITY
+ const uint64_t m1 = 0x5555555555555555; //binary: 0101...
+ const uint64_t m2 = 0x3333333333333333; //binary: 00110011..
+ const uint64_t m3 = 0x0f0f0f0f0f0f0f0f; //binary:  4 zeros,  4 ones ...
+@@ -262,14 +262,14 @@ ThreadPool* ThreadPool::allocThreadPools(x265_param* p, int& numPools, bool isTh
+     int numNumaNodes = X265_MIN(getNumaNodeCount(), MAX_NODE_NUM);
+     bool bNumaSupport = false;
+ 
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
++#ifdef USE_WIN32_AFFINITY
+     bNumaSupport = true;
+ #elif HAVE_LIBNUMA
+     bNumaSupport = numa_available() >= 0;
+ #endif
+ 
+ 
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7
++#ifdef USE_WIN32_AFFINITY
+     PGROUP_AFFINITY groupAffinityPointer = new GROUP_AFFINITY;
+     for (int i = 0; i < numNumaNodes; i++)
+     {
+@@ -475,7 +475,7 @@ bool ThreadPool::create(int numThreads, int maxProviders, uint64_t nodeMask)
+ {
+     X265_CHECK(numThreads <= MAX_POOL_THREADS, "a single thread pool cannot have more than MAX_POOL_THREADS threads\n");
+ 
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
++#ifdef USE_WIN32_AFFINITY
+     memset(&m_groupAffinity, 0, sizeof(GROUP_AFFINITY));
+     for (int i = 0; i < getNumaNodeCount(); i++)
+     {
+@@ -568,7 +568,7 @@ void ThreadPool::setCurrentThreadAffinity()
+ 
+ void ThreadPool::setThreadNodeAffinity(void *numaMask)
+ {
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
++#ifdef USE_WIN32_AFFINITY
+     UNREFERENCED_PARAMETER(numaMask);
+     GROUP_AFFINITY groupAffinity;
+     memset(&groupAffinity, 0, sizeof(GROUP_AFFINITY));
+@@ -597,7 +597,7 @@ void ThreadPool::setThreadNodeAffinity(void *numaMask)
+ /* static */
+ int ThreadPool::getNumaNodeCount()
+ {
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
++#ifdef USE_WIN32_AFFINITY
+     ULONG num = 1;
+     if (GetNumaHighestNodeNumber(&num))
+         num++;
+@@ -615,7 +615,7 @@ int ThreadPool::getNumaNodeCount()
+ /* static */
+ int ThreadPool::getCpuCount()
+ {
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7
++#ifdef USE_WIN32_AFFINITY
+     enum { MAX_NODE_NUM = 127 };
+     int cpus = 0;
+     int numNumaNodes = X265_MIN(getNumaNodeCount(), MAX_NODE_NUM);
+diff --git a/source/common/threadpool.h b/source/common/threadpool.h
+index 867539f3a..8c92090f2 100644
+--- a/source/common/threadpool.h
++++ b/source/common/threadpool.h
+@@ -44,6 +44,14 @@ static const sleepbitmap_t ALL_POOL_THREADS = (sleepbitmap_t)-1;
+ enum { MAX_POOL_THREADS = sizeof(sleepbitmap_t) * 8 };
+ enum { INVALID_SLICE_PRIORITY = 10 }; // a value larger than any X265_TYPE_* macro
+ 
++#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7
++# include <winapifamily.h>
++# if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
++// GetNumaNodeProcessorMaskEx is not available in UWP apps
++#  define USE_WIN32_AFFINITY 1
++# endif
++#endif
++
+ // Frame level job providers. FrameEncoder and Lookahead derive from
+ // this class and implement findJob()
+ class JobProvider
+@@ -84,7 +92,7 @@ public:
+     int           m_numProviders;
+     int           m_numWorkers;
+     void*         m_numaMask; // node mask in linux, cpu mask in windows
+-#if defined(_WIN32_WINNT) && _WIN32_WINNT >= _WIN32_WINNT_WIN7 
++#ifdef USE_WIN32_AFFINITY
+     GROUP_AFFINITY m_groupAffinity;
+ #endif
+     bool          m_isActive;
+diff --git a/source/common/x86/h-ipfilter8.asm b/source/common/x86/h-ipfilter8.asm
+index 757efc509..53d7f2d3c 100644
+--- a/source/common/x86/h-ipfilter8.asm
++++ b/source/common/x86/h-ipfilter8.asm
+@@ -125,9 +125,6 @@ const pb_8tap_hps_0, times 2 db 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8
+ ALIGN 32
+ interp4_hps_shuf: times 2 db 0, 1, 2, 3, 1, 2, 3, 4, 8, 9, 10, 11, 9, 10, 11, 12
+ 
+-ALIGN 32
+-const interp_4tap_8x8_horiz_shuf,   dd 0, 4, 1, 5, 2, 6, 3, 7
+-
+ SECTION .text
+ 
+ cextern pw_1
+@@ -1462,6 +1459,8 @@ cglobal interp_4tap_horiz_pp_4x32, 4, 6, 5, src, srcstride, dst, dststride
+ 
+     RET
+ 
++ALIGN 32
++const interp_4tap_8x8_horiz_shuf,   dd 0, 4, 1, 5, 2, 6, 3, 7
+ 
+ %macro FILTER_H4_w6 3
+     movu        %1, [srcq - 1]

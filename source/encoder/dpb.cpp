@@ -53,8 +53,11 @@ DPB::~DPB()
         FrameData* next = m_frameDataFreeList->m_freeListNext;
         m_frameDataFreeList->destroy();
 
-        m_frameDataFreeList->m_reconPic[0]->destroy();
-        delete m_frameDataFreeList->m_reconPic[0];
+        for (int i = 0; i < !!m_frameDataFreeList->m_param->bEnableSCC + 1; i++)
+        {
+            m_frameDataFreeList->m_reconPic[i]->destroy();
+            delete m_frameDataFreeList->m_reconPic[i];
+        }
 
         delete m_frameDataFreeList;
         m_frameDataFreeList = next;
@@ -295,7 +298,11 @@ void DPB::prepareEncode(Frame *newFrame)
     else
 #endif
         slice->m_numRefIdx[1] = X265_MIN(newFrame->m_param->bBPyramid ? 2 : 1, slice->m_rps.numberOfPositivePictures);
-    slice->setRefPicList(m_picList, newFrame->refPicSetInterLayer0, newFrame->refPicSetInterLayer1, layer);
+#if ENABLE_MULTIVIEW
+    slice->setRefPicList(m_picList, layer, newFrame->refPicSetInterLayer0, newFrame->refPicSetInterLayer1);
+#else
+    slice->setRefPicList(m_picList, layer);
+#endif
 
     X265_CHECK(slice->m_sliceType != B_SLICE || slice->m_numRefIdx[1], "B slice without L1 references (non-fatal)\n");
 
@@ -337,47 +344,6 @@ void DPB::prepareEncode(Frame *newFrame)
 
     slice->m_bTemporalMvp = slice->m_sps->bTemporalMVPEnabled;
 #if ENABLE_SCC_EXT
-    bool bGPBcheck = false;
-    if (slice->m_sliceType == B_SLICE)
-    {
-        if (slice->m_param->bEnableSCC)
-        {
-            if (slice->m_numRefIdx[0] - 1 == slice->m_numRefIdx[1])
-            {
-                bGPBcheck = true;
-                for (int i = 0; i < slice->m_numRefIdx[1]; i++)
-                {
-                    if (slice->m_refPOCList[1][i] != slice->m_refPOCList[0][i])
-                    {
-                        bGPBcheck = false;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (slice->m_numRefIdx[0] == slice->m_numRefIdx[1])
-        {
-            bGPBcheck = true;
-            int i;
-            for (i = 0; i < slice->m_numRefIdx[1]; i++)
-            {
-                if (slice->m_refPOCList[1][i] != slice->m_refPOCList[0][i])
-                {
-                    bGPBcheck = false;
-                    break;
-                }
-            }
-        }
-    }
-    if (bGPBcheck)
-    {
-        slice->m_bLMvdL1Zero = true;
-    }
-    else
-    {
-        slice->m_bLMvdL1Zero = false;
-    }
-
     if (!slice->isIntra() && slice->m_param->bEnableTemporalMvp)
     {
         const Frame* colPic = slice->m_refFrameList[slice->isInterB() && !slice->m_colFromL0Flag][slice->m_colRefIdx];
@@ -419,7 +385,7 @@ void DPB::computeRPS(int curPoc, int tempId, bool isRAP, RPS * rps, unsigned int
             if ((!m_bTemporalSublayer || (iterPic->m_tempLayer <= tempId)) && ((m_lastIDR >= curPoc) || (m_lastIDR <= iterPic->m_poc)))
             {
 #if ENABLE_MULTIVIEW
-                    if (iterPic->m_param->numViews > 1 && layer && numNeg == iterPic->m_param->maxNumReferences - 1 && (iterPic->m_poc - curPoc) < 0)
+                    if (iterPic->m_param->numViews > 1 && layer && numNeg == (uint8_t)(iterPic->m_param->maxNumReferences - 1) && (iterPic->m_poc - curPoc) < 0)
                     {
                         iterPic = iterPic->m_next;
                         continue;

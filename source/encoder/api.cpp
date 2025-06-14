@@ -91,10 +91,14 @@ x265_encoder *x265_encoder_open(x265_param *p)
         return NULL;
     }
 
-    Encoder* encoder = NULL;
-    x265_param* param = PARAM_NS::x265_param_alloc();
-    x265_param* latestParam = PARAM_NS::x265_param_alloc();
-    x265_param* zoneParam = PARAM_NS::x265_param_alloc();
+    Encoder* encoder = new Encoder;
+    encoder->m_paramBase[0] = PARAM_NS::x265_param_alloc();
+    encoder->m_paramBase[1] = PARAM_NS::x265_param_alloc();
+    encoder->m_paramBase[2] = PARAM_NS::x265_param_alloc();
+
+    x265_param* param = encoder->m_paramBase[0];
+    x265_param* latestParam = encoder->m_paramBase[1];
+    x265_param* zoneParam = encoder->m_paramBase[2];
 
     if(param) PARAM_NS::x265_param_default(param);
     if(latestParam) PARAM_NS::x265_param_default(latestParam);
@@ -115,8 +119,6 @@ x265_encoder *x265_encoder_open(x265_param *p)
     x265_copy_params(zoneParam, p);
     x265_log(param, X265_LOG_INFO, "HEVC encoder version %s\n", PFX(version_str));
     x265_log(param, X265_LOG_INFO, "build info %s\n", PFX(build_info_str));
-
-    encoder = new Encoder;
 
 #ifdef SVT_HEVC
 
@@ -195,23 +197,23 @@ x265_encoder *x265_encoder_open(x265_param *p)
 
     if (!param->bResetZoneConfig)
     {
-        param->rc.zones = X265_MALLOC(x265_zone, param->rc.zonefileCount);
+        // TODO: Memory pointer broken if both (p->rc.zoneCount || p->rc.zonefileCount) and (!param->bResetZoneConfig)
+        param->rc.zones = x265_zone_alloc(param->rc.zonefileCount, 1);
         for (int i = 0; i < param->rc.zonefileCount; i++)
         {
-            param->rc.zones[i].zoneParam = X265_MALLOC(x265_param, 1);
             memcpy(param->rc.zones[i].zoneParam, param, sizeof(x265_param));
             param->rc.zones[i].relativeComplexity = X265_MALLOC(double, param->reconfigWindowSize);
         }
     }
 
-    memcpy(zoneParam, param, sizeof(x265_param));
+    x265_copy_params(zoneParam, param);
     for (int i = 0; i < param->rc.zonefileCount; i++)
     {
         encoder->configureZone(zoneParam, param->rc.zones[i].zoneParam);
     }
 
     /* Try to open CSV file handle */
-    if (encoder->m_param->csvfn)
+    if (strlen(encoder->m_param->csvfn))
     {
         encoder->m_param->csvfpt = x265_csvlog_open(encoder->m_param);
         if (!encoder->m_param->csvfpt)
@@ -222,6 +224,7 @@ x265_encoder *x265_encoder_open(x265_param *p)
     }
 
     encoder->m_latestParam = latestParam;
+    encoder->m_zoneParam = zoneParam;
     x265_copy_params(latestParam, param);
     if (encoder->m_aborted)
         goto fail;
@@ -308,7 +311,7 @@ int x265_encoder_reconfig(x265_encoder* enc, x265_param* param_in)
         return -1;
     x265_param save;
     Encoder* encoder = static_cast<Encoder*>(enc);
-    if (encoder->m_param->csvfn == NULL && param_in->csvfpt != NULL)
+    if (strlen(encoder->m_param->csvfn) && param_in->csvfpt != NULL)
          encoder->m_param->csvfpt = param_in->csvfpt;
     if (encoder->m_latestParam->forceFlush != param_in->forceFlush)
         return encoder->reconfigureParam(encoder->m_latestParam, param_in);
@@ -326,18 +329,20 @@ int x265_encoder_reconfig(x265_encoder* enc, x265_param* param_in)
     {
         /* reconfigure failed, recover saved param set */
         x265_copy_params(encoder->m_latestParam, &save);
+        x265_zone_free(&save);
         ret = -1;
     }
     else
     {
         encoder->configure(encoder->m_latestParam);
-        if (encoder->m_latestParam->scalingLists && encoder->m_latestParam->scalingLists != encoder->m_param->scalingLists)
+        if (strlen(encoder->m_latestParam->scalingLists) && strcmp(encoder->m_latestParam->scalingLists, encoder->m_param->scalingLists))
         {
             if (encoder->m_param->bRepeatHeaders)
             {
                 if (encoder->m_scalingList.parseScalingList(encoder->m_latestParam->scalingLists))
                 {
                     x265_copy_params(encoder->m_latestParam, &save);
+                    x265_zone_free(&save);
                     return -1;
                 }
                 encoder->m_scalingList.setupQuantMatrices(encoder->m_param->internalCsp);
@@ -346,12 +351,13 @@ int x265_encoder_reconfig(x265_encoder* enc, x265_param* param_in)
             {
                 x265_log(encoder->m_param, X265_LOG_ERROR, "Repeat headers is turned OFF, cannot reconfigure scalinglists\n");
                 x265_copy_params(encoder->m_latestParam, &save);
+                x265_zone_free(&save);
                 return -1;
             }
         }
         if (!isReconfigureRc)
             encoder->m_reconfigure = true;
-        else if (encoder->m_reconfigureRc)
+        else if (encoder->m_reconfigureRc || encoder->m_latestParam->bConfigRCFrame)
         {
             VPS saveVPS;
             memcpy(&saveVPS.ptl, &encoder->m_vps.ptl, sizeof(saveVPS.ptl));
@@ -372,6 +378,7 @@ int x265_encoder_reconfig(x265_encoder* enc, x265_param* param_in)
     /* Zones support modifying num of Refs. Requires determining level at each zone start*/
     if (encoder->m_param->rc.zonefileCount)
         determineLevel(*encoder->m_latestParam, encoder->m_vps);
+    x265_zone_free(&save);
     return ret;
 }
 
@@ -404,8 +411,15 @@ int x265_encoder_reconfig_zone(x265_encoder* enc, x265_zone* zone_in)
 
     return 0;
 }
-
-int x265_encoder_encode(x265_encoder *enc, x265_nal **pp_nal, uint32_t *pi_nal, x265_picture *pic_in, x265_picture **pic_out)
+void x265_configure_vbv_end(x265_encoder* enc, x265_picture* picture, double totalstreamduration)
+{
+    Encoder* encoder = static_cast<Encoder*>(enc);
+    if ((totalstreamduration > 0) && (picture->poc) > ((encoder->m_param->vbvEndFrameAdjust)*(totalstreamduration)*((double)(encoder->m_param->fpsNum / encoder->m_param->fpsDenom))))
+    {
+         picture->vbvEndFlag = 1;
+    }
+}
+int x265_encoder_encode(x265_encoder* enc, x265_nal** pp_nal, uint32_t* pi_nal, x265_picture* pic_in, x265_picture* pic_out)
 {
     if (!enc)
         return -1;
@@ -603,7 +617,7 @@ fail:
     if (numEncoded && encoder->m_param->csvLogLevel && encoder->m_outputCount >= encoder->m_latestParam->chunkStart)
     {
         for (int layer = 0; layer < encoder->m_param->numLayers; layer++)
-            x265_csvlog_frame(encoder->m_param, pic_out[layer]);
+            x265_csvlog_frame(encoder->m_param, pic_out + layer);
     }
 
     if (numEncoded < 0)
@@ -803,7 +817,7 @@ void x265_alloc_analysis_data(x265_param *param, x265_analysis_data* analysis)
         //Allocate memory for distortionData pointer
         CHECKED_MALLOC_ZERO(distortionData, x265_analysis_distortion_data, 1);
         CHECKED_MALLOC_ZERO(distortionData->ctuDistortion, sse_t, analysis->numPartitions * numCUs_sse_t);
-        if (param->analysisLoad || param->rc.bStatRead)
+        if (param->analysisLoad[0] || param->rc.bStatRead)
         {
             CHECKED_MALLOC_ZERO(distortionData->scaledDistortion, double, analysis->numCUsInFrame);
             CHECKED_MALLOC_ZERO(distortionData->offset, double, analysis->numCUsInFrame);
@@ -908,7 +922,7 @@ void x265_free_analysis_data(x265_param *param, x265_analysis_data* analysis)
     if (analysis->distortionData)
     {
         X265_FREE((analysis->distortionData)->ctuDistortion);
-        if (param->rc.bStatRead || param->analysisLoad)
+        if (param->rc.bStatRead || param->analysisLoad[0])
         {
             X265_FREE((analysis->distortionData)->scaledDistortion);
             X265_FREE((analysis->distortionData)->offset);
@@ -919,7 +933,7 @@ void x265_free_analysis_data(x265_param *param, x265_analysis_data* analysis)
 
     /* Early exit freeing weights alone if level is 1 (when there is no analysis inter/intra) */
     if (!isMultiPassOpt && analysis->wt && !(param->bAnalysisType == AVC_INFO))
-        X265_FREE(analysis->wt);
+        X265_FREE_ZERO(analysis->wt);
 
     //Free memory for intraData pointers
     if (analysis->intraData)
@@ -978,7 +992,6 @@ void x265_free_analysis_data(x265_param *param, x265_analysis_data* analysis)
 
 void x265_cleanup(void)
 {
-    BitCost::destroy();
 }
 
 x265_picture *x265_picture_alloc()
@@ -999,8 +1012,9 @@ void x265_picture_init(x265_param *param, x265_picture *pic)
     pic->rpu.payloadSize = 0;
     pic->rpu.payload = NULL;
     pic->picStruct = 0;
+    pic->vbvEndFlag = 0;
 
-    if ((param->analysisSave || param->analysisLoad) || (param->bAnalysisType == AVC_INFO))
+    if ((strlen(param->analysisSave) || strlen(param->analysisLoad)) || (param->bAnalysisType == AVC_INFO))
     {
         uint32_t widthInCU = (param->sourceWidth + param->maxCUSize - 1) >> param->maxLog2CUSize;
         uint32_t heightInCU = (param->sourceHeight + param->maxCUSize - 1) >> param->maxLog2CUSize;
@@ -1032,6 +1046,8 @@ void x265_zone_free(x265_param *param)
     {
         for (int i = 0; i < param->rc.zonefileCount; i++)
             x265_free(param->rc.zones[i].zoneParam);
+        param->rc.zonefileCount = 0;
+        param->rc.zoneCount = 0;
         x265_free(param->rc.zones);
     }
 }
@@ -1065,6 +1081,7 @@ static const x265_api libapi =
     &x265_encoder_reconfig,
     &x265_encoder_reconfig_zone,
     &x265_encoder_headers,
+    &x265_configure_vbv_end,
     &x265_encoder_encode,
     &x265_encoder_get_stats,
     &x265_encoder_log,
@@ -1389,6 +1406,15 @@ FILE* x265_csvlog_open(const x265_param* param)
 #if ENABLE_LIBVMAF
                     fprintf(csvfp, ", VMAF Frame Score");
 #endif
+                    if (param->bConfigRCFrame)
+                    {
+                        if (param->rc.rateControlMode == X265_RC_ABR)
+                            fprintf(csvfp, ", Target bitrate");
+                        else if (param->rc.rateControlMode == X265_RC_CRF)
+                            fprintf(csvfp, ", Target CRF");
+                        else if (param->rc.rateControlMode == X265_RC_CQP)
+                            fprintf(csvfp, ", Target QP");
+                    }
                 }
                 fprintf(csvfp, "\n");
             }
@@ -1516,6 +1542,15 @@ void x265_csvlog_frame(const x265_param* param, const x265_picture* pic)
 #if ENABLE_LIBVMAF
         fprintf(param->csvfpt, ", %lf", frameStats->vmafFrameScore);
 #endif
+        if (param->bConfigRCFrame)
+        {
+            if(param->rc.rateControlMode == X265_RC_ABR)
+                fprintf(param->csvfpt, ", %ld", (long)frameStats->currTrBitrate);
+            else if (param->rc.rateControlMode == X265_RC_CRF)
+                fprintf(param->csvfpt, ", %f", frameStats->currTrCRF);
+            else if (param->rc.rateControlMode == X265_RC_CQP)
+                fprintf(param->csvfpt, ", %d", frameStats->currTrQP);
+        }
     }
     fprintf(param->csvfpt, "\n");
     fflush(stderr);
@@ -1893,9 +1928,9 @@ int compute_vmaf(double* vmaf_score, char* fmt, int width, int height, int bitde
 
 	VmafConfiguration cfg = {
 		.log_level = VMAF_LOG_LEVEL_INFO,
-		.n_threads = n_thread,
-		.n_subsample = n_subsample,
-		.cpumask = disable_avx ? -1 : 0,
+		.n_threads = static_cast<unsigned int>(n_thread),
+		.n_subsample = static_cast<unsigned int>(n_subsample),
+		.cpumask = static_cast<uint64_t>(disable_avx),
 		.gpumask = 0,
 	};
 
@@ -2129,6 +2164,7 @@ fail_or_end:
 double x265_calculate_vmafscore(x265_param *param, x265_vmaf_data *data)
 {
     double score;
+    const char* pix_format;
 
     data->width = param->sourceWidth;
     data->height = param->sourceHeight;
@@ -2139,22 +2175,22 @@ double x265_calculate_vmafscore(x265_param *param, x265_vmaf_data *data)
         if ((param->sourceWidth * param->sourceHeight) % 2 != 0)
             x265_log(NULL, X265_LOG_ERROR, "Invalid file size\n");
         data->offset = param->sourceWidth * param->sourceHeight / 2;
-        vcd->format = "yuv420p";
+        pix_format = "yuv420p";
     }
     else if (param->internalCsp == X265_CSP_I422)
     {
         data->offset = param->sourceWidth * param->sourceHeight;
-        vcd->format = "yuv422p10le";
+        pix_format = "yuv422p10le";
     }
     else if (param->internalCsp == X265_CSP_I444)
     {
         data->offset = param->sourceWidth * param->sourceHeight * 2;
-		vcd->format = "yuv444p10le";
+        pix_format = "yuv444p10le";
     }
     else
         x265_log(NULL, X265_LOG_ERROR, "Invalid format\n");
 
-    compute_vmaf(&score, vcd->format, data->width, data->height, param->sourceBitDepth, read_frame, data, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool, vcd->thread, vcd->subsample);
+    compute_vmaf(&score, (char*)pix_format, data->width, data->height, param->sourceBitDepth, read_frame, data, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool, vcd->thread, vcd->subsample);
 
     return score;
 }
@@ -2250,21 +2286,22 @@ int read_frame_8bit(float *reference_data, float *distorted_data, float *temp_da
 double x265_calculate_vmaf_framelevelscore(x265_param *param, x265_vmaf_framedata *vmafframedata)
 {
     double score;
+    const char* pix_format;
 
     if (param->internalCsp == X265_CSP_I420)
-        vcd->format = "yuv420p";
+        pix_format = "yuv420p";
     else if (param->internalCsp == X265_CSP_I422)
-        vcd->format = "yuv422p10le";
+        pix_format = "yuv422p10le";
     else
-		vcd->format = "yuv444p10le";
+        pix_format = "yuv444p10le";
 
     int (*read_frame)(float *reference_data, float *distorted_data, float *temp_data,
-                      int stride, void *s);
+        int stride, void *s);
     if (vmafframedata->internalBitDepth == 8)
         read_frame = read_frame_8bit;
     else
         read_frame = read_frame_10bit;
-    compute_vmaf(&score, vcd->format, vmafframedata->width, vmafframedata->height, param->sourceBitDepth, read_frame, vmafframedata, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool, vcd->thread, vcd->subsample);
+    compute_vmaf(&score, (char*)pix_format, vmafframedata->width, vmafframedata->height, param->sourceBitDepth, read_frame, vmafframedata, vcd->model_path, vcd->log_path, vcd->log_fmt, vcd->disable_clip, vcd->disable_avx, vcd->enable_transform, vcd->phone_model, vcd->psnr, vcd->ssim, vcd->ms_ssim, vcd->pool, vcd->thread, vcd->subsample);
 
     return score;
 }

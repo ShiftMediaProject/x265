@@ -100,6 +100,7 @@ struct RateControlEntry
     bool    isActive;
     double  amortizeFrames;
     double  amortizeFraction;
+    int  remainingVbvEndFrames;
     /* Required in 2-pass rate control */
     uint64_t expectedBits; /* total expected bits up to the current frame (current one excluded) */
     double   iCuCount;
@@ -136,6 +137,7 @@ public:
     double*     m_relativeComplexity;
     int         m_zoneBufferIdx;
 
+    int    m_totalFrames;
     bool   m_isAbr;
     bool   m_isVbv;
     bool   m_isCbr;
@@ -247,6 +249,8 @@ public:
     RateControlEntry* m_rce2Pass;
     Encoder* m_top;
 
+    bool    m_bRcReConfig;                /* RC-reconfigurtion */
+
     struct
     {
         uint16_t *qpBuffer[2]; /* Global buffers for converting MB-tree quantizer data. */
@@ -299,6 +303,7 @@ protected:
     double tuneAbrQScaleFromFeedback(double qScale);
     double tuneQScaleForZone(RateControlEntry *rce, double qScale); // Tune qScale to adhere to zone budget
     double tuneQscaleForSBRC(Frame* curFrame, double q); // Tune qScale to adhere to segment budget
+    double tuneQscaleToUpdatedBitrate(Frame* curFrame, double q); // Tune qScale according to updated bitrate
     void   accumPQpUpdate();
 
     int    getPredictorType(int lowresSliceType, int sliceType);

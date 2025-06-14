@@ -25,7 +25,9 @@ there are two extra arguments, the second is treated as the output
 bitstream filename, making :option:`--output` also optional if the input
 filename was implied. This makes :command:`x265 in.y4m out.hevc` a valid
 command line. If there are more than two extra arguments, the CLI will
-consider this an error and abort.
+consider this an error and abort. For Multiview encodes i.e encodes with
+:option:`--multiview-config` , only one extra command line argument is
+allowed and the CLI will treat it as the output filename.
 
 Generally, when an option expects a string value from a list of strings
 the user may specify the integer ordinal of the value they desire. ie:
@@ -299,8 +301,8 @@ Performance Options
 	in the system doesn't obey this constraint, we may spawn fewer threads
 	than cores which has been empirically shown to be better for performance. 
 
-	If the four pool features: :option:`--wpp`, :option:`--pmode`,
-	:option:`--pme` and :option:`--lookahead-slices` are all disabled,
+	If the four pool features: :option:`--wpp`, :option:`--pmode(deprecated)`,
+	:option:`--pme(deprecated)` and :option:`--lookahead-slices` are all disabled,
 	then :option:`--pools` is ignored and no thread pools are created.
 
 	If "none" is specified, then all four of the thread pool features are
@@ -342,7 +344,7 @@ Performance Options
 
 	Default: Enabled
 
-.. option:: --pmode, --no-pmode
+.. option:: --pmode, --no-pmode ( deprecated from release 4.1 )
 
 	Parallel mode decision, or distributed mode analysis. When enabled
 	the encoder will distribute the analysis work of each CU (merge,
@@ -352,31 +354,31 @@ Performance Options
 	6 there is generally always enough work to distribute to warrant the
 	overhead, assuming your CPUs are not already saturated.
 	
-	--pmode will increase utilization without reducing compression
+	--pmode(deprecated) will increase utilization without reducing compression
 	efficiency. In fact, since the modes are all measured in parallel it
 	makes certain early-outs impractical and thus you usually get
 	slightly better compression when it is enabled (at the expense of
 	not skipping improbable modes). This bypassing of early-outs can
-	cause pmode to slow down encodes, especially at faster presets.
+	cause pmode(deprecated) to slow down encodes, especially at faster presets.
 
 	This feature is implicitly disabled when no thread pool is present.
 
 	Default disabled
 
-.. option:: --pme, --no-pme
+.. option:: --pme, --no-pme ( deprecated from release 4.1 )
 
 	Parallel motion estimation. When enabled the encoder will distribute
 	motion estimation across multiple worker threads when more than two
 	references require motion searches for a given CU. Only recommended
-	if x265 is not already saturating CPU cores. :option:`--pmode` is
+	if x265 is not already saturating CPU cores. :option:`--pmode(deprecated)` is
 	much more effective than this option, since the amount of work it
-	distributes is substantially higher. With --pme it is not unusual
+	distributes is substantially higher. With --pme(deprecated) it is not unusual
 	for the overhead of distributing the work to outweigh the
 	parallelism benefits.
 	
 	This feature is implicitly disabled when no thread pool is present.
 
-	--pme will increase utilization on many core systems with no effect
+	--pme(deprecated) will increase utilization on many core systems with no effect
 	on the output bitstream.
 	
 	Default disabled
@@ -814,7 +816,7 @@ the prediction quad-tree.
 	(within your decoder level limits) if you enable one or
 	both of these flags.
 
-	Default 3.
+	Default 1.
 
 .. option:: --limit-modes, --no-limit-modes
 
@@ -895,7 +897,7 @@ the prediction quad-tree.
 
 .. option:: --b-intra, --no-b-intra
 
-	Enables the evaluation of intra modes in B slices. Default disabled.
+	Enables the evaluation of intra modes in B slices. Default enabled.
 
 .. option:: --cu-lossless, --no-cu-lossless
 
@@ -930,14 +932,14 @@ will not reuse analysis if slice type parameters do not match.
 .. option:: --analysis-save <filename>
 
 	Encoder outputs analysis information of each frame. Analysis data from save mode is
-	written to the file specified. Requires cutree, pmode to be off. Default disabled.
+	written to the file specified. Requires cutree, pmode(deprecated) to be off. Default disabled.
 	
 	The amount of analysis data stored is determined by :option:`--analysis-save-reuse-level`.
 	
 .. option:: --analysis-load <filename>
 
 	Encoder reuses analysis information from the file specified. By reading the analysis data written by
-	an earlier encode of the same sequence, substantial redundant work may be avoided. Requires cutree, pmode
+	an earlier encode of the same sequence, substantial redundant work may be avoided. Requires cutree, pmode(deprecated)
 	to be off. Default disabled.
 
 	The amount of analysis data reused is determined by :option:`--analysis-load-reuse-level`.
@@ -1203,7 +1205,7 @@ Temporal / motion search options
 	as a "skip".  Otherwise the merge candidates are tested as part of
 	motion estimation when searching for the least cost inter option.
 	The max candidate number is encoded in the SPS and determines the
-	bit cost of signaling merge CUs. Default 2
+	bit cost of signaling merge CUs. Default 3
 
 .. option:: --me <integer|string>
 
@@ -1323,6 +1325,8 @@ Temporal / motion search options
 	picture, thereby generating multiple motion-compensated predictions, which are then
 	combined by using adaptive filtering to produce a final noise-reduced picture.
 	Default: disabled
+
+	Note : MCSTF should be enabled only with frame threads 1
 
 Spatial/intra options
 =====================
@@ -1783,7 +1787,7 @@ Quality, rate control and rate distortion options
 	the minimum CU size at which QP can be adjusted, ie. Quantization Group
 	size. Allowed range of values are 64, 32, 16, 8 provided this falls within 
 	the inclusive range [maxCUSize, minCUSize].
-	Default: same as maxCUSize
+	Default: 32
 
 .. option:: --cutree, --no-cutree
 
@@ -1841,8 +1845,8 @@ Quality, rate control and rate distortion options
 	In pass 1 analysis information like motion vector, depth, reference and prediction
 	modes of the final best CTU partition is stored for each CTU.
 	Multipass analysis refinement cannot be enabled when :option:`--analysis-save`/:option:`--analysis-load`
-	is enabled and both will be disabled when enabled together. This feature requires :option:`--pmode`/:option:`--pme`
-	to be disabled and hence pmode/pme will be disabled when enabled at the same time.
+	is enabled and both will be disabled when enabled together. This feature requires :option:`--pmode(deprecated)`/:option:`--pme(deprecated)`
+	to be disabled and hence pmode/pme(deprecated) will be disabled when enabled at the same time.
 
 	Default: disabled.
 
@@ -1853,8 +1857,8 @@ Quality, rate control and rate distortion options
 	distortion get lower(negative)qp offsets and vice-versa for low distortion CTUs in pass 2.
 	This helps to improve the subjective quality.
 	Multipass refinement of qp cannot be enabled when :option:`--analysis-save`/:option:`--analysis-load`
-	is enabled and both will be disabled when enabled together. It requires :option:`--pmode`/:option:`--pme` to be
-	disabled and hence pmode/pme will be disabled when enabled along with it.
+	is enabled and both will be disabled when enabled together. It requires :option:`--pmode`(deprecated)/:option:`--pme(deprecated)` to be
+	disabled and hence pmode/pme(deprecated) will be disabled when enabled along with it.
 
 	Default: disabled.
 
@@ -2098,7 +2102,14 @@ Quality, rate control and rate distortion options
 	Used to trigger encoding of selective GOPs; Disabled by default.
 	
 	**API ONLY**
-	
+
+.. option:: --frame-rc, --no-frame-rc
+
+    This option allows configuring Rate control parameter of the chosen Rate Control
+    mode(CRF or QP or Bitrate) at frame level.
+    This option is recommended to be enabled only when planning to invoke the API function
+    x265_encoder_reconfig() to configure Rate control parameter value for each frame.
+    Default: disabled.
 
 Quantization Options
 ====================
@@ -2702,6 +2713,10 @@ Bitstream options
 
     Refers to the film grain model characteristics for signal enhancement information transmission.
 
+.. option:: --aom-film-grain <filename>
+
+	Refers to the AOM film grain model characteristics
+
     **CLI_ONLY**
 
 DCT Approximations
@@ -2930,7 +2945,8 @@ Multiview Encode Options
 
 
 	Other input parameters such as input-csp/input-depth/input-res/fps must be configured through
-	normal CLI and is expected to be same for all views.
+	normal CLI and is expected to be same for all views. The input filename(s):option:`--input` alone will be inferred
+	from the config file.
 
 **CLI_ONLY**
 

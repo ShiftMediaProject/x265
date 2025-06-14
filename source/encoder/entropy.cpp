@@ -230,7 +230,11 @@ Entropy::Entropy()
     X265_CHECK(sizeof(m_contextState) >= sizeof(m_contextState[0]) * MAX_OFF_CTX_MOD, "context state table is too small\n");
 }
 
+#if ENABLE_ALPHA || ENABLE_MULTIVIEW
 void Entropy::codeVPS(const VPS& vps, const SPS& sps)
+#else
+void Entropy::codeVPS(const VPS& vps)
+#endif
 {
     int maxLayers = (vps.m_numLayers > 1 || vps.m_numViews > 1) + 1;
     WRITE_CODE(0,       4, "vps_video_parameter_set_id");
@@ -305,7 +309,7 @@ void Entropy::codeVPS(const VPS& vps, const SPS& sps)
             WRITE_CODE(vps.ptl.levelIdc, 8, "general_level_idc");
             if (vps.maxTempSubLayers > 1)
             {
-                for (int i = 0; i < vps.maxTempSubLayers - 1; i++)
+                for (uint32_t i = 0; i < vps.maxTempSubLayers - 1; i++)
                 {
                     WRITE_FLAG(0, "sub_layer_profile_present_flag[i]");
                     WRITE_FLAG(0, "sub_layer_level_present_flag[i]");
@@ -389,7 +393,7 @@ void Entropy::codeVPS(const VPS& vps, const SPS& sps)
                 for (int i = 1; i < vps.m_vpsNumLayerSetsMinus1 + 1; i++)
                 {
                     WRITE_FLAG(vps.maxTempSubLayers > 1, "sub_layer_flag_info_present_flag");
-                    for (int j = 0; j < vps.maxTempSubLayers ; j++)
+                    for (uint32_t j = 0; j < vps.maxTempSubLayers ; j++)
                     {
                         if(j > 0)
                         WRITE_FLAG(vps.maxTempSubLayers > 1, "sub_layer_dpb_info_present_flag");
@@ -474,7 +478,7 @@ void Entropy::codeVPS(const VPS& vps, const SPS& sps)
                 for (int i = 1; i < vps.m_vpsNumLayerSetsMinus1 + 1; i++)
                 {
                     WRITE_FLAG(vps.maxTempSubLayers > 1, "sub_layer_flag_info_present_flag");
-                    for (int j = 0; j < vps.maxTempSubLayers; j++)
+                    for (uint32_t j = 0; j < vps.maxTempSubLayers; j++)
                     {
                         if (j > 0)
                             WRITE_FLAG(vps.maxTempSubLayers > 1, "sub_layer_dpb_info_present_flag");
@@ -577,12 +581,10 @@ void Entropy::codeSPS(const SPS& sps, const ScalingList& scalingList, const Prof
     if (scalingList.m_bEnabled)
     {
 #if ENABLE_MULTIVIEW
-        if (sps.maxViews > 1)
-        {
-            if ((layer != 0 && sps.setSpsExtOrMaxSubLayersMinus1 == 7))
-                WRITE_FLAG(1, "sps_infer_scaling_list_flag");
+        if ((layer != 0 && sps.setSpsExtOrMaxSubLayersMinus1 == 7))
+            WRITE_FLAG(sps.spsInferScalingListFlag, "sps_infer_scaling_list_flag");
+        if(sps.spsInferScalingListFlag)
             WRITE_CODE(0, 6, "sps_scaling_list_ref_layer_id");
-        }
         else
 #endif
         {
@@ -663,7 +665,7 @@ void Entropy::codePPS( const PPS& pps, bool filerAcross, int iPPSInitQpMinus26, 
     WRITE_FLAG(pps.pps_slice_chroma_qp_offsets_present_flag, "pps_slice_chroma_qp_offsets_present_flag");
 
     WRITE_FLAG(layer ? 0 : pps.bUseWeightPred,            "weighted_pred_flag");
-    WRITE_FLAG(pps.bUseWeightedBiPred,        "weighted_bipred_flag");
+    WRITE_FLAG(layer ? 0 : pps.bUseWeightedBiPred,        "weighted_bipred_flag");
     WRITE_FLAG(pps.bTransquantBypassEnabled,  "transquant_bypass_enable_flag");
     WRITE_FLAG(0,                             "tiles_enabled_flag");
     WRITE_FLAG(pps.bEntropyCodingSyncEnabled, "entropy_coding_sync_enabled_flag");
@@ -1069,11 +1071,7 @@ void Entropy::codeSliceHeader(const Slice& slice, FrameData& encData, uint32_t s
     }
 
     if (slice.isInterB())
-#if ENABLE_SCC_EXT
-        WRITE_FLAG(slice.m_bLMvdL1Zero, "mvd_l1_zero_flag");
-#else
         WRITE_FLAG(0, "mvd_l1_zero_flag");
-#endif
 
 #if ENABLE_SCC_EXT
     if (slice.m_bTemporalMvp)
@@ -1766,10 +1764,6 @@ void Entropy::codePredWeightTable(const Slice& slice)
         {
             for (int ref = 0; ref < slice.m_numRefIdx[list]; ref++)
             {
-#if ENABLE_SCC_EXT
-                if (slice.m_poc == slice.m_refPOCList[list][ref])
-                    continue;
-#endif
                 wp = slice.m_weightPredTable[list][ref];
                 if (!bDenomCoded)
                 {
@@ -1782,7 +1776,12 @@ void Entropy::codePredWeightTable(const Slice& slice)
                     }
                     bDenomCoded = true;
                 }
-                WRITE_FLAG(!!wp[0].wtPresent, "luma_weight_lX_flag");
+#if ENABLE_SCC_EXT
+                if (slice.m_poc == slice.m_refPOCList[list][ref])
+                    assert(!wp[0].wtPresent);
+                else
+#endif
+                    WRITE_FLAG(!!wp[0].wtPresent, "luma_weight_lX_flag");
                 totalSignalledWeightFlags += wp[0].wtPresent;
             }
 
@@ -1790,22 +1789,19 @@ void Entropy::codePredWeightTable(const Slice& slice)
             {
                 for (int ref = 0; ref < slice.m_numRefIdx[list]; ref++)
                 {
+                    wp = slice.m_weightPredTable[list][ref];
 #if ENABLE_SCC_EXT
                     if (slice.m_poc == slice.m_refPOCList[list][ref])
-                        continue;
+                        assert(!wp[1].wtPresent);
+                    else
 #endif
-                    wp = slice.m_weightPredTable[list][ref];
-                    WRITE_FLAG(!!wp[1].wtPresent, "chroma_weight_lX_flag");
+                        WRITE_FLAG(!!wp[1].wtPresent, "chroma_weight_lX_flag");
                     totalSignalledWeightFlags += 2 * wp[1].wtPresent;
                 }
             }
 
             for (int ref = 0; ref < slice.m_numRefIdx[list]; ref++)
             {
-#if ENABLE_SCC_EXT
-                if (slice.m_poc == slice.m_refPOCList[list][ref])
-                    continue;
-#endif
                 wp = slice.m_weightPredTable[list][ref];
                 if (wp[0].wtPresent)
                 {

@@ -154,9 +154,18 @@ static bool parseAbrConfig(FILE* abrConfig, CLIOptions cliopt[], uint8_t numEnco
     char line[1024];
     char* argLine;
 
+    char *strPool = (char*)malloc(256 * X265_MAX_STRING_SIZE * sizeof(char));
+    int strPoolSize = 256 * X265_MAX_STRING_SIZE;
     for (uint32_t i = 0; i < numEncodes; i++)
     {
-        fgets(line, sizeof(line), abrConfig);
+        char **argv = (char**)malloc(256 * sizeof(char *));
+        cliopt[i].stringPool = (i == 0 ? strPool : NULL);
+        cliopt[i].argString = argv;
+        cliopt[i].orgArgv = NULL;
+        if (fgets(line, sizeof(line), abrConfig) == NULL) {
+            fprintf(stderr, "Error reading line from configuration file.\n");
+            return false;
+        }
         if (*line == '#' || (strcmp(line, "\r\n") == 0))
             continue;
         int index = (int)strcspn(line, "\r\n");
@@ -165,7 +174,6 @@ static bool parseAbrConfig(FILE* abrConfig, CLIOptions cliopt[], uint8_t numEnco
         char* start = strchr(argLine, ' ');
         while (isspace((unsigned char)*start)) start++;
         int argc = 0;
-        char **argv = (char**)malloc(256 * sizeof(char *));
         // Adding a dummy string to avoid file parsing error
         argv[argc++] = (char *)"x265";
 
@@ -190,16 +198,20 @@ static bool parseAbrConfig(FILE* abrConfig, CLIOptions cliopt[], uint8_t numEnco
         }
         else
         {
-            cliopt[i].encName = strdup(head[0]);
+            snprintf(cliopt[i].encName, X265_MAX_STRING_SIZE, "%s", head[0]);
             cliopt[i].loadLevel = atoi(head[1]);
-            cliopt[i].reuseName = strdup(head[2]);
+            snprintf(cliopt[i].reuseName, X265_MAX_STRING_SIZE, "%s", head[2]);
         }
 
         char* token = strtok(start, " ");
         while (token)
         {
-            argv[argc++] = strdup(token);
+            argv[argc] = strPool;
+            strPool += strlen(token) + 1;
+            strPoolSize -= (int)strlen(token) + 1;
+            strcpy(argv[argc], token);
             token = strtok(NULL, " ");
+            argc++;
         }
         argv[argc] = NULL;
         if (cliopt[i].parse(argc++, argv))
@@ -210,6 +222,7 @@ static bool parseAbrConfig(FILE* abrConfig, CLIOptions cliopt[], uint8_t numEnco
             exit(1);
         }
     }
+    X265_CHECK(strPoolSize >= 0, "string pool broken!");
     return true;
 }
 
@@ -278,6 +291,8 @@ int main(int argc, char **argv)
         numEncodes = getNumAbrEncodes(abrConfig);
 
     CLIOptions* cliopt = new CLIOptions[numEncodes];
+    cliopt[0].orgArgv = argv;
+    cliopt[0].argString = argv;
 
     if (isAbrLadder)
     {

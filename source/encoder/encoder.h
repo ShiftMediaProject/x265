@@ -206,8 +206,10 @@ public:
     FILE*              m_analysisFileIn;
     FILE*              m_analysisFileOut;
     FILE*              m_naluFile;
+    x265_param*        m_paramBase[3];
     x265_param*        m_param;
     x265_param*        m_latestParam;     // Holds latest param during a reconfigure
+    x265_param*        m_zoneParam;
     RateControl*       m_rateControl;
     Lookahead*         m_lookahead;
     AdaptiveFrameDuplication* m_dupBuffer[DUP_BUFFER];      // picture buffer of size 2
@@ -285,7 +287,8 @@ public:
     ThreadSafeInteger* zoneWriteCount;
     /* Film grain model file */
     FILE* m_filmGrainIn;
-    OrigPicBuffer*          m_origPicBuffer;
+    /* Aom film grain model file*/
+    FILE* m_aomFilmGrainIn;
 
     Encoder();
     ~Encoder()
@@ -300,7 +303,7 @@ public:
     void stopJobs();
     void destroy();
 
-    int encode(const x265_picture* pic, x265_picture **pic_out);
+    int encode(const x265_picture* pic, x265_picture *pic_out);
 
     int reconfigureParam(x265_param* encParam, x265_param* param);
 
@@ -326,7 +329,7 @@ public:
 
     void printReconfigureParams();
 
-    char* statsString(EncStats&, char*);
+    char* statsString(EncStats&, char* , size_t bufferSize);
 
     void configure(x265_param *param);
 

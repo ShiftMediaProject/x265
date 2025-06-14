@@ -281,6 +281,7 @@ struct SPS
 
 #if ENABLE_MULTIVIEW
     int      setSpsExtOrMaxSubLayersMinus1;
+    int      spsInferScalingListFlag;
     int      maxViews;
     bool     vui_parameters_present_flag;
 #endif
@@ -405,7 +406,6 @@ public:
 
 #if  ENABLE_SCC_EXT
     Frame*      m_lastEncPic;
-    bool        m_bLMvdL1Zero;
     bool        m_useIntegerMv;
 #endif
     bool        m_bTemporalMvp;
@@ -434,9 +434,11 @@ public:
 
     void disableWeights();
 
-    void setRefPicList(PicList& picList, PicList& refPicSetInterLayer0, PicList& refPicSetInterLayer1, int viewId);
 #if ENABLE_MULTIVIEW
+    void setRefPicList(PicList& picList, int viewId, PicList& refPicSetInterLayer0, PicList& refPicSetInterLayer1);
     void createInterLayerReferencePictureSet(PicList& picList, PicList& refPicSetInterLayer0, PicList& refPicSetInterLayer1);
+#else
+    void setRefPicList(PicList& picList, int viewId);
 #endif
 
 #if  ENABLE_SCC_EXT

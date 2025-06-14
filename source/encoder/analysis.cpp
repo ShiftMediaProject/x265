@@ -157,9 +157,9 @@ Mode& Analysis::compressCTU(CUData& ctu, Frame& frame, const CUGeom& cuGeom, con
         calculateNormFactor(ctu, qp);
 
     uint32_t numPartition = ctu.m_numPartitions;
-    if (m_param->bCTUInfo && (*m_frame->m_ctuInfo + ctu.m_cuAddr))
+    if (m_param->bCTUInfo && m_frame->m_ctuInfo && m_frame->m_ctuInfo[ctu.m_cuAddr])
     {
-        x265_ctu_info_t* ctuTemp = *m_frame->m_ctuInfo + ctu.m_cuAddr;
+        x265_ctu_info_t* ctuTemp = m_frame->m_ctuInfo[ctu.m_cuAddr];
         int32_t depthIdx = 0;
         uint32_t maxNum8x8Partitions = 64;
         uint8_t* depthInfoPtr = m_frame->m_addOnDepth[ctu.m_cuAddr];
@@ -203,7 +203,7 @@ Mode& Analysis::compressCTU(CUData& ctu, Frame& frame, const CUGeom& cuGeom, con
     }
     
     int reuseLevel = X265_MAX(m_param->analysisSaveReuseLevel, m_param->analysisLoadReuseLevel);
-    if ((m_param->analysisSave || m_param->analysisLoad) && m_slice->m_sliceType != I_SLICE && reuseLevel > 1 && reuseLevel < 10)
+    if ((strlen(m_param->analysisSave) || strlen(m_param->analysisLoad)) && m_slice->m_sliceType != I_SLICE && reuseLevel > 1 && reuseLevel < 10)
     {
         int numPredDir = m_slice->isInterP() ? 1 : 2;
         m_reuseInterDataCTU = m_frame->m_analysisData.interData;
@@ -217,7 +217,7 @@ Mode& Analysis::compressCTU(CUData& ctu, Frame& frame, const CUGeom& cuGeom, con
             m_reusePartSize = &m_reuseInterDataCTU->partSize[ctu.m_cuAddr * ctu.m_numPartitions];
             m_reuseMergeFlag = &m_reuseInterDataCTU->mergeFlag[ctu.m_cuAddr * ctu.m_numPartitions];
         }
-        if (m_param->analysisSave && !m_param->analysisLoad)
+        if (strlen(m_param->analysisSave) && !strlen(m_param->analysisLoad))
             for (int i = 0; i < X265_MAX_PRED_MODE_PER_CTU * numPredDir; i++)
                 m_reuseRef[i] = -1;
     }
@@ -2870,7 +2870,11 @@ void Analysis::recodeCU(const CUData& parentCTU, const CUGeom& cuGeom, int32_t q
                                 continue;
                             MV mvp;
 
+#if (ENABLE_MULTIVIEW || ENABLE_SCC_EXT)
                             int numMvc = mode.cu.getPMV(mode.interNeighbours, list, ref, mode.amvpCand[list][ref], mvc, part, pu.puAbsPartIdx);
+#else
+                            int numMvc = mode.cu.getPMV(mode.interNeighbours, list, ref, mode.amvpCand[list][ref], mvc);
+#endif
                             mvp = mode.amvpCand[list][ref][mode.cu.m_mvpIdx[list][pu.puAbsPartIdx]];
                             if (m_param->interRefine == 1)
                             {
@@ -3413,7 +3417,7 @@ void Analysis::checkRDCostIntraBCMerge2Nx2N(Mode& mergeIBC, const CUGeom& cuGeom
     {
         interDirNeighbours[ui] = 0;
     }
-    int org_qp;
+    int8_t org_qp;
     int xPos = cu.m_cuPelX;
     int yPos = cu.m_cuPelY;
     int width = 1 << cu.m_log2CUSize[0];
@@ -3426,7 +3430,7 @@ void Analysis::checkRDCostIntraBCMerge2Nx2N(Mode& mergeIBC, const CUGeom& cuGeom
     cu.roundMergeCandidates(cMvFieldNeighbours, numValidMergeCand);
     restrictBipredMergeCand(&cu, 0, cMvFieldNeighbours, interDirNeighbours, numValidMergeCand);
 
-    for (uint32_t mergeCand = 0; mergeCand < numValidMergeCand; ++mergeCand)
+    for (uint8_t mergeCand = 0; mergeCand < numValidMergeCand; ++mergeCand)
     {
         if (interDirNeighbours[mergeCand] != 1)
         {
@@ -3533,7 +3537,11 @@ void Analysis::checkInter_rd0_4(Mode& interMode, const CUGeom& cuGeom, PartSize 
     }
 }
 
+#if ENABLE_SCC_EXT
 void Analysis::checkInter_rd5_6(Mode& interMode, const CUGeom& cuGeom, PartSize partSize, uint32_t refMask[2], MV* iMVCandList)
+#else
+void Analysis::checkInter_rd5_6(Mode& interMode, const CUGeom& cuGeom, PartSize partSize, uint32_t refMask[2])
+#endif
 {
     interMode.initCosts();
     interMode.cu.setPartSizeSubParts(partSize);
@@ -3570,7 +3578,11 @@ void Analysis::checkInter_rd5_6(Mode& interMode, const CUGeom& cuGeom, PartSize 
         }
     }
 
+#if ENABLE_SCC_EXT
     predInterSearch(interMode, cuGeom, m_csp != X265_CSP_I400 && m_frame->m_fencPic->m_picCsp != X265_CSP_I400, refMask, iMVCandList);
+#else
+    predInterSearch(interMode, cuGeom, m_csp != X265_CSP_I400 && m_frame->m_fencPic->m_picCsp != X265_CSP_I400, refMask);
+#endif
 
     /* predInterSearch sets interMode.sa8dBits, but this is ignored */
     encodeResAndCalcRdInterCU(interMode, cuGeom);
@@ -3623,7 +3635,7 @@ void Analysis::checkBidir2Nx2N(Mode& inter2Nx2N, Mode& bidir2Nx2N, const CUGeom&
     CUData& cu = bidir2Nx2N.cu;
 
 #if ENABLE_SCC_EXT
-    if ((cu.is8x8BipredRestriction(inter2Nx2N.bestME[0][0].mv, inter2Nx2N.bestME[0][1].mv, inter2Nx2N.bestME[0][0].ref, inter2Nx2N.bestME[0][1].ref) ? (cu.m_cuDepth[0] == 3) : cu.isBipredRestriction()) || inter2Nx2N.bestME[0][0].cost == MAX_UINT || inter2Nx2N.bestME[0][1].cost == MAX_UINT)
+    if ((cu.is8x8BipredRestriction(inter2Nx2N.bestME[0][0].mv, inter2Nx2N.bestME[0][1].mv, inter2Nx2N.bestME[0][0].ref, inter2Nx2N.bestME[0][1].ref) ? (1 << cu.m_log2CUSize[0] == 8) : cu.isBipredRestriction()) || inter2Nx2N.bestME[0][0].cost == MAX_UINT || inter2Nx2N.bestME[0][1].cost == MAX_UINT)
 #else
     if (cu.isBipredRestriction() || inter2Nx2N.bestME[0][0].cost == MAX_UINT || inter2Nx2N.bestME[0][1].cost == MAX_UINT)
 #endif
@@ -4118,7 +4130,7 @@ int Analysis::calculateQpforCuSize(const CUData& ctu, const CUGeom& cuGeom, int3
     double qp = baseQp >= 0 ? baseQp : curEncData.m_cuStat[ctu.m_cuAddr].baseQp;
     bool bCuTreeOffset = IS_REFERENCED(m_frame) && m_param->rc.cuTree && !complexCheck;
 
-    if ((m_param->analysisMultiPassDistortion && m_param->rc.bStatRead) || (m_param->ctuDistortionRefine && m_param->analysisLoad))
+    if ((m_param->analysisMultiPassDistortion && m_param->rc.bStatRead) || (m_param->ctuDistortionRefine && strlen(m_param->analysisLoad)))
     {
         x265_analysis_distortion_data* distortionData = m_frame->m_analysisData.distortionData;
         if ((distortionData->threshold[ctu.m_cuAddr] < 0.9 || distortionData->threshold[ctu.m_cuAddr] > 1.1)

@@ -29,6 +29,11 @@
 /* Incremented each time public API is changed, X265_BUILD is used as
  * the shared library SONAME on platforms which support it. It also
  * prevents linking against a different version of the static lib */
-#define X265_BUILD 212
+#define X265_BUILD 215
+
+#include <crtversion.h>
+#if _VC_CRT_MAJOR_VERSION < 14
+#define snprintf _snprintf
+#endif
 
 #endif

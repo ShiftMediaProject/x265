@@ -31,7 +31,7 @@ index cfd44e83d..14ec3d316 100644
              ///< should not close the handle here, otherwise the OpenFileMapping would fail
              //CloseHandle(h);
 diff --git a/source/common/threadpool.cpp b/source/common/threadpool.cpp
-index 9c27be783..5dde29e34 100644
+index b3505e5c0..c57509bae 100644
 --- a/source/common/threadpool.cpp
 +++ b/source/common/threadpool.cpp
 @@ -71,7 +71,7 @@
